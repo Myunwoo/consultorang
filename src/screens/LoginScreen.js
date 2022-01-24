@@ -83,7 +83,7 @@ const LoginScreen = (({route,navigation}) => {
         <View style={styles.mainbody}>
             <View style={styles.loginSection}>
                 <Image style={styles.topLogo} source={require('../../image/logo.png')} resizeMode='contain'/>
-                <Pressable style={styles.registerOuterWrapper} onPress={() => navigation.navigate('RegisterScreen')}>
+                <Pressable style={styles.registerOuterWrapper} onPress={() => navigation.navigate('RegisterNavigator')}>
                     <View style={styles.registerInnerWrapper}>
                         <Text
                             style={styles.txtRegister}>

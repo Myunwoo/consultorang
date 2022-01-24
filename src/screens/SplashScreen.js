@@ -31,7 +31,7 @@ const SplashScreen = ({navigation}) => {
               dataToSend.pw=info[1];
               fetchServer('POST', '/login/signin', dataToSend).then((responseJson) => {
                 if (responseJson.retCode === '0') {
-                    navigation.replace('BottomTabNavigator');
+                    navigation.replace('MainBottomNavigator');
                 } else {
                   navigation.replace('Auth');
                 }

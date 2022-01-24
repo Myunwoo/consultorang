@@ -24,7 +24,7 @@ export default RegisterInput;
 const styles=StyleSheet.create({
     inputWrapper:{
         flex:100,
-        height:32,
+        height:36,
         backgroundColor:'white',
         borderRadius:15,
         justifyContent:'center',

@@ -10,13 +10,13 @@ import {createStackNavigator} from '@react-navigation/stack';
 //import Screens
 import SplashScreen from './src/screens/SplashScreen';
 import LoginScreen from './src/screens/LoginScreen';
-import RegisterScreen from './src/screens/RegisterScreen';
 import EmailFindScreen from './src/screens/EmailFindScreen';
 import PasswordFindScreen from './src/screens/PasswordFindScreen';
 import KindSelectPage from './src/screens/KindSelectPage';
 import TermsShowPage from './src/screens/TermsShowPage';
 
 import MainBottomNavigator from './src/MainBottomNavigator';
+import RegisterNavigator from './src/RegisterNavigator';
 
 const Stack = createStackNavigator();
 
@@ -33,9 +33,8 @@ const Auth = ({route,navigation}) => {
         options={{headerShown:false}}
         initialParams={{email:initialEmail}}
       />
-      <Stack.Screen name="RegisterScreen" component={RegisterScreen}
+      <Stack.Screen name="RegisterNavigator" component={RegisterNavigator}
         options={{
-          title:'회원가입',
           headerShown:false,
         }}
       />

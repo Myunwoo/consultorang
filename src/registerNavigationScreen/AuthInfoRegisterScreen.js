@@ -1,24 +1,83 @@
 import React, {useState, useRef} from 'react';
 import {
-  StyleSheet,
-  View,
-  Text,
-  Pressable,
-  ScrollView,
-} from 'react-native';
-
+    StyleSheet,
+    View,
+    Text,
+    Pressable,
+    ScrollView,
+  } from 'react-native';
+  
 import { theme } from '../variables/color';
 import {CODE_LIST} from '../variables/codelist';
 import {statusBarHeight} from '../variables/scales';
 import {serviceTerm, userInfoTerm, infoAgreeTerm} from '../variables/termsOfUse';
 import { fetchServer } from '../abstract/asyncTasks';
 import { isEmailRight, isPasswordRight } from '../abstract/commonTasks';
-
+  
 //import components
 import CodeImageCard from '../components/CodeImageCard';
 import RegisterInput from '../components/RegisterInput';
 
-const RegisterScreen = (({navigation}) => {
+const handleCheckEmailButton = () => {
+    console.log('handleCheckEmailButton');
+    fetchServer('POST','/login/checkEmail',{email:userEmail})
+        .then((responseJson) => console.log(responseJson))
+        .catch(error => console.log(error));
+};
+
+const handleSubmitButton = () => {
+    // setErrorText('');
+    // setLoading(true);
+    // if(!isEmailRight(userEmail)){
+    //     alert('email error');
+    //     return;
+    // }
+    // if(!isPasswordRight(userPassword)){
+    //     alert('password error');
+    //     return;
+    // }
+    // setLoading(true);
+    // const dataToSend={
+    //     businessName:businessName,
+    //     email:userEmail,
+    //     pw:userPassword,
+    //     phone:userPhoneNumber,
+    //     businessNum:businessNum,
+    //     businessCd:businessCode,
+    //     serviceYn:userAgree
+    // };
+    // console.log('handleSubmitButton');
+    // console.log(dataToSend);
+    // //전송 기능
+    // fetchServer('POST', '/login/signup',dataToSend).then((responseJson) =>{
+    //     setLoading(false);
+    //     console.log('responseJson');
+    //     console.log(responseJson);
+    //     if (responseJson.retCode === '0') {
+    //         setIsRegistraionSuccess(true);
+    //     } else {
+    //         setIsRegistraionSuccess(false);
+    //         setErrorText(responseJson.errMsg);
+    //         alert(errorText);
+    //     }
+    // }).catch((error) => {
+    //     console.log(error);
+    //     setLoading(false);
+    // });
+    console.log('handle submit clicked');
+};
+
+const termTitleClicked = (arg) => {
+    console.log('termTitleClicked');
+    console.log(arg);
+};
+
+const codeComponentClicked = (code) => {
+    setBusinessCode(code);
+    console.log(businessCode);
+};
+
+const AuthInfoRegisterScreen = (({navigation}) => {
     const [businessName, setBusinessName] = useState('');
     const [userEmail, setUserEmail] = useState('');
     const [userPassword, setUserPassword] = useState('');
@@ -33,74 +92,6 @@ const RegisterScreen = (({navigation}) => {
     const [term, setTerm] = useState(serviceTerm);
     const [isRegisterSuccess, setIsRegistraionSuccess] = useState(false);
 
-    const emailInputRef = useRef();
-    const passwordInputRef = useRef();
-    const confirmPasswordInputRef = useRef();
-    const phoneNumInputRef = useRef();
-    const authorInputRef = useRef();
-    const businessNumInputRef = useRef();
-
-    let imageCardKey=0;
-
-    const handleCheckEmailButton = () => {
-        console.log('handleCheckEmailButton');
-        fetchServer('POST','/login/checkEmail',{email:userEmail})
-            .then((responseJson) => console.log(responseJson))
-            .catch(error => console.log(error));
-    };
-    
-    const handleSubmitButton = () => {
-        setErrorText('');
-        setLoading(true);
-        if(!isEmailRight(userEmail)){
-            alert('email error');
-            return;
-        }
-        if(!isPasswordRight(userPassword)){
-            alert('password error');
-            return;
-        }
-        setLoading(true);
-        const dataToSend={
-            businessName:businessName,
-            email:userEmail,
-            pw:userPassword,
-            phone:userPhoneNumber,
-            businessNum:businessNum,
-            businessCd:businessCode,
-            serviceYn:userAgree
-        };
-        console.log('handleSubmitButton');
-        console.log(dataToSend);
-        //전송 기능
-        fetchServer('POST', '/login/signup',dataToSend).then((responseJson) =>{
-            setLoading(false);
-            console.log('responseJson');
-            console.log(responseJson);
-            if (responseJson.retCode === '0') {
-                setIsRegistraionSuccess(true);
-            } else {
-                setIsRegistraionSuccess(false);
-                setErrorText(responseJson.errMsg);
-                alert(errorText);
-            }
-        }).catch((error) => {
-            console.log(error);
-            setLoading(false);
-        });
-    };
-
-    const termTitleClicked = (arg) => {
-        console.log('termTitleClicked');
-        console.log(arg);
-    };
-
-    const codeComponentClicked = (code) => {
-        setBusinessCode(code);
-        console.log(businessCode);
-    };
-
-    //input컴포넌트들 컴포넌트화해서 컴포넌트 폴더로 옮길 것.
     return (
         <View style={styles.mainbody}>
             <View style={styles.headerSection}>
@@ -133,16 +124,12 @@ const RegisterScreen = (({navigation}) => {
                 </View>
                 <View style={styles.inputCompOuterWrapper}>
                     <RegisterInput source={{setter:setBusinessNum, placeHolder:'사업자 번호 입력'}}></RegisterInput>
+                    <Pressable style={styles.inputCompButton}>
+                        <Text numberOfLines={1} adjustsFontSizeToFit>사업자 번호 확인</Text>
+                    </Pressable>
                 </View>
                 
-                <View style={styles.kindWrapper}>
-                    <Text style={styles.txtKind}>■ 업종 선택</Text>
-                </View>
-                <View style={styles.kindImageCardWrapper}>
-                    <ScrollView style={styles.kindScrollView} horizontal={true}>
-                        {CODE_LIST.map((code) => <CodeImageCard key={imageCardKey++} source={Object.assign(code,{setter:codeComponentClicked})}></CodeImageCard>)}
-                    </ScrollView>
-                </View>
+                
                 <View style={styles.termTitleOuterWrapper}>
                     <View style={styles.termTitleInnerWrapper} key={0} onPress={termTitleClicked}>
                         <Text style={styles.termTitle}>{serviceTerm.title}</Text>
@@ -175,7 +162,7 @@ const RegisterScreen = (({navigation}) => {
     );
 });
 
-export default RegisterScreen;
+export default AuthInfoRegisterScreen;
 
 const styles = StyleSheet.create({
     mainbody:{
@@ -184,7 +171,7 @@ const styles = StyleSheet.create({
         alignItems:'center',
     },
     inputCompOuterWrapper:{
-        marginTop:24,
+        marginVertical:8,
         width:'90%',
         flexDirection:'row',
         alignItems:'center',
@@ -217,6 +204,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius:20,
         borderTopRightRadius:20,
         alignItems:'center',
+        paddingTop:8,
     },
     emailInfoWrapper:{
         width:'88%',

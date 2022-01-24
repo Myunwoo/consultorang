@@ -1,10 +1,15 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AccountBookScreen = (({navigation}) => {
     const press=()=>{
         //실제 로그아웃 기능에선 토큰, 자동로그인여부, 아이디 저장여부, 아이디 및 비번을 말소시켜야 동작이 올바를 듯.
         navigation.replace('Auth');
+        AsyncStorage.removeItem('autoLogin');
+        AsyncStorage.removeItem('emailSave');
+        AsyncStorage.removeItem('userEmail');
+        AsyncStorage.removeItem('userPassowrd');
     };
 
     return (
