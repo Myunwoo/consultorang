@@ -4,11 +4,11 @@ import {
     View,
     Text,
     Pressable,
+    Image,
     ScrollView,
   } from 'react-native';
   
 import { theme } from '../variables/color';
-import {CODE_LIST} from '../variables/codelist';
 import {statusBarHeight} from '../variables/scales';
 import {serviceTerm, userInfoTerm, infoAgreeTerm} from '../variables/termsOfUse';
 import { fetchServer } from '../abstract/asyncTasks';
@@ -17,55 +17,6 @@ import { isEmailRight, isPasswordRight } from '../abstract/commonTasks';
 //import components
 import CodeImageCard from '../components/CodeImageCard';
 import RegisterInput from '../components/RegisterInput';
-
-const handleCheckEmailButton = () => {
-    console.log('handleCheckEmailButton');
-    fetchServer('POST','/login/checkEmail',{email:userEmail})
-        .then((responseJson) => console.log(responseJson))
-        .catch(error => console.log(error));
-};
-
-const handleSubmitButton = () => {
-    // setErrorText('');
-    // setLoading(true);
-    // if(!isEmailRight(userEmail)){
-    //     alert('email error');
-    //     return;
-    // }
-    // if(!isPasswordRight(userPassword)){
-    //     alert('password error');
-    //     return;
-    // }
-    // setLoading(true);
-    // const dataToSend={
-    //     businessName:businessName,
-    //     email:userEmail,
-    //     pw:userPassword,
-    //     phone:userPhoneNumber,
-    //     businessNum:businessNum,
-    //     businessCd:businessCode,
-    //     serviceYn:userAgree
-    // };
-    // console.log('handleSubmitButton');
-    // console.log(dataToSend);
-    // //전송 기능
-    // fetchServer('POST', '/login/signup',dataToSend).then((responseJson) =>{
-    //     setLoading(false);
-    //     console.log('responseJson');
-    //     console.log(responseJson);
-    //     if (responseJson.retCode === '0') {
-    //         setIsRegistraionSuccess(true);
-    //     } else {
-    //         setIsRegistraionSuccess(false);
-    //         setErrorText(responseJson.errMsg);
-    //         alert(errorText);
-    //     }
-    // }).catch((error) => {
-    //     console.log(error);
-    //     setLoading(false);
-    // });
-    console.log('handle submit clicked');
-};
 
 const termTitleClicked = (arg) => {
     console.log('termTitleClicked');
@@ -91,6 +42,24 @@ const AuthInfoRegisterScreen = (({navigation}) => {
     const [loading, setLoading] = useState(false);
     const [term, setTerm] = useState(serviceTerm);
     const [isRegisterSuccess, setIsRegistraionSuccess] = useState(false);
+
+    const handleCheckEmailButton = () => {
+        console.log('handleCheckEmailButton');
+        console.log(userEmail);
+        if(isEmailRight(userEmail)){
+            alert('올바른 이메일을 입력해주세요');
+            return;
+        }
+        fetchServer('POST','/login/checkEmail',{email:userEmail})
+            .then((responseJson) => console.log(responseJson))
+            .catch(error => console.log(error));
+        //받은 결과에 대한 처리 분기를 제작해야함.
+    };
+
+    const handleGoNext=(arg)=>{
+        //상위 네비게이터로 데이터를 올리는 동작이 필요함 세터를 불러와서 네비게이터의 데이터를 세팅해줘야 되지 않을까 보임
+        navigation.navigate('FoodInfoRegisterScreen');
+    }
 
     return (
         <View style={styles.mainbody}>
@@ -128,8 +97,6 @@ const AuthInfoRegisterScreen = (({navigation}) => {
                         <Text numberOfLines={1} adjustsFontSizeToFit>사업자 번호 확인</Text>
                     </Pressable>
                 </View>
-                
-                
                 <View style={styles.termTitleOuterWrapper}>
                     <View style={styles.termTitleInnerWrapper} key={0} onPress={termTitleClicked}>
                         <Text style={styles.termTitle}>{serviceTerm.title}</Text>
@@ -143,19 +110,59 @@ const AuthInfoRegisterScreen = (({navigation}) => {
                         <Text style={styles.termTitle}>{infoAgreeTerm.title}</Text>
                     </View>
                 </View>
-                <ScrollView style={styles.termContentScrollView}>
-
-                </ScrollView>
+                <View style={styles.termContentWrapper}>
+                    <ScrollView style={styles.termContentScrollView}
+                        invertStickyHeaders={true}
+                        stickyHeaderIndices={[1]}>
+                            <Text>ffz</Text>
+                            <Text>ffz</Text>
+                            <Text>ffz</Text>
+                            <Text>ffz</Text>
+                            <Text>ffz</Text>
+                            <Text>ffz</Text>
+                            <Text>ffz</Text>
+                            <Text>ffz</Text>
+                            <Text>ffz</Text>
+                            <Text>ffz</Text>
+                            <Text>ffz</Text>
+                            <Text>ffz</Text>
+                            <Text>ffz</Text>
+                            <Text>ffz</Text>
+                            <Text>ffz</Text>
+                            <Text>ffz</Text>
+                            <Text>ffz</Text>
+                            <Text>ffz</Text>
+                            <Text>ffz</Text>
+                            <Text>ffz</Text>
+                            <Text>ffz</Text>
+                    </ScrollView>
+                    <View style={styles.termContentShowWrapper}>
+                        <Text style={styles.txtTermContentShow}>약관 전체보기 {'>'} </Text>
+                    </View>
+                </View>
                 <Pressable style={styles.termAgreeSection}>
                     <View style={styles.btnTermAgree}></View><Text style={styles.txtTermAgree}>서비스 이용약관, 개인정보 취급방침, 개인정보제공에 모두 동의합니다</Text>
                 </Pressable>
-                <View style={styles.registerBtnSection}>
-                    <Pressable style={styles.btnRegister} onPress={handleSubmitButton}>
-                        <Text>회원가입</Text>
-                    </Pressable>
-                    <Pressable style={styles.btnCancel} onPress={navigation.goBack}>
-                        <Text>취소</Text>
-                    </Pressable>
+                <View style={styles.goNextOutterWrapper}>
+                    <View style={styles.torangColumn}>
+                    <Image
+                        style={styles.imgTorang}
+                        source={require('../../image/torang1.png')}
+                        resizemode='contain'
+                    />
+                    </View>
+                    <View style={styles.goNextColumn}>
+                        <View style={styles.torangWordOutterWrapper}>
+                            <View style={styles.torangWordInnerWrapper}>
+                                <Text style={styles.txtTorangWord}>안녕하세요! 저 '토랑이'에게 사장님의 가게에 대해 알려주세요!</Text>
+                            </View>
+                        </View>
+                        <View style={styles.goNextWrapper}>
+                            <Pressable style={styles.btnGoNext} onPress={handleGoNext}>
+                                <Text style={styles.txtGoNext}>Go {'>'}</Text>
+                            </Pressable>
+                        </View>
+                    </View>
                 </View>
             </View>
         </View>
@@ -169,6 +176,7 @@ const styles = StyleSheet.create({
         backgroundColor:theme.registerBackground1,
         flex:1,
         alignItems:'center',
+        marginBottom:20,
     },
     inputCompOuterWrapper:{
         marginVertical:8,
@@ -228,6 +236,7 @@ const styles = StyleSheet.create({
     termTitleOuterWrapper:{
         width:'90%',
         height:30,
+        marginTop:8,
         flexDirection:'row',
     },
     termTitleInnerWrapper:{
@@ -244,16 +253,25 @@ const styles = StyleSheet.create({
         height:'100%',
         width:4,
     },
+    termContentWrapper:{
+        width:'90%',
+        flex:1,
+    },
     termContentScrollView:{
         backgroundColor:'white',
         marginTop:4,
-        width:'90%',
+        width:'100%',
+    },
+    termContentShowWrapper:{
+        marginTop:4,
+        alignSelf:'flex-end',
+        fontSize:14,
     },
     termAgreeSection:{
         justifyContent:'center',
         alignItems:'center',
         flexDirection:'row',
-        marginTop:12,
+        marginTop:6,
     },
     btnTermAgree:{
         width: 15,
@@ -262,28 +280,63 @@ const styles = StyleSheet.create({
     },
     txtTermAgree:{
         fontSize:12,
+        marginLeft:8,
     },  
-    registerBtnSection:{
+    goNextOutterWrapper:{
         width:'90%',
-        justifyContent:'space-around',
+        height:160,
+        marginTop:12,
         flexDirection:'row',
-        marginTop:15,
-        marginBottom:20,
     },
-    btnRegister:{
-        width:100,
-        height:28,
-        backgroundColor:theme.btnBackground2,
-        borderRadius:20,
+    torangColumn:{
         justifyContent:'center',
         alignItems:'center',
     },
-    btnCancel:{
-        width:100,
-        height:28,
-        backgroundColor:theme.backgroundGrey,
-        borderRadius:20,
+    imgTorang:{
+        width:140,
+        height:170,
+    },
+    goNextColumn:{
+        flex:1,
+        marginLeft:4,
         justifyContent:'center',
         alignItems:'center',
     },
+    torangWordOutterWrapper:{
+        width:'100%',
+        flex:65,
+        justifyContent:'center',
+        alignItems:'center',
+    },
+    torangWordInnerWrapper:{
+        width:'100%',
+        height:80,
+        justifyContent:'center',
+        alignItems:'center',
+        backgroundColor:'white',
+        borderRadius:8,
+    },
+    txtTorangWord:{
+
+    },
+    goNextWrapper:{
+        width:'100%',
+        flex:35,
+    },
+    btnGoNext:{
+        width:80,
+        height:55,
+        backgroundColor:theme.torangYellow,
+        justifyContent:'center',
+        alignItems:'center',
+        alignSelf:'flex-end',
+        marginTop:2,
+        marginRight:12,
+        borderRadius:24,
+    },
+    txtGoNext:{
+        color:theme.torangBrown,
+        fontWeight:'bold',
+        fontSize:20,
+    }
 });

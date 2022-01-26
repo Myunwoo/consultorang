@@ -16,9 +16,9 @@ const CodeImageCard = (arg) => {
             <Pressable style={styles.pressable} onPress={onClicked}>
                 <Image
                     style={styles.img}
-                    source={require('../../image/reacticon.png')}
+                    source={require('../../image/torang1.png')}
                     resizemode='contain'
-                    />
+                />
                 <Text numberOfLines={1} adjustsFontSizeToFit style={styles.title}>{name}</Text>
             </Pressable>
         </View>

@@ -13,4 +13,7 @@ export const theme = {
     textGreen:'#68D15A',
 
     registerBackground1:'#70BCC3',
+
+    torangYellow:'#FBCC37',
+    torangBrown:'#595750',
 };
