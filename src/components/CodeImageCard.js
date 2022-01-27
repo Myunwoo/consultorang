@@ -1,10 +1,7 @@
 import {StyleSheet, Image, Text, View, Pressable} from 'react-native';
 
 const CodeImageCard = (arg) => {
-    const image=arg.source.image;
-    const name=arg.source.name;
-    const type=arg.source.type;
-    const setter=arg.source.setter;
+    const {image, name, type, setter, diameter}=arg.source;
     
     const onClicked = () => {
         console.log(name);
@@ -12,7 +9,9 @@ const CodeImageCard = (arg) => {
     }
 
     return(
-        <View style={styles.mainBody} onPress={onClicked}>
+        <View style={
+            {width:diameter, height:diameter, backgroundColor:'tomato',marginTop:15,
+            borderRadius:50, marginHorizontal:5,}} onPress={onClicked}>
             <Pressable style={styles.pressable} onPress={onClicked}>
                 <Image
                     style={styles.img}
@@ -28,14 +27,6 @@ const CodeImageCard = (arg) => {
 export default CodeImageCard;
 
 const styles=StyleSheet.create({
-    mainBody:{
-        width:100,
-        height:100,
-        marginTop:15,
-        backgroundColor:'white',
-        borderRadius:50,
-        marginHorizontal:5,
-    },
     pressable:{
         width:'100%',
         height:'100%',

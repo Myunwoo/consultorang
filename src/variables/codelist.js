@@ -1,21 +1,13 @@
-export const CODE_LIST=[
+export const CODE_LIST_ROW1 =[
     {image:'../../image/reacticon.png', name:'한식', type:'BT001'},
-    {image:'../../image/reacticon.png', name:'패스트푸드', type:'BT002'},
+    {image:'../../image/reacticon.png', name:'일식', type:'BT005'},
     {image:'../../image/reacticon.png', name:'중식', type:'BT003'},
     {image:'../../image/reacticon.png', name:'양식', type:'BT004'},
-    {image:'../../image/reacticon.png', name:'일식', type:'BT005'},
-    {image:'../../image/reacticon.png', name:'햄버거', type:'BT006'},
-    {image:'../../image/reacticon.png', name:'피자냠냠', type:'BT007'},
-    {image:'../../image/reacticon.png', name:'헤헤', type:'BT008'},
-    {image:'../../image/reacticon.png', name:'헤헤', type:'BT009'},
-    {image:'../../image/reacticon.png', name:'헤헤', type:'BT010'},
-    {image:'../../image/reacticon.png', name:'헤헤', type:'BT011'},
-    {image:'../../image/reacticon.png', name:'헤헤', type:'BT012'},
-    {image:'../../image/reacticon.png', name:'헤헤', type:'BT013'},
-    {image:'../../image/reacticon.png', name:'헤헤', type:'BT014'},
-    {image:'../../image/reacticon.png', name:'헤헤', type:'BT015'},
-    {image:'../../image/reacticon.png', name:'헤헤', type:'BT016'},
-    {image:'../../image/reacticon.png', name:'헤헤', type:'BT017'},
-    {image:'../../image/reacticon.png', name:'헤헤', type:'BT018'},
-    {image:'../../image/reacticon.png', name:'헤헤', type:'BT019'},
+];
+
+export const CODE_LIST_ROW2 =[
+    {image:'../../image/reacticon.png', name:'에스닉', type:'BT001'},
+    {image:'../../image/reacticon.png', name:'주점', type:'BT005'},
+    {image:'../../image/reacticon.png', name:'카페', type:'BT003'},
+    {image:'../../image/reacticon.png', name:'디저트', type:'BT004'},
 ];

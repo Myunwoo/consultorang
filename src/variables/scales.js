@@ -9,4 +9,4 @@ if(sh===0){
 export const statusBarHeight = sh;
 
 //화면 너비
-export const { width:SCREEN_WIDTH } =Dimensions.get("window");
+export const { width:SCREEN_WIDTH } = Dimensions.get("window");
