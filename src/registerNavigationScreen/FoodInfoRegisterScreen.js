@@ -3,15 +3,19 @@ import { StyleSheet, Text, View, ScrollView } from 'react-native';
 
 import { theme } from '../variables/color';
 import {statusBarHeight} from '../variables/scales';
-import { CODE_LIST_ROW1, CODE_LIST_ROW2 } from '../variables/codelist';
+import { CODE_LIST_ROW1, CODE_LIST_ROW2, ING_LIST_ROW1, ING_LIST_ROW2, HOW_LIST, ALCOHOL_LIST } from '../variables/codelist';
 import { SCREEN_WIDTH } from '../variables/scales';
 
-import CodeImageCard from '../components/CodeImageCard';
+import TypeImageCard from '../components/TypeImageCard';
+import IngredientImageCard from '../components/IngredientImageCard';
+import QuestionHeader from '../components/QuestionHeader';
+import MultiSelectButtons from '../components/MultiSelectButtons';
 
 const FoodInfoRegisterScreen = (({navigation}) => {
-    const codeComponentClicked = () => {
+    const typeComponentClicked = () => {
         console.log('codeComponentClicked');
     }
+    const typeDiameter=SCREEN_WIDTH*0.8*0.25;
     let i=0;
 
     return (
@@ -22,16 +26,61 @@ const FoodInfoRegisterScreen = (({navigation}) => {
             <View style={styles.inputSection}>
                 <ScrollView style={styles.scrollbody}>
                     <View style={styles.foodStyleSection}>
-                        <View style={styles.foodStyleHeaderWrapper}>
-                            <View style={styles.foodStyleHeaderSquare}></View><Text>어떤 스타일의 음식을 판매하시나요?</Text>
+                        <QuestionHeader text={'어떤 스타일의 음식을 판매하시나요?'}></QuestionHeader>
+                        <View style={styles.foodStyleCircleRow}>
+                            {CODE_LIST_ROW1.map((code) => <TypeImageCard key={i++} source={Object.assign(code,{setter:typeComponentClicked, diameter: typeDiameter})}></TypeImageCard>)}
                         </View>
                         <View style={styles.foodStyleCircleRow}>
-                            {CODE_LIST_ROW1.map((code) => <CodeImageCard key={i++} source={Object.assign(code,{setter:codeComponentClicked, diameter: (SCREEN_WIDTH*0.8*0.25)})}></CodeImageCard>)}
+                            {CODE_LIST_ROW2.map((code) => <TypeImageCard key={i++} source={Object.assign(code,{setter:typeComponentClicked, diameter: typeDiameter})}></TypeImageCard>)}
                         </View>
-                        <View style={styles.foodStyleCircleRow}>
-                            {CODE_LIST_ROW2.map((code) => <CodeImageCard key={i++} source={Object.assign(code,{setter:codeComponentClicked, diameter: (SCREEN_WIDTH*0.8*0.25)})}></CodeImageCard>)}
+                    </View>
+                    <View style={styles.ingSection}>
+                        <QuestionHeader text={'주로 어떤 재료를 사용하시나요?(복수선택 가능)'}></QuestionHeader>
+                        <View style={styles.ingSelectRow}>
+                            {ING_LIST_ROW1.map((ing) => <IngredientImageCard key={i++} source={Object.assign(ing,{diameter: typeDiameter, width:SCREEN_WIDTH*0.9*0.45})}></IngredientImageCard>)}
                         </View>
-                        
+                        <View style={styles.ingSelectRow}>
+                            {ING_LIST_ROW2.map((ing) => <IngredientImageCard key={i++} source={Object.assign(ing,{diameter: typeDiameter, width:SCREEN_WIDTH*0.9*0.45})}></IngredientImageCard>)}
+                        </View>
+                    </View>
+                    <View style={styles.howcookSection}>
+                        <QuestionHeader text={'주로 어떻게 요리하시나요?(복수선택 가능)'}></QuestionHeader>
+                        <MultiSelectButtons source={{list:HOW_LIST}}/>
+                        <View style={styles.howcookInfoSection}>
+                            <View style={styles.howcookRow}>
+                                <Text style={styles.howcookTitle}>※ 일반조리</Text>
+                                <View>
+                                    <Text style={styles.howcookText}>: 특별한 설비나 방식이 필요하지 않은,</Text>
+                                    <Text style={styles.howcookHText}>가정집과 비슷한 조리 방식</Text>
+                                </View>
+                            </View>
+                            <View style={styles.howcookRow}>
+                                <Text style={styles.howcookTitle}>※ 비가열</Text>
+                                <View>
+                                    <Text style={styles.howcookText}>: 회, 샌드위치 등과 같이 가열없이</Text>
+                                    <Text style={styles.howcookHText}>도마에서 끝낼 수 있는 조리방식</Text>
+                                </View>
+                            </View>
+                        </View>
+                    </View>
+                    <View style={styles.alcholSection}>
+                        <QuestionHeader text={'주류를 판매하시나요?(복수선택 가능)'}></QuestionHeader>
+                        <MultiSelectButtons source={{list:ALCOHOL_LIST}}/>
+                    </View>
+                    <View style={styles.halfcookSection}>
+                        <QuestionHeader text={'식재료 중, 반조리 식품의 비율은 어느정도 인가요?'}></QuestionHeader>
+                        <View><Text>스크롤을 이용한 이벤트 필요</Text></View>
+                    </View>
+                    <View style={styles.employeeSection}>
+                        <QuestionHeader text={'직원 수는 몇 명 인가요?'}></QuestionHeader>
+                        <View><Text>스크롤을 이용한 이벤트 필요</Text></View>
+                    </View>
+                    <View style={styles.timeSection}>
+                        <QuestionHeader text={'영업 시간을 알려주세요.'}></QuestionHeader>
+                        <View><Text>스크롤을 이용한 이벤트 필요</Text></View>
+                    </View>
+                    <View style={styles.goNextOutterWrapper}>
+
                     </View>
                 </ScrollView>
             </View>
@@ -40,15 +89,6 @@ const FoodInfoRegisterScreen = (({navigation}) => {
 });
 
 export default FoodInfoRegisterScreen;
-
-{/* <Text>FoodInfoRegisterScreen</Text>
-            <View style={styles.kindWrapper}>
-                <Text style={styles.txtKind}>■ 업종 선택</Text>
-            </View>
-            <View style={styles.kindImageCardWrapper}>
-                <ScrollView style={styles.kindScrollView} horizontal={true}>
-                </ScrollView>
-            </View> */}
 
 const styles = StyleSheet.create({
     mainbody:{
@@ -85,18 +125,38 @@ const styles = StyleSheet.create({
     foodStyleSection:{
         
     },
-    foodStyleHeaderWrapper:{
-        flexDirection:'row',
-        alignItems:'center',
-    },
-    foodStyleHeaderSquare:{
-        width:10,
-        height:10,
-        backgroundColor:'black',
-        marginRight:8,
-    },
     foodStyleCircleRow:{
         flexDirection:'row',
-        backgroundColor:'teal',
+        justifyContent:'center',
+        alignItems:'center',
     },
+    ingSelectRow:{
+        flexDirection:'row',
+        width:'100%',
+    },
+    howcookInfoSection:{
+        marginTop:5,
+        paddingHorizontal:15,
+        paddingVertical:10,
+        width:'100%',
+        height:120,
+        backgroundColor:theme.howcookBackgoundGrey,
+        borderRadius:30,
+      
+    },
+    howcookRow:{
+        flexDirection:'row',
+        flexWrap:'wrap',
+        flex:1,
+        alignItems:'center',
+    },
+    howcookTitle:{
+        marginRight:5,
+        color:theme.checkedBlue,
+        fontWeight:'bold',
+        alignSelf:'flex-start'
+    },
+    howcookHText:{
+        fontWeight:'700',
+    }
 });

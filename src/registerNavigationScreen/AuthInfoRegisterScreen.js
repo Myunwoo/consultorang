@@ -15,7 +15,6 @@ import { fetchServer } from '../abstract/asyncTasks';
 import { isEmailRight, isPasswordRight } from '../abstract/commonTasks';
   
 //import components
-import CodeImageCard from '../components/CodeImageCard';
 import RegisterInput from '../components/RegisterInput';
 
 const termTitleClicked = (arg) => {

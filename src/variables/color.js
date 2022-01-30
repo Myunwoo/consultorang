@@ -1,4 +1,5 @@
 export const theme = {
+    //LoginScreen
     loginBlue:"#0071BB",
     loginCyan:'#D5E8F2',
 
@@ -16,4 +17,9 @@ export const theme = {
 
     torangYellow:'#FBCC37',
     torangBrown:'#595750',
+
+    //FoodInfoRegisterScreen
+    checkedBlue:'#153C6B',
+    uncheckedGrey:'#606060',
+    howcookBackgoundGrey:'#E5E5E5',
 };
