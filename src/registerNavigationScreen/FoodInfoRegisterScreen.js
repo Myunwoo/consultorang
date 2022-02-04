@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import React, {useState} from 'react';
+import { StyleSheet, Text, View, ScrollView, Image, Pressable } from 'react-native';
 
 import { theme } from '../variables/color';
 import {statusBarHeight} from '../variables/scales';
@@ -11,12 +11,27 @@ import IngredientImageCard from '../components/IngredientImageCard';
 import QuestionHeader from '../components/QuestionHeader';
 import MultiSelectButtons from '../components/MultiSelectButtons';
 
-const FoodInfoRegisterScreen = (({navigation}) => {
+const FoodInfoRegisterScreen = ({route,navigation}) => {
+    const [businessType,setBusinessType]=useState('ST001');
+    const [businessIngre, setBusinessIngre]=useState('IG001,IG002');
+    const [businessCookway, setBusinessCookway]=useState('HC004');
+    const [businessAlcohol, setBusinessAlcohol]=useState('AL002');
+    const [businessAlready, setBusinessAlready]=useState('80');
+    const [businessStaff, setBusinessStaff]=useState(10);
+    const [businessHours, setBusinessHours]=useState('09:00~10:00');
+    
     const typeComponentClicked = () => {
         console.log('codeComponentClicked');
     }
     const typeDiameter=SCREEN_WIDTH*0.8*0.25;
     let i=0;
+
+    const {setFoodInfo:setter} =route.params;
+
+    const handleGoNext = () => {
+        //setter(businessType, businessIngre, businessCookway, businessAlcohol, businessAlready, businessStaff, businessHours);
+        navigation.navigate('ExcelSendScreen');
+    }
 
     return (
         <View style={styles.mainbody}>
@@ -80,13 +95,26 @@ const FoodInfoRegisterScreen = (({navigation}) => {
                         <View><Text>스크롤을 이용한 이벤트 필요</Text></View>
                     </View>
                     <View style={styles.goNextOutterWrapper}>
-
+                        <Image
+                            style={styles.imgTorang}
+                            source={require('../../image/torang2.png')}
+                            resizeMode='contain'
+                        />
+                        {/* <View style={styles.goNextTextSection}>
+                            <Text>거의 다 왔습니다!</Text>
+                            <Text>포스기기의 엑셀파일 혹은 메뉴판을 업로드 해 주세요!</Text>
+                        </View> */}
+                    </View>
+                    <View style={styles.btnUnploadWrapper}>
+                        <Pressable style={styles.btnUnpload} onPress={handleGoNext}>
+                            <Text style={styles.txtUpload}>Upload {'>'}</Text>
+                        </Pressable>  
                     </View>
                 </ScrollView>
             </View>
         </View>
     );
-});
+};
 
 export default FoodInfoRegisterScreen;
 
@@ -158,5 +186,34 @@ const styles = StyleSheet.create({
     },
     howcookHText:{
         fontWeight:'700',
+    },
+    goNextOutterWrapper:{
+        width:'100%',
+        backgroundColor:'teal',
+        height:400,
+        backgroundColor:'tomato'
+    },
+    imgTorang:{
+        width:'100%',
+        
+    },
+    goNextTextSection:{
+        zIndex:9999,
+    },
+    btnUnploadWrapper:{
+        width:100,
+        height:50,
+        borderRadius:15,
+        backgroundColor:'teal',
+        alignSelf:'center',
+    },
+    btnUnpload:{
+        width:'100%',
+        height:'100%',
+        justifyContent:'center',
+        alignItems:'center',
+    },
+    txtUpload:{
+        
     }
 });

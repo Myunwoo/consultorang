@@ -27,7 +27,7 @@ const codeComponentClicked = (code) => {
     console.log(businessCode);
 };
 
-const AuthInfoRegisterScreen = (({navigation}) => {
+const AuthInfoRegisterScreen = ({route,navigation}) => {
     const [businessName, setBusinessName] = useState('');
     const [userEmail, setUserEmail] = useState('');
     const [userPassword, setUserPassword] = useState('');
@@ -35,12 +35,14 @@ const AuthInfoRegisterScreen = (({navigation}) => {
     const [userPhoneNumber, setUserPhoneNumber] = useState('');
     const [authorNum, setAuthorNum] = useState('');
     const [businessNum, setBusinessNum] = useState('');
-    const [businessCode, setBusinessCode] = useState('1');
     const [userAgree, setUserAgree] = useState(false);
+
     const [errortext, setErrorText] = useState('');
     const [loading, setLoading] = useState(false);
     const [term, setTerm] = useState(serviceTerm);
     const [isRegisterSuccess, setIsRegistraionSuccess] = useState(false);
+
+    const {setAuthInfo:setter} =route.params;
 
     const handleCheckEmailButton = () => {
         console.log('handleCheckEmailButton');
@@ -56,7 +58,7 @@ const AuthInfoRegisterScreen = (({navigation}) => {
     };
 
     const handleGoNext=(arg)=>{
-        //상위 네비게이터로 데이터를 올리는 동작이 필요함 세터를 불러와서 네비게이터의 데이터를 세팅해줘야 되지 않을까 보임
+        setter(businessName, userEmail, userPassword, userPhoneNumber, userAgree, businessNum);
         navigation.navigate('FoodInfoRegisterScreen');
     }
 
@@ -147,7 +149,7 @@ const AuthInfoRegisterScreen = (({navigation}) => {
                     <Image
                         style={styles.imgTorang}
                         source={require('../../image/torang1.png')}
-                        resizemode='contain'
+                        resizeMode='contain'
                     />
                     </View>
                     <View style={styles.goNextColumn}>
@@ -166,7 +168,7 @@ const AuthInfoRegisterScreen = (({navigation}) => {
             </View>
         </View>
     );
-});
+};
 
 export default AuthInfoRegisterScreen;
 
