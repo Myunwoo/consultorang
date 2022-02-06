@@ -19,7 +19,7 @@ const ExcelSendScreen = ({navigation}) => {
     })();
   }, []);
 
-  const handleFind = async() => {  
+  const handleFind = async() => {
     try {
       const res = await DocumentPicker.getDocumentAsync({
         //엑셀만 뜨게 타입 지정해 줄 것.
@@ -38,7 +38,7 @@ const ExcelSendScreen = ({navigation}) => {
       uploadFile('POST','/engine/insertExcel',res).then(responseJson=>{
         console.log(responseJson);
       });
-      
+
     } catch (err) {
       //Handling any exception (If any)
       if (DocumentPicker.isCancel(err)) {
