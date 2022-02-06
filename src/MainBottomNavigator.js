@@ -15,7 +15,7 @@ const MainBottomNavigator = (props) => {
             <Tab.Screen name="AccountBookScreen" component={AccountBookScreen} />
             <Tab.Screen name="IncomeStatementScreen" component={IncomeStatementScreen} />
             <Tab.Screen name="MenuCalculatorScreen" component={MenuCalculatorScreen} />
-            <Tab.Screen name="MenuEngineeringScreen" component={MenuEngineeringScreen} />
+            <Tab.Screen name="MenuEngineeringScreen" component={MenuEngineeringScreen} options={{headerShown:false}}/>
         </Tab.Navigator>
     );
 }

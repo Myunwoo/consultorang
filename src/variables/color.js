@@ -3,6 +3,11 @@ export const theme = {
     loginBlue:"#0071BB",
     loginCyan:'#D5E8F2',
 
+    //Gradient colors
+    GRAD1:'#85CBC5',
+    GRAD2:'#48A4C1',
+    GRAD3:'#0887BE',
+
     btnBackground1:'#A4D3E6',
     btnBackground2:'#B9DEEC',
     inputBackground1:'#DDEDF5',
