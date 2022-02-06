@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Button, Image, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Pressable } from 'react-native';
 
 import { uploadFile } from '../abstract/asyncTasks';
 
@@ -8,9 +8,6 @@ import * as DocumentPicker from 'expo-document-picker';
 const ExcelSendScreen = ({navigation}) => {
   const [excel, setExcel] = useState(null);
 
-  // const handleFind = async() => {
-    
-  // }
   useEffect(() => {
     (async () => {
       if (Platform.OS !== 'web') {
@@ -37,15 +34,11 @@ const ExcelSendScreen = ({navigation}) => {
         // type: "vnd.openxmlformats-officedocument.spreadsheetml.sheet" // .xlsx
         // type: "text/csv" // .csv
       });
-      //Printing the log realted to the file
-      // console.log('res : ' + JSON.stringify(res));
-      // console.log('URI : ' + res.uri);
-      // console.log('Type : ' + res.type);
-      // console.log('File Name : ' + res.name);
-      // console.log('File Size : ' + res.size);
-      //Setting the state to show single file attributes
       
-      uploadFile(res);
+      uploadFile('POST','/engine/insertExcel',res).then(responseJson=>{
+        console.log(responseJson);
+      });
+      
     } catch (err) {
       //Handling any exception (If any)
       if (DocumentPicker.isCancel(err)) {
