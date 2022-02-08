@@ -11,7 +11,7 @@ const Tab = createBottomTabNavigator();
 
 const MainBottomNavigator = (props) => {
     return(
-        <Tab.Navigator initialRouteName="AccountBookScreen">
+        <Tab.Navigator initialRouteName="AccountBookScreen" >
             <Tab.Screen name="AccountBookScreen" component={AccountBookScreen} />
             <Tab.Screen name="IncomeStatementScreen" component={IncomeStatementScreen} />
             <Tab.Screen name="MenuCalculatorScreen" component={MenuCalculatorScreen} />
