@@ -9,7 +9,7 @@ import {
   } from 'react-native';
   
 import { theme } from '../variables/color';
-import {statusBarHeight} from '../variables/scales';
+import {statusBarHeight, CONTENT_SECTION_BORDER_RADIUS} from '../variables/scales';
 import {serviceTerm, userInfoTerm, infoAgreeTerm} from '../variables/termsOfUse';
 import { fetchServer } from '../abstract/asyncTasks';
 import { isEmailRight, isPasswordRight } from '../abstract/commonTasks';
@@ -174,7 +174,7 @@ export default AuthInfoRegisterScreen;
 
 const styles = StyleSheet.create({
     mainbody:{
-        backgroundColor:theme.registerBackground1,
+        backgroundColor:theme.registerEmerald,
         flex:1,
         alignItems:'center',
         marginBottom:20,
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
         flex:30,
         height:32,
         backgroundColor:theme.btnBackground2,
-        borderRadius:15,
+        borderRadius:CONTENT_SECTION_BORDER_RADIUS,
         justifyContent:'center',
         alignItems:'center',
     },

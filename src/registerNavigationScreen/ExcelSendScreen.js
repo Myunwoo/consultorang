@@ -1,5 +1,6 @@
 import React, {useState,useEffect} from 'react';
 import { StyleSheet, Text, View, Pressable } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { uploadFile } from '../abstract/asyncTasks';
 
@@ -7,17 +8,6 @@ import * as DocumentPicker from 'expo-document-picker';
 
 const ExcelSendScreen = ({navigation}) => {
   const [excel, setExcel] = useState(null);
-
-  useEffect(() => {
-    (async () => {
-      if (Platform.OS !== 'web') {
-        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== 'granted') {
-          alert('Sorry, we need camera roll permissions to make this work!');
-        }
-      }
-    })();
-  }, []);
 
   const handleFind = async() => {
     try {
@@ -36,7 +26,12 @@ const ExcelSendScreen = ({navigation}) => {
       });
       
       uploadFile('POST','/engine/insertExcel',res).then(responseJson=>{
-        console.log(responseJson);
+        if(responseJson.retCode==='1'){
+          alert(responseJson.errMsg);
+        }else if(responseJson.retCode==='0'){
+          console.log('categories saved');
+          AsyncStorage.setItem('categories', JSON.stringify(responseJson.data.menuList));
+        }        
       });
 
     } catch (err) {

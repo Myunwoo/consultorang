@@ -40,3 +40,14 @@ export const ALCOHOL_LIST = [
     {text:'와인',code:'AL003'},
     {text:'기타',code:'AL004'},
 ]
+
+export const WEATHER_LIST=[
+    {image:require('../../image/weather_cloud.png'), name:'weather_big_cloud'},
+    // {image:require('../../image/weather_cloud_wind.png'), name:'weather_cloud_wind'},
+    // {image:require('../../image/weather_rain.png'), name:'weather_rain'},
+    // {image:require('../../image/weather_small_cloud.png'), name:'weather_small_cloud'},
+    // {image:require('../../image/weather_snow.png'), name:'weather_snow'},
+    // {image:require('../../image/weather_storm.png'), name:'weather_storm'},
+    // {image:require('../../image/weather_sunny.png'), name:'weather_sunny'},
+    // {image:require('../../image/weather_wind.png'), name:'weather_wind'},
+]

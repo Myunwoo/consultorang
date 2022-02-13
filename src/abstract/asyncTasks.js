@@ -40,12 +40,12 @@ export const uploadFile = async (_method, _url, _file) => {
   const type = getMimeType(extArr[1]);
   const fileToUpload = _file;
   const data = new FormData();
-  data.append("userId", 30);
+  data.append("userId", 111);
   data.append("saleYm","202202");
   data.append('multipartFile', {
     uri: fileUri, name: fileName, type 
   });
-  console.log(data);
+
   return fetch(url+_url,{
     method:_method,
     body: (data===null ? null : data),

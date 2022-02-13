@@ -120,7 +120,7 @@ export default FoodInfoRegisterScreen;
 
 const styles = StyleSheet.create({
     mainbody:{
-        backgroundColor:theme.registerBackground1,
+        backgroundColor:theme.registerEmerald,
         flex:1,
         alignItems:'center',
         marginBottom:20,
