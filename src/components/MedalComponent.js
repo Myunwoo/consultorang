@@ -26,7 +26,7 @@ const MedalComponent = (arg) => {
     return (
         <View style={styles.mainbody}>
             <Image
-                resizemode='contain'
+                resizeMode='contain'
                 style={{width:50, height:50,}}
                 source={img}
             >

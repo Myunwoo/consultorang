@@ -8,8 +8,8 @@ if(sh===0){
 }
 export const statusBarHeight = sh;
 
-//화면 너비
-export const { width:SCREEN_WIDTH } = Dimensions.get("window");
+//화면 크기
+export const { width:SCREEN_WIDTH, height:SCREEN_HEIGHT } = Dimensions.get("window");
 
 export const CONTENT_SECTION_BORDER_RADIUS=15;
 

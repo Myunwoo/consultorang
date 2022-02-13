@@ -91,7 +91,6 @@ const RegisterTopNavigator = (props) => {
             <Tab.Screen name="AuthInfoRegisterScreen" component={AuthInfoRegisterScreen}  options={{headerShown:false}} initialParams={{setAuthInfo}}/>
             <Tab.Screen name="FoodInfoRegisterScreen" component={FoodInfoRegisterScreen}  options={{headerShown:false}} initialParams={{setFoodInfo}}/>
             <Tab.Screen name="ExcelSendScreen" component={ExcelSendScreen}  options={{headerShown:false}}/>
-            
         </Tab.Navigator>
     );
 };
