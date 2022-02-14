@@ -27,7 +27,7 @@ const IngredientImageCard = (arg) => {
             <Pressable style={styles.pressable} onPress={clicked}>
             <View style={styles.imgWrapper}>
                 <Image
-                    resizemode='contain'
+                    resizeMode='contain'
                     style={{width:diameter, height:diameter,}}
                     source={image}
                 >

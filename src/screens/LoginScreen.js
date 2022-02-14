@@ -130,7 +130,7 @@ const LoginScreen = (({route,navigation}) => {
                     </View>
                     <View style={styles.loginInputSectionColumn2}>
                         <Pressable style={({pressed}) => [
-                            {backgroundColor:pressed? 'tomato' : theme.btnBackground1},styles.btnLogin]}
+                            {backgroundColor:pressed? 'tomato' : theme.registerBtnCyan},styles.btnLogin]}
                             onPress={handleSubmitPress}>
                             <Text style={styles.txtLogin}>로그인</Text>
                         </Pressable>
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
         width:'90%',
         height:'12%',
         marginTop:40,
-        backgroundColor:theme.btnBackground1,
+        backgroundColor:theme.registerBtnBlue,
         justifyContent:'center',
         alignItems:'center',
         borderRadius:15,
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
         width:'65%',
         height:'40%',
         borderRadius:20,
-        backgroundColor:theme.btnBackground2,
+        backgroundColor:theme.registerBtnCyan,
         justifyContent:'center',
         alignItems:'center',
     },
