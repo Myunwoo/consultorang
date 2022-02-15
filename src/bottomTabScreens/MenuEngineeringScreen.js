@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Pressable, Image } from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 
 import { theme } from '../variables/color';
-import {statusBarHeight,CONTENT_SECTION_BORDER_RADIUS, BASIC_SHADOW, SCREEN_HEIGHT, WEATHER_LIST} from '../variables/scales';
+import {dateObject, statusBarHeight,CONTENT_SECTION_BORDER_RADIUS, BASIC_SHADOW, SCREEN_HEIGHT, WEATHER_LIST} from '../variables/scales';
 import { getItemAsyncStorage, fetchServer } from '../abstract/asyncTasks';
 
 import WeatherComponent from '../components/WeatherComponent';
@@ -14,38 +14,6 @@ import MenuYellowCircle from '../components/MenuYellowCircle';
 import { useEffect } from 'react';
 
 let circleIndex=0;
-
-const initDate = () => {
-    const today=new Date();
-    const month=today.getMonth()+1;
-    const date=today.getDate();
-    const day=today.getDay();
-    let dateString=''
-    switch(day){
-        case 0:
-            dateString='일요일';
-            break;
-        case 1:
-            dateString='월요일';
-            break;
-        case 2:
-            dateString='화요일';
-            break;
-        case 3:
-            dateString='수요일';
-            break;
-        case 4:
-            dateString='목요일';
-            break;
-        case 5:
-            dateString='금요일';
-            break;
-        case 6:
-            dateString='토요일';
-            break;
-    }
-    return {month,date, dateString};
-}
 
 const initCategory = async(cateSetter) => {
     let categories=[]
@@ -74,7 +42,7 @@ const handleSetCategory = (targetId, setter) => {
 }
 
 const MenuEngineeringScreen = ({navigation}) => {
-    const {month, date, dateString}=initDate();
+    const {month, date, dateString}=dateObject();
     const [categories, setCategories] = useState([]);
     const [categoryTxt, setCategoryTxt] = useState('카테고리를 불러오고 있습니다');
     const [cateData, setCateData] = useState({
