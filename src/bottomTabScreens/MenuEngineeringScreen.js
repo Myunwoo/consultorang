@@ -89,7 +89,7 @@ const MenuEngineeringScreen = ({navigation}) => {
                 <View style={styles.selectSection__selectRow}>
                     <Pressable 
                         style={styles.selectSection__pressable}
-                        onPress={() => handleSetCategory(1,setCateData)}
+                        onPress={() => handleSetCategory(2,setCateData)}
                     >
                         <Text style={{width:'90%',textAlign:'center',}}>{categoryTxt}</Text>
                         <Text>^</Text>

@@ -10,7 +10,6 @@ const MenuYellowCircle = (arg) => {
     x=String(x)+'%';
     y=String(100-y)+'%';
     
-
     return (
         <View 
             style={{

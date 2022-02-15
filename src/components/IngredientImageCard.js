@@ -5,6 +5,7 @@ import { theme } from '../variables/color';
 
 const IngredientImageCard = (arg) => {
     const {image, name, code, diameter, width}=arg.source;
+
     const [checked, setChecked]=useState(false);
 
     const clicked = () =>{
@@ -18,7 +19,7 @@ const IngredientImageCard = (arg) => {
         backgroundColor:checked ? 'blue':'white',
         marginVertical:5,
         marginHorizontal:5,
-    }
+    };
 
     const t=()=>{}
 

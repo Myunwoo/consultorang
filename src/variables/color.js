@@ -15,6 +15,9 @@ export const theme = {
     GRAD2:'#48A4C1',
     GRAD3:'#0887BE',
 
+    //AccountBookScreen
+    titleWrapperBlue:'#2995C0',
+
     backgroundGrey:'#CACACA',
 
     placeholderColor:'#ABB4B8',
@@ -22,7 +25,7 @@ export const theme = {
     textGreen:'#68D15A',
 
     
-
+    //torang colors
     torangYellow:'#FBCC37',
     torangBrown:'#595750',
 
