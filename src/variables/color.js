@@ -17,6 +17,8 @@ export const theme = {
 
     //AccountBookScreen
     titleWrapperBlue:'#2995C0',
+    btnIncomeRed:'#DF7162',
+    btnExpenditureBlue:'#3587B9',
 
     backgroundGrey:'#CACACA',
 

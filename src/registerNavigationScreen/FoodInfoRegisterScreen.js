@@ -30,7 +30,7 @@ const FoodInfoRegisterScreen = ({route,navigation}) => {
 
     const handleGoNext = () => {
         //setter(businessType, businessIngre, businessCookway, businessAlcohol, businessAlready, businessStaff, businessHours);
-        navigation.navigate('ExcelSendScreen');
+        navigation.navigate('LoginScreen');
     }
 
     return (
