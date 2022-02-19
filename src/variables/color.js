@@ -39,4 +39,9 @@ export const theme = {
     //MenuEngineeringScreen
     selectRow:'#B1DADE',
     engineeringYellow:'#F3ED86',
+
+    //MenuEngineeringInfoScreen
+    engineeringNavy:'#334265',
+    categoryCyan:'#E4F2F8',
+    engineeringCircleNavy:'#163C6B',
 };

@@ -4,47 +4,48 @@ import {LinearGradient} from 'expo-linear-gradient';
 
 import { theme } from '../variables/color';
 import {
-    dateObject,
     statusBarHeight,
     CONTENT_SECTION_BORDER_RADIUS,
     BASIC_SHADOW,
     SCREEN_HEIGHT, 
-    WEATHER_LIST,
     BOTTOM_TAP_NAVIGATOR_HEIGHT_IOS,
     BOTTOM_TAP_NAVIGATOR_HEIGHT_ANDROID
 } from '../variables/scales';
+import {dateObject} from '../variables/scales';
 
+import commonStyles from '../variables/commonStyles';
 import WeatherComponent from '../components/WeatherComponent';
 
 const AccountBookScreen = (({navigation}) => {
     const {month, date, dateString}=dateObject();
 
     return (
-        <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={styles.mainbody}>
-            <View style={styles.headerSection}>
-                <View style={styles.dateSection}>
-                    <View style={styles.dateWrapper}>
+        <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>
+            <View style={commonStyles.headerSection}>
+                <View style={commonStyles.dateSection}>
+                    <View style={commonStyles.dateWrapper}>
                         <Text style={{fontSize:12,color:'white',}}>Today</Text>
                         <Text style={{fontSize:16,color:'white',}}>{`${month}/${date}`}</Text>
                     </View>
-                    <View style={styles.dayWrapper}>
+                    <View style={commonStyles.dayWrapper}>
                         <Text style={{fontWeight:'bold',fontSize:20,color:theme.engineeringYellow,}}>{dateString}</Text>
                     </View>
                 </View>
-                <View style={styles.weatherImgWrapper}>
+                <View style={commonStyles.weatherImgWrapper}>
                     {/* 날씨 api와의 연동에서 한 번 더 고민 필요 */}
                     <WeatherComponent 
                         source={{size:(SCREEN_HEIGHT*0.06) > 60 ? 60 : (SCREEN_HEIGHT*0.06)}}>    
                     </WeatherComponent>
                 </View>
             </View>
-            <View style={styles.contentSection}>
-                <View style={styles.titleWrapper}>
-                    <Text style={styles.txtTitle}>월간 가계부</Text>
-                </View>
-                <View style={styles.contentWrapper}>
+            <View style={commonStyles.contentSection}>
+                <View style={commonStyles.titleWrapper}>
+                    <Text style={commonStyles.txtTitle}>월간 가계부</Text>
+                </View>       
+                <View style={{width:50, height:50, backgroundColor:theme.titleWrapperBlue, position:'absolute', top:30, left:0, zIndex:1}}></View>
+                <View style={commonStyles.contentWrapper}>
                     <View style={styles.calendarWrapper}>
-                        {/* 혜선's 컴포넌트 넣어볼 위치 */}
+                            
                     </View>
                     <View style={styles.accountTitleWrapper}>
                         <Text style={styles.txtAccountTitle}>이번 달 수입/지출 내역을 손쉽게 입력해보세요!</Text>
@@ -97,85 +98,6 @@ const AccountBookScreen = (({navigation}) => {
 export default AccountBookScreen;
 
 const styles=StyleSheet.create({
-    mainbody:{
-        height:SCREEN_HEIGHT,
-        paddingTop:statusBarHeight,
-        justifyContent:'flex-end',
-    },
-    headerSection:{
-        flexDirection:'row',
-        height:'7%',
-        maxHeight:64,
-        marginHorizontal:'5%',
-        alignItems:'center',
-    },
-    dateSection:{
-        flexDirection:'row',
-        marginRight:8,
-    },
-    dateWrapper:{
-        alignItems:'center',
-        marginRight:8,
-    },
-    dayWrapper:{
-        justifyContent:'center',
-        marginRight:8,
-    },
-    weatherImgWrapper:{
-
-    },
-    contentSection:{
-        flex:1,
-    },
-    titleWrapper:{
-        justifyContent:'flex-start',
-        alignItems:'center',    
-        borderTopLeftRadius:CONTENT_SECTION_BORDER_RADIUS,
-        borderTopRightRadius:CONTENT_SECTION_BORDER_RADIUS,
-        backgroundColor:theme.titleWrapperBlue,
-        width:'30%',
-        maxWidth:120,
-        height:60,
-        ...Platform.select({
-            ios: {
-                paddingTop:2,
-            },
-            android: {
-                paddingTop:1,
-            },
-        })
-    },
-    txtTitle:{
-        color:'white',
-        ...Platform.select({
-            ios: {
-                fontSize:20,
-            },
-            android: {
-                fontSize:18,
-            },
-        })
-    },
-    contentWrapper:{
-        position:'absolute',
-        top:30,
-        left:0,
-        borderTopLeftRadius:CONTENT_SECTION_BORDER_RADIUS,
-        borderTopRightRadius:CONTENT_SECTION_BORDER_RADIUS,
-        width:'100%',
-        height:'100%',
-        backgroundColor:theme.inputBackground2,
-        alignItems:'center',
-        paddingTop:15,
-        // ...Platform.select({
-        //     ios:{
-        //         height:SCREEN_HEIGHT-(SCREEN_HEIGHT*0.07)-BOTTOM_TAP_NAVIGATOR_HEIGHT_IOS-statusBarHeight,
-        //     },
-        //     android:{
-        //         height:SCREEN_HEIGHT-(SCREEN_HEIGHT*0.07)-BOTTOM_TAP_NAVIGATOR_HEIGHT_ANDROID-statusBarHeight,
-        //     }
-        // })
-    },
     calendarWrapper:{
         width:'90%',
         height:64,
@@ -193,7 +115,7 @@ const styles=StyleSheet.create({
     },
     accountWrapper:{
         width:'90%',
-        flex:5,
+        flex:4,
         maxHeight:240,
         flexDirection:'row',
     },
@@ -269,8 +191,10 @@ const styles=StyleSheet.create({
     memoInnerWrapper:{
         justifyContent:'center',
         alignItems:'center',
+        flex:1,
         height:'80%',
         borderRadius:15,
         backgroundColor:'white',
+        marginBottom:20,
     },
 });

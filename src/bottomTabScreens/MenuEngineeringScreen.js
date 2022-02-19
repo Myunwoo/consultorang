@@ -1,4 +1,4 @@
-import React, { useState, useEfffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Pressable, Image } from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 
@@ -11,7 +11,7 @@ import MedalComponent from '../components/MedalComponent';
 import GraphArrowUp from '../components/GraphArrowUp';
 import GraphArrowRight from '../components/GraphArrowRight';
 import MenuYellowCircle from '../components/MenuYellowCircle';
-import { useEffect } from 'react';
+import commonStyles from '../variables/commonStyles';
 
 let circleIndex=0;
 
@@ -67,18 +67,18 @@ const MenuEngineeringScreen = ({navigation}) => {
     },[categories])
 
     return (
-        <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={styles.mainbody}>
-            <View style={styles.headerSection}>
-                <View style={styles.dateSection}>
-                    <View style={styles.dateWrapper}>
+        <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>
+            <View style={commonStyles.headerSection}>
+                <View style={commonStyles.dateSection}>
+                    <View style={commonStyles.dateWrapper}>
                         <Text style={{fontSize:12,color:'white',}}>Today</Text>
                         <Text style={{fontSize:16,color:'white',}}>{`${month}/${date}`}</Text>
                     </View>
-                    <View style={styles.dayWrapper}>
+                    <View style={commonStyles.dayWrapper}>
                         <Text style={{fontWeight:'bold',fontSize:20,color:theme.engineeringYellow,}}>{dateString}</Text>
                     </View>
                 </View>
-                <View style={styles.weatherImgWrapper}>
+                <View style={commonStyles.weatherImgWrapper}>
                     {/* 날씨 api와의 연동에서 한 번 더 고민 필요 */}
                     <WeatherComponent 
                         source={{size:(SCREEN_HEIGHT*0.06) > 60 ? 60 : (SCREEN_HEIGHT*0.06)}}>    
@@ -89,7 +89,7 @@ const MenuEngineeringScreen = ({navigation}) => {
                 <View style={styles.selectSection__selectRow}>
                     <Pressable 
                         style={styles.selectSection__pressable}
-                        onPress={() => handleSetCategory(2,setCateData)}
+                        onPress={() => handleSetCategory(1,setCateData)}
                     >
                         <Text style={{width:'90%',textAlign:'center',}}>{categoryTxt}</Text>
                         <Text>^</Text>
@@ -125,13 +125,13 @@ const MenuEngineeringScreen = ({navigation}) => {
                         <Text numberOfLines={1} adjustsFontSizeToFit style={styles.resultContent}>등급별 솔루션이 궁금하다면 메달을 클릭해 보세요!</Text>
                     </View>
                     <View style={styles.medalSection}>
-                        <Pressable onPress={() => handlePressMedal(0)}>
+                        <Pressable onPress={() => navigation.navigate('MenuEngineeringInfoScreen',{type:0,array:cateData.first, categoryTxt})}>
                             <MedalComponent key={0} source={{type: 'gold', num:cateData.first.length}}></MedalComponent>
                         </Pressable>
-                        <Pressable onPress={() => handlePressMedal(1)}>
+                        <Pressable onPress={() => navigation.navigate('MenuEngineeringInfoScreen',{type:1,array:cateData.second, categoryTxt})}>
                             <MedalComponent key={1} source={{type: 'silver', num:cateData.second.length}}></MedalComponent>
                         </Pressable>
-                        <Pressable onPress={() => handlePressMedal(2)}>
+                        <Pressable onPress={() => navigation.navigate('MenuEngineeringInfoScreen',{type:2,array:cateData.third, categoryTxt})}>
                             <MedalComponent key={2} source={{type: 'bronze', num:cateData.third.length}}></MedalComponent>    
                         </Pressable>                        
                     </View>

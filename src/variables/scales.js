@@ -26,7 +26,7 @@ export const BASIC_SHADOW=Platform.select({
     },
   },
   android: {
-    elevation: 1,
+    elevation: 2,
   },
 });
 
