@@ -15,9 +15,18 @@ import {dateObject} from '../variables/scales';
 
 import commonStyles from '../variables/commonStyles';
 import WeatherComponent from '../components/WeatherComponent';
+import HyeSun from '../components/HyeSun';
 
 const AccountBookScreen = (({navigation}) => {
     const {month, date, dateString}=dateObject();
+
+    // {
+    //     width:(Number),
+    //     height:(Number),
+    //     date:(String),
+    //     day:(Number),
+    // }
+    
 
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>
@@ -32,7 +41,6 @@ const AccountBookScreen = (({navigation}) => {
                     </View>
                 </View>
                 <View style={commonStyles.weatherImgWrapper}>
-                    {/* 날씨 api와의 연동에서 한 번 더 고민 필요 */}
                     <WeatherComponent 
                         source={{size:(SCREEN_HEIGHT*0.06) > 60 ? 60 : (SCREEN_HEIGHT*0.06)}}>    
                     </WeatherComponent>
@@ -45,7 +53,7 @@ const AccountBookScreen = (({navigation}) => {
                 <View style={{width:50, height:50, backgroundColor:theme.titleWrapperBlue, position:'absolute', top:30, left:0, zIndex:1}}></View>
                 <View style={commonStyles.contentWrapper}>
                     <View style={styles.calendarWrapper}>
-                            
+                        <HyeSun source={{width:54, height:70, date:'일', day:10}}></HyeSun>
                     </View>
                     <View style={styles.accountTitleWrapper}>
                         <Text style={styles.txtAccountTitle}>이번 달 수입/지출 내역을 손쉽게 입력해보세요!</Text>
@@ -101,7 +109,6 @@ const styles=StyleSheet.create({
     calendarWrapper:{
         width:'90%',
         height:64,
-        backgroundColor:'teal',
     },
     accountTitleWrapper:{
         marginTop:4,

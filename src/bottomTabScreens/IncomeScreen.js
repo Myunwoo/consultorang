@@ -10,3 +10,7 @@ const IncomeScreen = (({navigation}) => {
 });
 
 export default IncomeScreen;
+
+const styles = StyleSheet.create({
+
+});

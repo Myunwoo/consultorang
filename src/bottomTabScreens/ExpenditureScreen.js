@@ -10,3 +10,7 @@ const ExpenditureScreen = (({navigation}) => {
 });
 
 export default ExpenditureScreen;
+
+const styles = StyleSheet.create({
+
+});
