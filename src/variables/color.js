@@ -19,14 +19,12 @@ export const theme = {
     titleWrapperBlue:'#2995C0',
     btnIncomeRed:'#DF7162',
     btnExpenditureBlue:'#3587B9',
-
     backgroundGrey:'#CACACA',
 
     placeholderColor:'#ABB4B8',
     textWhite:'#D1E6F2',
     textGreen:'#68D15A',
 
-    
     //torang colors
     torangYellow:'#FBCC37',
     torangBrown:'#595750',

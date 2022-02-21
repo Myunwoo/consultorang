@@ -9,7 +9,6 @@ const MenuYellowCircle = (arg) => {
     let {menuNm,popularity:x ,contributionMargin:y}=arg.source;
     x=String(x)+'%';
     y=String(100-y)+'%';
-    
     return (
         <View 
             style={{

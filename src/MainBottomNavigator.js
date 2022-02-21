@@ -14,6 +14,7 @@ const Tab = createBottomTabNavigator();
 
 const MainBottomNavigator = (props) => {
     return(
+
     <Tab.Navigator initialRouteName="AccountBook" screenOptions={{
         tabBarStyle: { 
             ...Platform.select({

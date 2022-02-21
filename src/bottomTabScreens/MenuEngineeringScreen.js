@@ -1,8 +1,10 @@
+
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Pressable, Image } from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 
 import { theme } from '../variables/color';
+
 import {dateObject, statusBarHeight,CONTENT_SECTION_BORDER_RADIUS, BASIC_SHADOW, SCREEN_HEIGHT, WEATHER_LIST} from '../variables/scales';
 import { getItemAsyncStorage, fetchServer } from '../abstract/asyncTasks';
 
