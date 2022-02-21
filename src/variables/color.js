@@ -15,14 +15,17 @@ export const theme = {
     GRAD2:'#48A4C1',
     GRAD3:'#0887BE',
 
+    //AccountBookScreen
+    titleWrapperBlue:'#2995C0',
+    btnIncomeRed:'#DF7162',
+    btnExpenditureBlue:'#3587B9',
     backgroundGrey:'#CACACA',
 
     placeholderColor:'#ABB4B8',
     textWhite:'#D1E6F2',
     textGreen:'#68D15A',
 
-    
-
+    //torang colors
     torangYellow:'#FBCC37',
     torangBrown:'#595750',
 
@@ -34,4 +37,9 @@ export const theme = {
     //MenuEngineeringScreen
     selectRow:'#B1DADE',
     engineeringYellow:'#F3ED86',
+
+    //MenuEngineeringInfoScreen
+    engineeringNavy:'#334265',
+    categoryCyan:'#E4F2F8',
+    engineeringCircleNavy:'#163C6B',
 };
