@@ -7,6 +7,8 @@ if(sh===0){
     sh=StatusBar.currentHeight;
 }
 export const statusBarHeight = sh;
+export const BOTTOM_TAP_NAVIGATOR_HEIGHT_IOS=80;
+export const BOTTOM_TAP_NAVIGATOR_HEIGHT_ANDROID=50;
 
 //화면 크기
 export const { width:SCREEN_WIDTH, height:SCREEN_HEIGHT } = Dimensions.get("window");
@@ -24,7 +26,7 @@ export const BASIC_SHADOW=Platform.select({
     },
   },
   android: {
-    elevation: 1,
+    elevation: 2,
   },
 });
 

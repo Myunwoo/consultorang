@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, Image, View, } from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 import { theme } from '../variables/color';
 
@@ -11,7 +11,14 @@ const GraphArrowUp = (arg) => {
             <View style={styles.triangle}></View>
             <LinearGradient colors={['#A17082', '#58789F', '#2A7AB2']} style={styles.arrowbody}>
             </LinearGradient>
-            <View style={styles.imgWrapper}></View>
+            <View style={styles.imgWrapper}>
+                <Image
+                    resizeMode='contain'
+                    style={{width:30,height:30,}}
+                    source={require('../../image/engineering_won.png')}
+                >
+                </Image>
+            </View>
         </View>
     );
 }
@@ -48,7 +55,6 @@ const styles = StyleSheet.create({
     imgWrapper:{
         width:30,
         height:30,
-        backgroundColor:'tomato',
         alignSelf:'center',
         marginTop:5,
     }
