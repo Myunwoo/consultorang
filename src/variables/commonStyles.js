@@ -9,7 +9,16 @@ import {
     BOTTOM_TAP_NAVIGATOR_HEIGHT_ANDROID
 } from '../variables/scales';
 
-const commonStyles = StyleSheet.create({
+export const circleBtnProp=(defaultStyle ,target, setter, pressFunc)=>{
+    return {
+        style: target ? {...defaultStyle, backgroundColor:theme.registerBtnBlue} : {...defaultStyle,backgroundColor:theme.registerBtnCyan},
+        onPressIn: () => setter(true),
+        onPressOut: () => setter(false),
+        onPress: pressFunc,
+    };
+};
+
+export const commonStyles = StyleSheet.create({
     mainbody:{
         flex:1,
         paddingTop:statusBarHeight,

@@ -1,64 +1,163 @@
-import React, {useState, useRef} from 'react';
-import {
-    StyleSheet,
-    View,
-    Text,
-    Pressable,
-    Image,
-    ScrollView,
-  } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import { StyleSheet, View, Text, Pressable, Image, ScrollView, } from 'react-native';
   
 import { theme } from '../variables/color';
 import {statusBarHeight, CONTENT_SECTION_BORDER_RADIUS} from '../variables/scales';
 import {serviceTerm, userInfoTerm, infoAgreeTerm} from '../variables/termsOfUse';
 import { fetchServer } from '../abstract/asyncTasks';
-import { isEmailRight, isPasswordRight } from '../abstract/commonTasks';
+import { checkEmailFormat, checkPwdFormat, checkBsnFormat, checkPhoneFormat } from '../abstract/commonTasks';
+import { circleBtnProp } from '../variables/commonStyles';
   
 //import components
 import RegisterInput from '../components/RegisterInput';
 
-const termTitleClicked = (arg) => {
-    console.log('termTitleClicked');
-    console.log(arg);
-};
+////////
+/* 
+1. 약관3가지 버튼 눌림에 의한 스타일 변화
 
-const codeComponentClicked = (code) => {
-    setBusinessCode(code);
-    console.log(businessCode);
-};
+6. 핸드폰 번호 인증 기능 구현
+
+7. 사업자 번호 형식 검색 및 사업자 번호 확인 기능 구현 -- 한 사업장이 중복 가입하는 경우도 막아야 할 것으로 보임
+
+*/
+
 
 const AuthInfoRegisterScreen = ({route,navigation}) => {
-    const [businessName, setBusinessName] = useState('');
-    const [userEmail, setUserEmail] = useState('');
-    const [userPassword, setUserPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [userPhoneNumber, setUserPhoneNumber] = useState('');
-    const [authorNum, setAuthorNum] = useState('');
-    const [businessNum, setBusinessNum] = useState('');
-    const [userAgree, setUserAgree] = useState(false);
+    const [businessName, setBusinessName]=useState('');
+    const [userEmail, setUserEmail]=useState('');
+    const [userPassword, setUserPassword]=useState('');
+    const [confirmPassword, setConfirmPassword]=useState('');
+    const [userPhoneNumber, setUserPhoneNumber]=useState('');
+    const [authorNum, setAuthorNum]=useState('');
+    const [businessNum, setBusinessNum]=useState('');
+    const [userAgree, setUserAgree]=useState(false);
 
-    const [errortext, setErrorText] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [term, setTerm] = useState(serviceTerm);
-    const [isRegisterSuccess, setIsRegistraionSuccess] = useState(false);
+    const [errortext, setErrorText]=useState('');
+    const [loading, setLoading]=useState(false);
+    const [term, setTerm]=useState(serviceTerm);
+    const [isRegisterSuccess, setIsRegistraionSuccess]=useState(false);
 
-    const {setAuthInfo:setter} =route.params;
+    //Buttons
+    const [isEmailCheckPress, setIsEmailChekcPress]=useState(false);
+    const [isAuthornumCheckPress, setIsAuthornumCheckPress]=useState(false);
+    const [isBsnumCheckPress, setIsBsnumCheckPress]=useState(false);
+    const [isAuthorSendPress, setIsAuthorSendPress]=useState(false);
+    //////////
 
+    //email 중복확인 여부
+    const [isRightEmail, setIsRightEmail]=useState(false);
+    useEffect(()=>{
+        setIsRightEmail(false);
+    },[userEmail]);
+
+    //사업자 번호 중복확인 여부
+    const [isRightBusinessNum, setIsRightBusinessNum]=useState(false);
+    useEffect(()=>{
+        setIsRightBusinessNum(false);
+    },[businessNum]);
+
+    //인증번호 인증 여부
+    const [isAuthorized, setIsAuthorized]=useState(false);
+
+    //button handlers
     const handleCheckEmailButton = () => {
-        console.log('handleCheckEmailButton');
-        console.log(userEmail);
-        if(isEmailRight(userEmail)){
+        if(!checkEmailFormat(userEmail)){
             alert('올바른 이메일을 입력해주세요');
             return;
         }
         fetchServer('POST','/login/checkEmail',{email:userEmail})
-            .then((responseJson) => console.log(responseJson))
+            .then((responseJson) => {
+                const {isEnableEmail}=responseJson.data;
+                if(isEnableEmail){
+                    setIsRightEmail(true);
+                    alert('사용 가능한 이메일입니다.');
+                }else{
+                    setIsRightEmail(false);
+                    alert('중복된 이메일입니다.');
+                }
+            })
             .catch(error => console.log(error));
-        //받은 결과에 대한 처리 분기를 제작해야함.
     };
 
+    const handleAuthorSend=()=>{
+        console.log('인증번호 전송');
+    };
+
+    const handleCheckAuthButton=()=>{
+        if(!checkPhoneFormat){
+            alert('올바른 핸드폰 번호를 입력해주세요.');
+            return;
+        }
+        //SMS인증에 대해 생각해 보아야 함.
+        setIsAuthorized(true);
+    };
+
+    //사업자 번호 생기면 그때 활용
+    const handleCheckBsnumButton=()=>{
+        // if(!isBusinessNumRight(businessNum)){
+        //     alert('올바른 사업자번호를 입력해주세요');
+        //     return;
+        // }
+        // fetchServer('POST','/login/checkEmail',{businessNum:businessNum})
+        //     .then((responseJson) => {
+        //         const {isEnableBusinessNum}=responseJson.data;
+        //         if(isEnableBusinessNum){
+        //             setIsRightBusinessNum(true);
+        //             alert('사용 가능한 사업자번호입니다.');
+        //         }else{
+        //             setIsRightBusinessNum(false);
+        //             alert('중복된 사업자번호입니다.');
+        //         }
+        //     })
+        //     .catch(error => console.log(error));
+        setIsRightBusinessNum(true);
+    };
+
+    const handleTermAgree=()=>{
+        setUserAgree(!userAgree);
+    };
+
+    const handleTermTitleClick = (arg) => {
+        console.log('termTitleClicked');
+        console.log(arg);
+    };
+    //////////////
+
+    //Button Props
+    const emailCheckProps = circleBtnProp(styles.inputCompButton, isEmailCheckPress, setIsEmailChekcPress, handleCheckEmailButton);
+    const authorNumProps = circleBtnProp(styles.inputCompButton, isAuthornumCheckPress, setIsAuthornumCheckPress, handleCheckAuthButton);
+    const businessNumProp = circleBtnProp(styles.inputCompButton, isBsnumCheckPress, setIsBsnumCheckPress, handleCheckBsnumButton);
+    const authorSendProp = circleBtnProp(styles.inputCompButton, isAuthorSendPress, setIsAuthorSendPress, handleAuthorSend);
+    //////////////
+    
+
+    //AuthInfo를 navigate를 통해 FoodInfoRegisterScreen으로 넘기고, FoodInfoRegisterScreen에서 데이터를 서버로 전송하도록 수정합시다.
+    //Navigator로부터 세터를 전달 받는 등의 동작은 삭제하도록 하겠습니다.
     const handleGoNext=(arg)=>{
-        setter(businessName, userEmail, userPassword, userPhoneNumber, userAgree, businessNum);
+        // if(!isRightEmail){
+        //     alert('이메일 중복확인을 먼저 해주세요');
+        //     return;
+        // }
+        // if(!checkPwdFormat(userPassword)){
+        //     alert('올바른 비밀번호를 입력해 주세요');
+        //     return;
+        // }
+        // if(userPassword!==confirmPassword){
+        //     alert('비밀번호 확인을 비밀번호와 동일하게 입력해주세요');
+        //     return;
+        // }
+        // if(!isAuthorized){
+        //     alert('핸드폰 인증을 먼저 진행해 주세요');
+        //     return;
+        // }
+        // if(!isRightBusinessNum){
+        //     alert('사업자 번호 확인을 먼저 해주세요');
+        //     return;
+        // }
+        // if(!userAgree){
+        //     alert('이용약관에 동의해 주세요');
+        //     return;
+        // }
         navigation.navigate('FoodInfoRegisterScreen');
     }
 
@@ -73,43 +172,46 @@ const AuthInfoRegisterScreen = ({route,navigation}) => {
                 </View>
                 <View style={styles.inputCompOuterWrapper}>
                     <RegisterInput source={{setter:setUserEmail, placeHolder:'이메일 입력'}}></RegisterInput>
-                    <Pressable style={styles.inputCompButton} onPress={handleCheckEmailButton}>
+                    <Pressable {...emailCheckProps}>
                         <Text numberOfLines={1} adjustsFontSizeToFit style={styles.inputCompText}>중복 확인</Text>
                     </Pressable>
                 </View>
                 <View style={styles.inputCompOuterWrapper}>
-                    <RegisterInput source={{setter:setUserPassword, placeHolder:'비밀번호 입력'}}></RegisterInput>
+                    <RegisterInput source={{setter:setUserPassword, placeHolder:'비밀번호 입력', secure:true}}></RegisterInput>
                 </View>
                 <View style={styles.inputCompOuterWrapper}>
-                    <RegisterInput source={{setter:setConfirmPassword, placeHolder:'비밀번호 확인'}}></RegisterInput>
+                    <RegisterInput source={{setter:setConfirmPassword, placeHolder:'비밀번호 확인', secure:true}}></RegisterInput>
                 </View>
                 <View style={styles.inputCompOuterWrapper}>
                     <RegisterInput source={{setter:setUserPhoneNumber, placeHolder:'핸드폰 번호 입력'}}></RegisterInput>
+                    <Pressable {...authorSendProp}>
+                        <Text numberOfLines={1} adjustsFontSizeToFit>인증번호 전송</Text>
+                    </Pressable>
                 </View>
                 <View style={styles.inputCompOuterWrapper}>
-                    <RegisterInput source={{setter:setAuthorNum, placeHolder:'인증번호 입력'}}></RegisterInput>
-                    <Pressable style={styles.inputCompButton}>
+                    <RegisterInput source={{setter:setAuthorNum, placeHolder:'인증번호 입력', editable:!isAuthorized}}></RegisterInput>
+                    <Pressable {...authorNumProps}>
                         <Text numberOfLines={1} adjustsFontSizeToFit>인증번호 확인</Text>
                     </Pressable>
                 </View>
                 <View style={styles.inputCompOuterWrapper}>
                     <RegisterInput source={{setter:setBusinessNum, placeHolder:'사업자 번호 입력'}}></RegisterInput>
-                    <Pressable style={styles.inputCompButton}>
+                    <Pressable {...businessNumProp}>
                         <Text numberOfLines={1} adjustsFontSizeToFit>사업자 번호 확인</Text>
                     </Pressable>
                 </View>
                 <View style={styles.termTitleOuterWrapper}>
-                    <View style={styles.termTitleInnerWrapper} key={0} onPress={termTitleClicked}>
+                    <Pressable style={styles.termTitleInnerWrapper} key={0} onPress={()=>handleTermTitleClick(0)}>
                         <Text style={styles.termTitle}>{serviceTerm.title}</Text>
-                    </View>
+                    </Pressable>
                     <View style={styles.divider}></View>
-                    <View style={styles.termTitleInnerWrapper} key={1} onPress={termTitleClicked}>
+                    <Pressable style={styles.termTitleInnerWrapper} key={1} onPress={()=>handleTermTitleClick(1)}>
                         <Text style={styles.termTitle}>{userInfoTerm.title}</Text>
-                    </View>
+                    </Pressable>
                     <View style={styles.divider}></View>
-                    <View style={styles.termTitleInnerWrapper} key={2} onPress={termTitleClicked}>
+                    <Pressable style={styles.termTitleInnerWrapper} key={2} onPress={()=>handleTermTitleClick(2)}>
                         <Text style={styles.termTitle}>{infoAgreeTerm.title}</Text>
-                    </View>
+                    </Pressable>
                 </View>
                 <View style={styles.termContentWrapper}>
                     <ScrollView style={styles.termContentScrollView}
@@ -138,11 +240,21 @@ const AuthInfoRegisterScreen = ({route,navigation}) => {
                             <Text>ffz</Text>
                     </ScrollView>
                     <View style={styles.termContentShowWrapper}>
-                        <Text style={styles.txtTermContentShow}>약관 전체보기 {'>'} </Text>
+                        <Pressable style={{width:'100%', height:'100%'}} onPress={() => navigation.navigate('TermScreen')}>
+                            <Text style={styles.txtTermContentShow}>약관 전체보기 {'>'} </Text>
+                        </Pressable>
                     </View>
                 </View>
-                <Pressable style={styles.termAgreeSection}>
-                    <View style={styles.btnTermAgree}></View><Text style={styles.txtTermAgree}>서비스 이용약관, 개인정보 취급방침, 개인정보제공에 모두 동의합니다</Text>
+                <Pressable style={styles.termAgreeSection} onPress={handleTermAgree}>
+                    <View style={styles.btnTermAgree}>
+                        <Image
+                            resizeMode='contain'
+                            style={{width:'100%', height:'100%', opacity:userAgree?1:0}}
+                            source={require('../../image/register_check.png')}
+                        >
+                        </Image>
+                    </View>
+                    <Text style={styles.txtTermAgree}>서비스 이용약관, 개인정보 취급방침, 개인정보제공에 모두 동의합니다</Text>
                 </Pressable>
                 <View style={styles.goNextOutterWrapper}>
                     <View style={styles.torangColumn}>
@@ -189,7 +301,6 @@ const styles = StyleSheet.create({
         marginLeft:15,
         flex:30,
         height:32,
-        backgroundColor:theme.btnBackground2,
         borderRadius:CONTENT_SECTION_BORDER_RADIUS,
         justifyContent:'center',
         alignItems:'center',
@@ -259,6 +370,7 @@ const styles = StyleSheet.create({
         flex:1,
     },
     termContentScrollView:{
+        flex:1,
         backgroundColor:'white',
         marginTop:4,
         width:'100%',
@@ -266,7 +378,7 @@ const styles = StyleSheet.create({
     termContentShowWrapper:{
         marginTop:4,
         alignSelf:'flex-end',
-        fontSize:14,
+        height:20,
     },
     termAgreeSection:{
         justifyContent:'center',

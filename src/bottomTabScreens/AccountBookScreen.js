@@ -20,14 +20,6 @@ import HyeSun from '../components/HyeSun';
 const AccountBookScreen = (({navigation}) => {
     const {month, date, dateString}=dateObject();
 
-    // {
-    //     width:(Number),
-    //     height:(Number),
-    //     date:(String),
-    //     day:(Number),
-    // }
-    
-
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>
             <View style={commonStyles.headerSection}>

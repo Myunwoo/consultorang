@@ -26,8 +26,6 @@ const FoodInfoRegisterScreen = ({route,navigation}) => {
     const typeDiameter=SCREEN_WIDTH*0.8*0.25;
     let i=0;
 
-    const {setFoodInfo:setter} =route.params;
-
     const handleGoNext = () => {
         //setter(businessType, businessIngre, businessCookway, businessAlcohol, businessAlready, businessStaff, businessHours);
         navigation.navigate('LoginScreen');
