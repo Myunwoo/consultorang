@@ -11,6 +11,13 @@ import IngredientImageCard from '../components/IngredientImageCard';
 import QuestionHeader from '../components/QuestionHeader';
 import MultiSelectButtons from '../components/MultiSelectButtons';
 
+
+/*
+1. 각종 뷰들이 실제로 데이터를 조작할 수 있도록 기능을 탑재해야 함.
+*/
+
+const typeDiameter=SCREEN_WIDTH*0.8*0.25;
+
 const FoodInfoRegisterScreen = ({route,navigation}) => {
     const [businessType,setBusinessType]=useState('ST001');
     const [businessIngre, setBusinessIngre]=useState('IG001,IG002');
@@ -19,17 +26,11 @@ const FoodInfoRegisterScreen = ({route,navigation}) => {
     const [businessAlready, setBusinessAlready]=useState('80');
     const [businessStaff, setBusinessStaff]=useState(10);
     const [businessHours, setBusinessHours]=useState('09:00~10:00');
-    
-    const typeComponentClicked = () => {
-        console.log('codeComponentClicked');
-    }
-    const typeDiameter=SCREEN_WIDTH*0.8*0.25;
-    let i=0;
 
+    let i=0;
     const handleGoNext = () => {
-        //setter(businessType, businessIngre, businessCookway, businessAlcohol, businessAlready, businessStaff, businessHours);
-        navigation.navigate('LoginScreen');
-    }
+        //navigation.navigate('LoginScreen');
+    };
 
     return (
         <View style={styles.mainbody}>
@@ -41,10 +42,10 @@ const FoodInfoRegisterScreen = ({route,navigation}) => {
                     <View style={styles.foodStyleSection}>
                         <QuestionHeader text={'어떤 스타일의 음식을 판매하시나요?'}></QuestionHeader>
                         <View style={styles.foodStyleCircleRow}>
-                            {CODE_LIST_ROW1.map((code) => <TypeImageCard key={i++} source={Object.assign(code,{setter:typeComponentClicked, diameter: typeDiameter})}></TypeImageCard>)}
+                            {CODE_LIST_ROW1.map((code) => <TypeImageCard key={i++} source={Object.assign(code,{businessType, setter:setBusinessType, diameter: typeDiameter})}></TypeImageCard>)}
                         </View>
                         <View style={styles.foodStyleCircleRow}>
-                            {CODE_LIST_ROW2.map((code) => <TypeImageCard key={i++} source={Object.assign(code,{setter:typeComponentClicked, diameter: typeDiameter})}></TypeImageCard>)}
+                            {CODE_LIST_ROW2.map((code) => <TypeImageCard key={i++} source={Object.assign(code,{businessType, setter:setBusinessType, diameter: typeDiameter})}></TypeImageCard>)}
                         </View>
                     </View>
                     <View style={styles.ingSection}>

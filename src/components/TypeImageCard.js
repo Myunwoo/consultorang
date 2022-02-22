@@ -26,8 +26,7 @@ const TypeImageCard = (arg) => {
         <View style={
             {width:diameter, height:diameter, borderRadius:diameter, overflow:'hidden', marginHorizontal:5, marginVertical:5,}} onPress={onClicked}>
             <Pressable style={styles.pressable} onPress={onClicked}>
-                <Image style={styles.img} source={image} resizemode='contain'
-                />
+                <Image style={styles.img} source={image} resizemode='contain'/>
                 <View style={textWrapper}>
                     <Text style={styles.text}>{name}</Text>
                 </View>

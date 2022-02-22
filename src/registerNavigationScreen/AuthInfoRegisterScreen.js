@@ -13,12 +13,7 @@ import RegisterInput from '../components/RegisterInput';
 
 ////////
 /* 
-1. 약관3가지 버튼 눌림에 의한 스타일 변화
-
 6. 핸드폰 번호 인증 기능 구현
-
-7. 사업자 번호 형식 검색 및 사업자 번호 확인 기능 구현 -- 한 사업장이 중복 가입하는 경우도 막아야 할 것으로 보임
-
 */
 
 
@@ -34,7 +29,6 @@ const AuthInfoRegisterScreen = ({route,navigation}) => {
 
     const [errortext, setErrorText]=useState('');
     const [loading, setLoading]=useState(false);
-    const [term, setTerm]=useState(serviceTerm);
     const [isRegisterSuccess, setIsRegistraionSuccess]=useState(false);
 
     //Buttons
@@ -43,6 +37,24 @@ const AuthInfoRegisterScreen = ({route,navigation}) => {
     const [isBsnumCheckPress, setIsBsnumCheckPress]=useState(false);
     const [isAuthorSendPress, setIsAuthorSendPress]=useState(false);
     //////////
+
+    //이용약관 선택
+    const [whichTerm, setWhichTerm]=useState(0);
+    const [term, setTerm]=useState(serviceTerm.content);
+
+    useEffect(()=>{
+        switch(whichTerm){
+            case 0:
+                setTerm(serviceTerm.content);
+                break;
+            case 1:
+                setTerm(userInfoTerm.content);
+                break;
+            case 2:
+                setTerm(infoAgreeTerm.content);
+                break;
+        }
+    },[whichTerm]);
 
     //email 중복확인 여부
     const [isRightEmail, setIsRightEmail]=useState(false);
@@ -94,32 +106,27 @@ const AuthInfoRegisterScreen = ({route,navigation}) => {
 
     //사업자 번호 생기면 그때 활용
     const handleCheckBsnumButton=()=>{
-        // if(!isBusinessNumRight(businessNum)){
-        //     alert('올바른 사업자번호를 입력해주세요');
-        //     return;
-        // }
-        // fetchServer('POST','/login/checkEmail',{businessNum:businessNum})
-        //     .then((responseJson) => {
-        //         const {isEnableBusinessNum}=responseJson.data;
-        //         if(isEnableBusinessNum){
-        //             setIsRightBusinessNum(true);
-        //             alert('사용 가능한 사업자번호입니다.');
-        //         }else{
-        //             setIsRightBusinessNum(false);
-        //             alert('중복된 사업자번호입니다.');
-        //         }
-        //     })
-        //     .catch(error => console.log(error));
+        if(!checkBsnFormat(businessNum)){
+            alert('올바른 사업자번호를 입력해주세요');
+            return;
+        }
+        fetchServer('POST','/login/checkBusinessNum',{businessNum:businessNum})
+            .then((responseJson) => {
+                const {data}=responseJson;
+                if(data){
+                    setIsRightBusinessNum(true);
+                    alert('사용 가능한 사업자번호입니다.');
+                }else{
+                    setIsRightBusinessNum(false);
+                    alert('중복된 사업자번호입니다.');
+                }
+            })
+            .catch(error => console.log(error));
         setIsRightBusinessNum(true);
     };
 
     const handleTermAgree=()=>{
         setUserAgree(!userAgree);
-    };
-
-    const handleTermTitleClick = (arg) => {
-        console.log('termTitleClicked');
-        console.log(arg);
     };
     //////////////
 
@@ -201,15 +208,15 @@ const AuthInfoRegisterScreen = ({route,navigation}) => {
                     </Pressable>
                 </View>
                 <View style={styles.termTitleOuterWrapper}>
-                    <Pressable style={styles.termTitleInnerWrapper} key={0} onPress={()=>handleTermTitleClick(0)}>
+                    <Pressable style={{...styles.termTitleInnerWrapper, backgroundColor: (whichTerm==0)?theme.registerBtnBlue:theme.backgroundGrey}} key={0} onPress={()=>setWhichTerm(0)}>
                         <Text style={styles.termTitle}>{serviceTerm.title}</Text>
                     </Pressable>
                     <View style={styles.divider}></View>
-                    <Pressable style={styles.termTitleInnerWrapper} key={1} onPress={()=>handleTermTitleClick(1)}>
+                    <Pressable style={{...styles.termTitleInnerWrapper, backgroundColor: (whichTerm==1)?theme.registerBtnBlue:theme.backgroundGrey}} key={1} onPress={()=>setWhichTerm(1)}>
                         <Text style={styles.termTitle}>{userInfoTerm.title}</Text>
                     </Pressable>
                     <View style={styles.divider}></View>
-                    <Pressable style={styles.termTitleInnerWrapper} key={2} onPress={()=>handleTermTitleClick(2)}>
+                    <Pressable style={{...styles.termTitleInnerWrapper, backgroundColor: (whichTerm==2)?theme.registerBtnBlue:theme.backgroundGrey}} key={2} onPress={()=>setWhichTerm(2)}>
                         <Text style={styles.termTitle}>{infoAgreeTerm.title}</Text>
                     </Pressable>
                 </View>
@@ -217,27 +224,7 @@ const AuthInfoRegisterScreen = ({route,navigation}) => {
                     <ScrollView style={styles.termContentScrollView}
                         invertStickyHeaders={true}
                         stickyHeaderIndices={[1]}>
-                            <Text>ffz</Text>
-                            <Text>ffz</Text>
-                            <Text>ffz</Text>
-                            <Text>ffz</Text>
-                            <Text>ffz</Text>
-                            <Text>ffz</Text>
-                            <Text>ffz</Text>
-                            <Text>ffz</Text>
-                            <Text>ffz</Text>
-                            <Text>ffz</Text>
-                            <Text>ffz</Text>
-                            <Text>ffz</Text>
-                            <Text>ffz</Text>
-                            <Text>ffz</Text>
-                            <Text>ffz</Text>
-                            <Text>ffz</Text>
-                            <Text>ffz</Text>
-                            <Text>ffz</Text>
-                            <Text>ffz</Text>
-                            <Text>ffz</Text>
-                            <Text>ffz</Text>
+                        <Text>{term}</Text>
                     </ScrollView>
                     <View style={styles.termContentShowWrapper}>
                         <Pressable style={{width:'100%', height:'100%'}} onPress={() => navigation.navigate('TermScreen')}>
