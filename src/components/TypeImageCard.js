@@ -4,7 +4,7 @@ import React,{ useState } from 'react';
 import { theme } from '../variables/color';
 
 const TypeImageCard = (arg) => {
-    const {image, name, code, setter, diameter}=arg.source;
+    const {businessType, image, name, code, setter, diameter}=arg.source;
     const [checked, setChecked]=useState(false);
 
     let textWrapper={
@@ -14,7 +14,7 @@ const TypeImageCard = (arg) => {
         bottom:0,
         justifyContent:'center',
         alignItems:'center',
-        backgroundColor:checked ? theme.checkedBlue : theme.uncheckedGrey,
+        backgroundColor:businessType===code ? theme.checkedBlue : theme.uncheckedGrey,
     }
     
     const onClicked = () => {

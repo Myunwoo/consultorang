@@ -4,24 +4,28 @@ import { StyleSheet, Text, View, ScrollView, Image, Pressable } from 'react-nati
 import { theme } from '../variables/color';
 
 const IngredientImageCard = (arg) => {
-    const {image, name, code, diameter, width}=arg.source;
-
-    const [checked, setChecked]=useState(false);
+    const {businessIngre, setter, image, name, code, diameter, width}=arg.source;
 
     const clicked = () =>{
-        setChecked(!checked);
+        const arr=businessIngre.slice();
+        const idx = arr.indexOf(code)
+        if(idx > -1){
+            arr.splice(idx, 1);
+        }else{
+            arr.push(code);
+        }
+        arr.sort();
+        setter(arr);
     }
 
     let mainbody = {
         width:width,
         height:100,
         borderRadius:20,
-        backgroundColor:checked ? 'blue':'white',
+        backgroundColor: businessIngre.includes(code) ? 'blue':'white',
         marginVertical:5,
         marginHorizontal:5,
     };
-
-    const t=()=>{}
 
     return (
         <View style={mainbody}>
