@@ -15,7 +15,7 @@ import {dateObject} from '../variables/scales';
 
 import commonStyles from '../variables/commonStyles';
 import WeatherComponent from '../components/WeatherComponent';
-import HyeSun from '../components/HyeSun';
+import WeeklyCalendar from '../components/WeeklyCalendar';
 
 import ModalComponent from '../modals/ModalComponent';
 import ExcelModal from '../modals/ExcelModal';
