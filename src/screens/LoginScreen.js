@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { theme } from '../variables/color';
 import {fetchServer} from '../abstract/asyncTasks';
-import { isEmailRight, isPasswordRight } from '../abstract/commonTasks';
+import { checkEmailFormat, checkPwdFormat } from '../abstract/commonTasks';
 
 const LoginScreen = (({route,navigation}) => {
     const [userPassword, setUserPassword] = useState('');
@@ -44,11 +44,11 @@ const LoginScreen = (({route,navigation}) => {
 
     const handleSubmitPress = () => {
         setErrorText('');
-        if(!isEmailRight(userEmail)){
+        if(!checkEmailFormat(userEmail)){
             alert("email error");
             return
         }
-        if(!isPasswordRight(userPassword)){
+        if(!checkPwdFormat(userPassword)){
             alert("password error");
             return
         }
