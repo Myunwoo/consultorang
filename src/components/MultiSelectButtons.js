@@ -1,28 +1,53 @@
 import React, {useState} from 'react';
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Pressable } from 'react-native';
 
 import { theme } from '../variables/color';
 
 const MultiSelectButtons = (arg) => {
-    const {list} = arg.source;
+    const {list, setter, prop} = arg.source;
     let i=0;
     
     return (
         <View style={styles.outterWrapper}>
-            {list.map((item)=><MyButton key={i++} source={item}></MyButton>)}
+            {list.map((item)=><MyButton key={i++} source={{...item, setter, prop}}></MyButton>)}
         </View>
     );
 }
 
 const MyButton = (arg) => {
-    const {text, code} = arg.source;
-
-    const [checked, setChecked] = useState(false);
+    const {text, code, setter, prop} = arg.source;
     const [myName, setMyName] = useState(text);
 
+    const clicked = () =>{
+        const arr=prop.slice();
+        const idx = arr.indexOf(code)
+        if(idx > -1){
+            arr.splice(idx, 1);
+        }else{
+            arr.push(code);
+        }
+        arr.sort();
+        setter(arr);
+    }
+
+    let btnStyle={
+        justifyContent:'center',
+        alignItems:'center',
+        paddingHorizontal:15,
+        paddingVertical:10,
+        backgroundColor: prop.includes(code) ? 'blue':'white',
+        borderRadius:20,
+        marginHorizontal:5,
+        marginVertical:2,
+    };
+
     return(
-        <View style={styles.buttonWrapper}>
-            <Text style={styles.buttonText}>{myName}</Text>
+        <View style={btnStyle}>
+            <Pressable 
+                hitSlop={ { top: 10, right: 15, bottom: 10, left: 15 } }
+                onPress={clicked}>
+                <Text style={styles.buttonText}>{myName}</Text>
+            </Pressable>
         </View>
     )
 }
@@ -33,16 +58,6 @@ const styles = StyleSheet.create({
     outterWrapper:{
         flexWrap:'wrap',
         flexDirection:'row',
-    },
-    buttonWrapper:{
-        justifyContent:'center',
-        alignItems:'center',
-        paddingHorizontal:15,
-        paddingVertical:10,
-        backgroundColor:'tomato',
-        borderRadius:20,
-        marginHorizontal:5,
-        marginVertical:2,
     },
     buttonText:{
         fontWeight:'bold',
