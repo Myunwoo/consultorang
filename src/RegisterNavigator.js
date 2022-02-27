@@ -13,6 +13,7 @@ const RegisterNavigator = (props) => {
     const [loading, setLoading] = useState(false);
 
     return (
+
         <Tab.Navigator initialRouteName='AuthInfoRegisterScreen' screenOptions={{tabBarShowLabel:false,}}>
             <Tab.Screen name="AuthInfoRegisterScreen" component={AuthInfoRegisterScreen}  options={{headerShown:false}} />
             <Tab.Screen name="TermScreen" component={TermScreen}  options={{headerShown:false}} />

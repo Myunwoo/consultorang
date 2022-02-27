@@ -59,9 +59,14 @@ const AccountBookScreen = (({navigation}) => {
                 </View>       
                 <View style={{width:50, height:50, backgroundColor:theme.titleWrapperBlue, position:'absolute', top:30, left:0, zIndex:1}}></View>
                 <View style={commonStyles.contentWrapper}>
-                    <View style={styles.calendarWrapper}>
-                        <HyeSun source={{width:54, height:70, date:'일', day:10}}></HyeSun>
-                    </View>
+                  <View style={styles.calendarWrapper}>
+                    <WeeklyCalendar
+                      source={{ width: 10, height: 100, date: "일", day: 10 }}></WeeklyCalendar>
+                    <WeeklyCalendar
+                      source={{ width: 10, height: 100, date: "월", day: 11 }}></WeeklyCalendar>
+                    <WeeklyCalendar
+                      source={{ width: 10, height: 100, date: "화", day: 12 }}></WeeklyCalendar>
+                  </View>
                     <View style={styles.accountTitleWrapper}>
                         <Text style={styles.txtAccountTitle}>이번 달 수입/지출 내역을 손쉽게 입력해보세요!</Text>
                     </View>
@@ -101,7 +106,7 @@ const AccountBookScreen = (({navigation}) => {
                     </View>
                     <View style={styles.memoWrapper}>
                         <View style={styles.memoInnerWrapper}>
-                            <Text></Text>
+                            <Text>들어갈 내용 미정</Text>
                         </View>
                     </View>
                 </View>
@@ -116,6 +121,7 @@ const styles=StyleSheet.create({
     calendarWrapper:{
         width:'90%',
         height:64,
+        flexDirection: "row",
     },
     accountTitleWrapper:{
         marginTop:4,
