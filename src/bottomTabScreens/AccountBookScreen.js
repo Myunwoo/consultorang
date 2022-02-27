@@ -1,5 +1,5 @@
-import React from 'react';
-import { Platform, StyleSheet, Text, View, Pressable, Image, ScrollView } from 'react-native';
+import React, {useState} from 'react';
+import { Platform, StyleSheet, Text, View, Pressable, Image, Modal } from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 
 import { theme } from '../variables/color';
@@ -17,11 +17,26 @@ import commonStyles from '../variables/commonStyles';
 import WeatherComponent from '../components/WeatherComponent';
 import HyeSun from '../components/HyeSun';
 
+import ModalComponent from '../modals/ModalComponent';
+import ExcelModal from '../modals/ExcelModal';
+
 const AccountBookScreen = (({navigation}) => {
     const {month, date, dateString}=dateObject();
+    const [inModalVisible, setInModalVisible]=useState(false);
+    const [expModalVisible, setExpModalVisible]=useState(false);
+    const [excelModalVisible, setExcelModalVisible]=useState(false);
 
+    //1. 엑셀을 추가하였느냐 아니냐의 여부를 통해 이번 달 현황을 보여줄지 말지를 결정해야 한다.
+    //2. 엑셀 모달 완성
+    //3. 수익 모달 완성
+    //4. 지출 모달 완성
+    //5. 캘린더 컴포넌트 합쳐서 적용
+    
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>
+            <ModalComponent showModal={excelModalVisible} setShowModal={setExcelModalVisible}>
+                <ExcelModal></ExcelModal>
+            </ModalComponent>
             <View style={commonStyles.headerSection}>
                 <View style={commonStyles.dateSection}>
                     <View style={commonStyles.dateWrapper}>
@@ -84,7 +99,7 @@ const AccountBookScreen = (({navigation}) => {
                     </View>
                     <View style={styles.excelWrapper}>
                         <View style={styles.btnExcelWrapper}>
-                            <Pressable style={styles.btnExcel} onPress={() => navigation.navigate('ExcelSendScreen')}>
+                            <Pressable style={styles.btnExcel} onPress={() => setExcelModalVisible(true)}>
                                 <Text style={styles.txtExcel}>이번 달 엑셀 추가</Text>
                             </Pressable>
                         </View>

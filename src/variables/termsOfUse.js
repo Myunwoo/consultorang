@@ -1,4 +1,4 @@
-export const serviceTerm = {
+export const serviceTerm =  {
     title:'서비스 이용약관',
     content:'대충 서비스 약관',
 };

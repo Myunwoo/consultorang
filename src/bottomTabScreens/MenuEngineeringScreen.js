@@ -37,7 +37,10 @@ const handleSetCategory = (targetId, setter) => {
         'saleYm': '202202',
     }
     fetchServer('POST', '/engine/getCatEngine', dataToSend).then((responseJson) => {
-        setter(responseJson.data);
+        console.log(responseJson);
+        if(responseJson.data!==null){
+            setter(responseJson.data);
+        }
     }).catch((error) => {
         console.log(error);
     });

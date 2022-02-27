@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, ScrollView, Image, Pressable } from 'react-native';
+import Slider from '@react-native-community/slider';
 
 import { theme } from '../variables/color';
 import {statusBarHeight} from '../variables/scales';
@@ -11,27 +12,34 @@ import IngredientImageCard from '../components/IngredientImageCard';
 import QuestionHeader from '../components/QuestionHeader';
 import MultiSelectButtons from '../components/MultiSelectButtons';
 
+
+/*
+1. 각종 뷰들이 실제로 데이터를 조작할 수 있도록 기능을 탑재해야 함.
+*/
+
+const typeDiameter=SCREEN_WIDTH*0.8*0.25;
+
 const FoodInfoRegisterScreen = ({route,navigation}) => {
-    const [businessType,setBusinessType]=useState('ST001');
-    const [businessIngre, setBusinessIngre]=useState('IG001,IG002');
-    const [businessCookway, setBusinessCookway]=useState('HC004');
-    const [businessAlcohol, setBusinessAlcohol]=useState('AL002');
-    const [businessAlready, setBusinessAlready]=useState('80');
-    const [businessStaff, setBusinessStaff]=useState(10);
+    const [businessType,setBusinessType]=useState('');
+    const [businessIngre, setBusinessIngre]=useState([]);
+    const [businessCookway, setBusinessCookway]=useState([]);
+    const [businessAlcohol, setBusinessAlcohol]=useState([]);
+    //already는 전송할 때 string이어야 함.
+    const [businessAlready, setBusinessAlready]=useState(0);
+    //businessStaff는 전송할 때 number이어야 함.
+    const [businessStaff, setBusinessStaff]=useState(0);
     const [businessHours, setBusinessHours]=useState('09:00~10:00');
-    
-    const typeComponentClicked = () => {
-        console.log('codeComponentClicked');
-    }
-    const typeDiameter=SCREEN_WIDTH*0.8*0.25;
+
     let i=0;
-
-    const {setFoodInfo:setter} =route.params;
-
     const handleGoNext = () => {
-        //setter(businessType, businessIngre, businessCookway, businessAlcohol, businessAlready, businessStaff, businessHours);
-        navigation.navigate('LoginScreen');
-    }
+        //navigation.navigate('LoginScreen');
+        // console.log(businessType);
+        // console.log(businessIngre.join(','));
+        // console.log(businessCookway.join(','));
+        // console.log(businessAlcohol.join(','));
+        console.log(businessAlready);
+        console.log(businessStaff);
+    };
 
     return (
         <View style={styles.mainbody}>
@@ -43,24 +51,24 @@ const FoodInfoRegisterScreen = ({route,navigation}) => {
                     <View style={styles.foodStyleSection}>
                         <QuestionHeader text={'어떤 스타일의 음식을 판매하시나요?'}></QuestionHeader>
                         <View style={styles.foodStyleCircleRow}>
-                            {CODE_LIST_ROW1.map((code) => <TypeImageCard key={i++} source={Object.assign(code,{setter:typeComponentClicked, diameter: typeDiameter})}></TypeImageCard>)}
+                            {CODE_LIST_ROW1.map((code) => <TypeImageCard key={i++} source={Object.assign(code,{businessType, setter:setBusinessType, diameter: typeDiameter})}></TypeImageCard>)}
                         </View>
                         <View style={styles.foodStyleCircleRow}>
-                            {CODE_LIST_ROW2.map((code) => <TypeImageCard key={i++} source={Object.assign(code,{setter:typeComponentClicked, diameter: typeDiameter})}></TypeImageCard>)}
+                            {CODE_LIST_ROW2.map((code) => <TypeImageCard key={i++} source={Object.assign(code,{businessType, setter:setBusinessType, diameter: typeDiameter})}></TypeImageCard>)}
                         </View>
                     </View>
                     <View style={styles.ingSection}>
                         <QuestionHeader text={'주로 어떤 재료를 사용하시나요?(복수선택 가능)'}></QuestionHeader>
                         <View style={styles.ingSelectRow}>
-                            {ING_LIST_ROW1.map((ing) => <IngredientImageCard key={i++} source={Object.assign(ing,{diameter: typeDiameter, width:SCREEN_WIDTH*0.9*0.45})}></IngredientImageCard>)}
+                            {ING_LIST_ROW1.map((ing) => <IngredientImageCard key={i++} source={Object.assign(ing,{businessIngre, setter: setBusinessIngre, diameter: typeDiameter, width:SCREEN_WIDTH*0.9*0.45})}></IngredientImageCard>)}
                         </View>
                         <View style={styles.ingSelectRow}>
-                            {ING_LIST_ROW2.map((ing) => <IngredientImageCard key={i++} source={Object.assign(ing,{diameter: typeDiameter, width:SCREEN_WIDTH*0.9*0.45})}></IngredientImageCard>)}
+                            {ING_LIST_ROW2.map((ing) => <IngredientImageCard key={i++} source={Object.assign(ing,{businessIngre, setter: setBusinessIngre, diameter: typeDiameter, width:SCREEN_WIDTH*0.9*0.45})}></IngredientImageCard>)}
                         </View>
                     </View>
                     <View style={styles.howcookSection}>
                         <QuestionHeader text={'주로 어떻게 요리하시나요?(복수선택 가능)'}></QuestionHeader>
-                        <MultiSelectButtons source={{list:HOW_LIST}}/>
+                        <MultiSelectButtons source={{list:HOW_LIST, setter:setBusinessCookway, prop:businessCookway}}/>
                         <View style={styles.howcookInfoSection}>
                             <View style={styles.howcookRow}>
                                 <Text style={styles.howcookTitle}>※ 일반조리</Text>
@@ -80,19 +88,41 @@ const FoodInfoRegisterScreen = ({route,navigation}) => {
                     </View>
                     <View style={styles.alcholSection}>
                         <QuestionHeader text={'주류를 판매하시나요?(복수선택 가능)'}></QuestionHeader>
-                        <MultiSelectButtons source={{list:ALCOHOL_LIST}}/>
+                        <MultiSelectButtons source={{list:ALCOHOL_LIST, setter:setBusinessAlcohol, prop:businessAlcohol}}/>
                     </View>
                     <View style={styles.halfcookSection}>
                         <QuestionHeader text={'식재료 중, 반조리 식품의 비율은 어느정도 인가요?'}></QuestionHeader>
-                        <View><Text>스크롤을 이용한 이벤트 필요</Text></View>
+                        <Slider
+                            style={{width: '100%', height: 40}}
+                            minimumValue={0}
+                            maximumValue={100}
+                            minimumTrackTintColor="#FFFFFF"
+                            maximumTrackTintColor="#000000"
+                            onValueChange={value=>setBusinessAlready(value)}
+                            step={10}
+                        />
                     </View>
                     <View style={styles.employeeSection}>
                         <QuestionHeader text={'직원 수는 몇 명 인가요?'}></QuestionHeader>
-                        <View><Text>스크롤을 이용한 이벤트 필요</Text></View>
+                        <Slider
+                            style={{width: '100%', height: 40}}
+                            minimumValue={0}
+                            maximumValue={100}
+                            minimumTrackTintColor="#FFFFFF"
+                            maximumTrackTintColor="#000000"
+                            onValueChange={value=>setBusinessStaff(value)}
+                            step={1}
+                        />
                     </View>
                     <View style={styles.timeSection}>
                         <QuestionHeader text={'영업 시간을 알려주세요.'}></QuestionHeader>
-                        <View><Text>스크롤을 이용한 이벤트 필요</Text></View>
+                        <Slider
+                            style={{width: '100%', height: 40}}
+                            minimumValue={0}
+                            maximumValue={1}
+                            minimumTrackTintColor="#FFFFFF"
+                            maximumTrackTintColor="#000000"
+                        />
                     </View>
                     <View style={styles.goNextOutterWrapper}>
                         <Image
@@ -107,7 +137,7 @@ const FoodInfoRegisterScreen = ({route,navigation}) => {
                     </View>
                     <View style={styles.btnUnploadWrapper}>
                         <Pressable style={styles.btnUnpload} onPress={handleGoNext}>
-                            <Text style={styles.txtUpload}>Upload {'>'}</Text>
+                            <Text style={styles.txtUpload}>회원가입 {'>'}</Text>
                         </Pressable>  
                     </View>
                 </ScrollView>
@@ -189,13 +219,13 @@ const styles = StyleSheet.create({
     },
     goNextOutterWrapper:{
         width:'100%',
-        backgroundColor:'teal',
         height:400,
-        backgroundColor:'tomato'
+        backgroundColor:'teal',
+        marginBottom:12,
     },
     imgTorang:{
         width:'100%',
-        
+        height:300,
     },
     goNextTextSection:{
         zIndex:9999,
