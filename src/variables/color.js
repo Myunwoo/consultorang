@@ -42,4 +42,8 @@ export const theme = {
     engineeringNavy:'#334265',
     categoryCyan:'#E4F2F8',
     engineeringCircleNavy:'#163C6B',
+    
+    //AccountBookScreen
+    dateCheckedGrey: "#636363",
+    dateUnCheckedWhite: "#f4f4f4",
 };
