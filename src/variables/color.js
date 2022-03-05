@@ -27,12 +27,12 @@ export const theme = {
 
     //torang colors
     torangYellow:'#FBCC37',
-    torangBrown:'#595750',
+    torangGrey:'#595750',
 
     //FoodInfoRegisterScreen
     checkedBlue:'#153C6B',
     uncheckedGrey:'#606060',
-    howcookBackgoundGrey:'#E5E5E5',
+    darkGrey:'#E5E5E5',
     
     //MenuEngineeringScreen
     selectRow:'#B1DADE',

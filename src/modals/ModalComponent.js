@@ -9,24 +9,21 @@ import {
   BOTTOM_TAP_NAVIGATOR_HEIGHT_ANDROID
 } from '../variables/scales';
 
-const ModalComponent = ({
-  showModal,
-  setShowModal,
-  children, // 컴포넌트를 자식으로 넘겨받는다.
-}) => {
+const ModalComponent = ({ showModal, setShowModal, children}) => {
+
   return (
     <>
       {showModal ? (
         <View style={styles.mainbody}>
-          <Modal
-            animationType="fade"
-            transparent={true}
-            visible={showModal}
-            onRequestClose={() => {
-              setShowModal(!showModal);
-            }}>
-            <View style={styles.centeredView}>{children}</View>
-          </Modal>
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={showModal}
+              onRequestClose={() => {
+                setShowModal(!showModal);
+              }}>
+              <View style={styles.centeredView}>{children}</View>
+            </Modal>
         </View>
       ) : null}
     </>
@@ -53,5 +50,4 @@ const styles=StyleSheet.create({
     alignItems:'center',
     zIndex:9999,
   },
-
 });

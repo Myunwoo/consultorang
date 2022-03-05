@@ -1,22 +1,19 @@
-import React from 'react';
-
+import React, {useState} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import AccountBookScreen from './AccountBookScreen';
-import IncomeScreen from './IncomeScreen';
-import ExpenditureScreen from './ExpenditureScreen';
-import ExcelSendScreen from '../registerNavigationScreen/ExcelSendScreen';
 
-const Stack = createStackNavigator();
+import AccountBookScreen from './AccountBookScreen';
+import HistoryScreen from './HistoryScreen';
+
+const Tab = createStackNavigator();
 
 const AccountBookNavigator = (props) => {
-    return(
-        <Stack.Navigator initialRouteName="AccountBookScreen">
-            <Stack.Screen name="AccountBookScreen" component={AccountBookScreen} options={{headerShown:false}}/>
-            <Stack.Screen name="ExcelSendScreen" component={ExcelSendScreen} options={{headerShown:false}}/>
-            <Stack.Screen name="IncomeScreen" component={IncomeScreen} options={{headerShown:false}}/>
-            <Stack.Screen name="ExpenditureScreen" component={ExpenditureScreen} options={{headerShown:false}}/>
-        </Stack.Navigator>
+    return (
+
+        <Tab.Navigator initialRouteName='AccountBookScreen' screenOptions={{tabBarShowLabel:false,}}>
+            <Tab.Screen name="AccountBookScreen" component={AccountBookScreen}  options={{headerShown:false}} />
+            <Tab.Screen name="HistoryScreen" component={HistoryScreen}  options={{headerShown:false}} />
+        </Tab.Navigator>
     );
-}
+};
 
 export default AccountBookNavigator;

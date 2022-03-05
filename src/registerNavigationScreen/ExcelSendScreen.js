@@ -7,7 +7,6 @@ import { uploadFile } from '../abstract/asyncTasks';
 import * as DocumentPicker from 'expo-document-picker';
 
 const ExcelSendScreen = ({navigation}) => {
-  const [excel, setExcel] = useState(null);
 
   const handleFind = async() => {
     try {
