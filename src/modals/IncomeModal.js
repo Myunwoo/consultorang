@@ -7,25 +7,34 @@ import * as DocumentPicker from 'expo-document-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
   
 import { theme } from '../variables/color';
+import {dateObject} from '../variables/scales';
 import RegisterInput from '../components/RegisterInput';
 import ModalTitle from '../components/ModalTitle';
+import ModalDatePicker from '../components/ModalDatePicker';
 
 const IncomeModal = ({ showModal, setShowModal,}) => {
+    const {year, month, date, dateString}=dateObject();
+
     const [contentName, setContentName]=useState('');
     const [amout, setAmount]=useState('');
+    const [dateToSend, setDateToSend]=useState(`${year}.${month}.${date}`);
 
     const handleOutsideClick=()=>{
         setShowModal(false);
     };
 
-    //날짜 선택을 위한 뷰? 혹은 디폴트 캘린더를 활용할 것.
-    const handleDateSelect=()=>{
-        
-    };
-
     //서버로의 데이터 전송, 데이터 전송 성공시 기존 입력 값을 삭제해 주어야 합니다.
     const handleApply=()=>{
 
+    };
+
+    const handleSend=()=>{
+        const dataToSend={
+            name:contentName,
+            amount:amout,
+            date:dateToSend,
+        };
+        console.log(dataToSend);
     };
 
     return (
@@ -40,26 +49,17 @@ const IncomeModal = ({ showModal, setShowModal,}) => {
                     </View>
                     <ModalTitle text={'기타 수익'}></ModalTitle>
                     <View style={styles.calendarWrapper}>
-                        <Text>날짜 : </Text>
-                        <Pressable style={styles.btnDate} onPress={handleDateSelect}>
-                            <Text>21.03.21</Text>
-                            <Image
-                                resizeMode='contain'
-                                style={{width:20, height:20, marginLeft:8,}}
-                                source={require('../../image/calendar_select.png')}
-                            >
-                            </Image>
-                        </Pressable>
+                        <ModalDatePicker date={dateToSend} setter={setDateToSend}></ModalDatePicker>
                     </View>
                     <View style={styles.inputOutterWrapper}>
                         <View style={{flex:25 ,height:36, marginRight:4,}}>
                             <RegisterInput source={{setter:setContentName, placeHolder:'기타',}}></RegisterInput>
                         </View>
                         <View style={{flex:55, height:36, marginRight:4,}}>
-                            <RegisterInput source={{setter:setAmount, placeHolder:'금액',}}></RegisterInput>
+                            <RegisterInput source={{setter:setAmount, placeHolder:'금액', keyType:'numeric'}}></RegisterInput>
                         </View>
                         <View style={styles.btnSendWrapper}>
-                            <Pressable style={styles.btnSend}>
+                            <Pressable onPress={handleSend} style={styles.btnSend}>
                                 <Text style={{color:'white',}}>입력</Text>
                             </Pressable>
                         </View>
@@ -122,18 +122,6 @@ const styles = StyleSheet.create({
         borderRadius:CONTENT_SECTION_BORDER_RADIUS,
         backgroundColor:theme.darkGrey,
     },
-    calendarWrapper:{
-        width:'90%',
-        height:40,
-        flexDirection:'row',
-        alignItems:'center',
-    },
-    btnDate:{
-        height:'100%',
-        alignItems:'center',
-        marginLeft:4,
-        flexDirection:'row',
-    },
     inputOutterWrapper:{
         width:'90%',
         flexDirection:'row',
@@ -163,5 +151,9 @@ const styles = StyleSheet.create({
         height:'100%',
         justifyContent:'center',
         alignItems:'center',
+    },
+    calendarWrapper:{
+        width:'90%',
+        height:40,
     },
 });

@@ -4,27 +4,36 @@ import { StyleSheet, Text, View, Image, Pressable } from 'react-native';
 import { theme } from '../variables/color';
 
 const FixedContentComponent = (arg) => {
-    const {setter, title}=arg.source;
+    const {name, setter, title}=arg.source;
 
     let img;
     switch(title){
         case '식재료비':
-            img=require('../../image/medal_gold.png');
+            img=(name==title?require('../../image/fixed_ingredient_chk.png') : require('../../image/fixed_ingredient_unchk.png'));
             break;
         case '인건비':
-            img=require('../../image/medal_silver.png');
+            img=(name==title?require('../../image/fixed_human_chk.png') : require('../../image/fixed_human_unchk.png'));
             break;
         case '고정비':
-            img=require('../../image/medal_bronze.png');
+            img=(name==title?require('../../image/fixed_fix_chk.png') : require('../../image/fixed_fix_unchk.png'));
             break;
     }
 
     const handlePress=()=>{
-        
+        setter(title);
     };
 
+    let mainbody={
+        flex:1,
+        backgroundColor:theme.inputBackground2,
+        margin:10,
+        borderRadius:15,
+        borderColor:name==title?theme.btnExpenditureBlue : theme.darkGrey,
+        borderWidth:4,
+    }
+
     return (
-        <View style={styles.mainbody}>
+        <View style={mainbody}>
             <Pressable style={styles.btn} onPress={handlePress}>
             <Image
                 resizeMode='contain'
@@ -41,14 +50,6 @@ const FixedContentComponent = (arg) => {
 export default FixedContentComponent;
 
 const styles = StyleSheet.create({
-    mainbody:{
-        flex:1,
-        backgroundColor:theme.inputBackground2,
-        margin:10,
-        borderRadius:15,
-        borderColor:theme.darkGrey,
-        borderWidth:4,
-    },
     btn:{
         width:'100%',
         height:'100%',

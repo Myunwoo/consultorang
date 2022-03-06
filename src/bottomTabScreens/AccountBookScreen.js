@@ -105,7 +105,7 @@ const AccountBookScreen = (({navigation}) => {
                   <View style={styles.calendarWrapper}>
                       {calArr.map(cal=><WeeklyCalendar key={i++} source={cal}></WeeklyCalendar>)}
                       <View style={styles.dotWrapper}>
-                          <Pressable onPress={navigation.navigate('HistoryScreen')} style={{width:'100%', height:'100%', flexDirection:'row', alignItems:'center', justifyContent:'space-evenly'}}>
+                          <Pressable onPress={()=>navigation.navigate('HistoryScreen')} style={{width:'100%', height:'100%', flexDirection:'row', alignItems:'center', justifyContent:'space-evenly'}}>
                               <View style={{width:6, height:6, borderRadius:6, backgroundColor:theme.torangGrey}}></View>
                               <View style={{width:6, height:6, borderRadius:6, backgroundColor:theme.torangGrey}}></View>
                               <View style={{width:6, height:6, borderRadius:6, backgroundColor:theme.torangGrey}}></View>

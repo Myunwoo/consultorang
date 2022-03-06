@@ -7,24 +7,49 @@ import * as DocumentPicker from 'expo-document-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
   
 import { theme } from '../variables/color';
+import {dateObject} from '../variables/scales';
 import RegisterInput from '../components/RegisterInput';
 import FixedContentComponent from '../components/FixedContentComponent';
 import ModalTitle from '../components/ModalTitle';
+import ModalDatePicker from '../components/ModalDatePicker';
 
 const ExpeditureModal = ({ showModal, setShowModal,}) => {
+    const {year, month, date, dateString}=dateObject();
+
+    const [fixedDate, setFixedDate]=useState(`${year}.${month}.${date}`);
     const [fixedContentName, setFixedContentName]=useState('');
     const [fixedAmount, setFixedAmount]=useState('');
-    const [contentName, setContentName]=useState('');
-    const [amount, setAmount]=useState('');
+    const [etcDate, setEtcDate]=useState(`${year}.${month}.${date}`);
+    const [etcContentName, setEtcContentName]=useState('');
+    const [etcAmount, setEtcAmount]=useState('');
     
     const handleOutsideClick=()=>{
-        setShowModal(false);
+        //setShowModal(false);
+        console.log('handleOutsideClick')
     };
 
 
     const handleDateSelect=(type)=>{
         console.log(type);
     };
+
+    const handleFixedSend=()=>{
+        const dataToSend={
+            name:fixedContentName,
+            amount:fixedAmount,
+            date:fixedDate,
+        };
+        console.log(dataToSend);
+    };
+
+    const handleEtcSend=()=>{
+        const dataToSend={
+            name:etcContentName,
+            amount:etcAmount,
+            date:etcDate,
+        };
+        console.log(dataToSend);
+    }
 
     return (
         <Pressable style={styles.outside} onPress={handleOutsideClick}>
@@ -36,54 +61,36 @@ const ExpeditureModal = ({ showModal, setShowModal,}) => {
                     </View>
                     <ModalTitle text={'지출 항목'}></ModalTitle>
                     <View style={styles.calendarWrapper}>
-                        <Text>날짜 : </Text>
-                        <Pressable style={styles.btnDate} onPress={()=> handleDateSelect(0)}>
-                            <Text>21.03.21</Text>
-                            <Image
-                                resizeMode='contain'
-                                style={{width:20, height:20, marginLeft:8,}}
-                                source={require('../../image/calendar_select.png')}
-                            >
-                            </Image>
-                        </Pressable>
+                        <ModalDatePicker date={fixedDate} setter={setFixedDate}></ModalDatePicker>
                     </View>
                     <View style={styles.fixedContentWrapper}>
-                        <FixedContentComponent source={{setter:setFixedContentName,title:'식재료비'}}></FixedContentComponent>
-                        <FixedContentComponent source={{setter:setFixedContentName,title:'인건비'}}></FixedContentComponent>
-                        <FixedContentComponent source={{setter:setFixedContentName,title:'고정비'}}></FixedContentComponent>
+                        <FixedContentComponent source={{name:fixedContentName, setter:setFixedContentName,title:'식재료비'}}></FixedContentComponent>
+                        <FixedContentComponent source={{name:fixedContentName, setter:setFixedContentName,title:'인건비'}}></FixedContentComponent>
+                        <FixedContentComponent source={{name:fixedContentName, setter:setFixedContentName,title:'고정비'}}></FixedContentComponent>
                     </View>
                     <View style={styles.inputOutterWrapper}>
                         <View style={{flex:25 ,height:36, marginRight:4,}}>
-                            <RegisterInput source={{setter:setFixedAmount, placeHolder:'금액',}}></RegisterInput>
+                            <RegisterInput source={{setter:setFixedAmount, placeHolder:'금액',keyType:'numeric'}}></RegisterInput>
                         </View>
                         <View style={styles.btnSendWrapper}>
-                            <Pressable style={styles.btnSend}>
+                            <Pressable onPress={handleFixedSend} style={styles.btnSend}>
                                 <Text style={{color:'white',}}>입력</Text>
                             </Pressable>
                         </View>
                     </View>
                     <ModalTitle text={'기타 지출'}></ModalTitle>
                     <View style={styles.calendarWrapper}>
-                        <Text>날짜 : </Text>
-                        <Pressable style={styles.btnDate} onPress={()=>handleDateSelect(1)}>
-                            <Text>21.03.21</Text>
-                            <Image
-                                resizeMode='contain'
-                                style={{width:20, height:20, marginLeft:8,}}
-                                source={require('../../image/calendar_select.png')}
-                            >
-                            </Image>
-                        </Pressable>
+                        <ModalDatePicker date={etcDate} setter={setEtcDate}></ModalDatePicker>
                     </View>
                     <View style={styles.inputOutterWrapper}>
                         <View style={{flex:25 ,height:36, marginRight:4,}}>
-                            <RegisterInput source={{setter:setContentName, placeHolder:'기타',}}></RegisterInput>
+                            <RegisterInput source={{setter:setEtcContentName, placeHolder:'기타',}}></RegisterInput>
                         </View>
                         <View style={{flex:55, height:36, marginRight:4,}}>
-                            <RegisterInput source={{setter:setAmount, placeHolder:'금액',}}></RegisterInput>
+                            <RegisterInput source={{setter:setEtcAmount, placeHolder:'금액', keyType:'numeric'}}></RegisterInput>
                         </View>
                         <View style={styles.btnSendWrapper}>
-                            <Pressable style={styles.btnSend}>
+                            <Pressable onPress={handleEtcSend} style={styles.btnSend}>
                                 <Text style={{color:'white',}}>입력</Text>
                             </Pressable>
                         </View>
@@ -138,8 +145,6 @@ const styles = StyleSheet.create({
     calendarWrapper:{
         width:'90%',
         height:40,
-        flexDirection:'row',
-        alignItems:'center',
     },
     fixedContentWrapper:{
         width:'100%',

@@ -32,6 +32,7 @@ export const BASIC_SHADOW=Platform.select({
 
 export const dateObject = () => {
   const today=new Date();
+  const year=today.getFullYear();
   const month=today.getMonth()+1;
   const date=today.getDate();
   const day=today.getDay();
@@ -59,5 +60,5 @@ export const dateObject = () => {
           dateString='토요일';
           break;
   }
-  return {month,date, dateString};
+  return {year, month,date, dateString};
 }

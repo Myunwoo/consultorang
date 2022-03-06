@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import { StyleSheet, Text, View, Pressable, TextInput, Keyboard, Image } from 'react-native';
 import {
     CONTENT_SECTION_BORDER_RADIUS,
@@ -7,12 +7,22 @@ import * as DocumentPicker from 'expo-document-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
   
 import { theme } from '../variables/color';
+import {dateObject} from '../variables/scales';
 import ModalTitle from '../components/ModalTitle';
+import ModalDatePicker from '../components/ModalDatePicker';
 
 //메모의 양을 제한하는 과정이 필요할 것 같음. 메모가 늘어남에 따라 뷰는 어떻게 되는지 확인해야 함.
 
 const MemoModal = ({ showModal, setShowModal,}) => {
+    const {year, month, date, dateString}=dateObject();
     const [memo, setMemo]=useState('');
+    const [memoLen, setMemoLen]=useState(0);
+    const [dateToSend, setDateToSend]=useState(`${year}.${month}.${date}`);
+
+    useEffect(()=>{
+        setMemoLen(memo.length);
+    },[memo])
+
     const handleOutsideClick=()=>{
         setShowModal(false);
     };
@@ -32,16 +42,7 @@ const MemoModal = ({ showModal, setShowModal,}) => {
                 <View style={styles.contentOutterWrapper}>
                     <ModalTitle text={'메모 입력'}></ModalTitle>
                     <View style={styles.calendarWrapper}>
-                        <Text>날짜 : </Text>
-                        <Pressable style={styles.btnDate} onPress={handleDateSelect}>
-                            <Text>21.03.21</Text>
-                            <Image
-                                resizeMode='contain'
-                                style={{width:20, height:20, marginLeft:8,}}
-                                source={require('../../image/calendar_select.png')}
-                            >
-                            </Image>
-                        </Pressable>
+                        <ModalDatePicker date={dateToSend} setter={setDateToSend}></ModalDatePicker>
                     </View>
                     <View style={styles.memoInputWrapper}>
                         <TextInput
@@ -56,7 +57,12 @@ const MemoModal = ({ showModal, setShowModal,}) => {
                             returnKeyType="next"
                             secureTextEntry={false}
                             editable={true}
+                            maxLength={600}
+                            multiline={true}
                         />
+                    </View>
+                    <View style={styles.lengthWrapper}>
+                        <Text style={{marginRight:12,}}>{`${memoLen}/600`}</Text>
                     </View>
                     <View style={styles.btnSendWrapper}>
                         <Pressable onPress={handleSend} style={{width:'100%', height:'100%', justifyContent:'center', alignItems:'center', }}>
@@ -106,8 +112,6 @@ const styles = StyleSheet.create({
     calendarWrapper:{
         width:'90%',
         height:40,
-        flexDirection:'row',
-        alignItems:'center',
     },
     btnDate:{
         height:'100%',
@@ -119,6 +123,13 @@ const styles = StyleSheet.create({
         flex:1,
         width:'100%',
         paddingHorizontal:'5%',
+    },
+    lengthWrapper:{
+        width:'100%',
+        height:40,
+        marginBottom:30,
+        justifyContent:'center',
+        alignItems:'flex-end',
     },
     btnSendWrapper:{
         width:160,
