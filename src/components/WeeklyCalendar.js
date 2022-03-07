@@ -11,6 +11,7 @@ import { BASIC_SHADOW } from "../variables/scales";
 const WeeklyCalendar = (arg) => {
   const { width, height, date, day } = arg.source;
   const [checked, setChecked] = useState(false);
+
   let dateString;
   switch(date){
     case 0:

@@ -10,7 +10,6 @@ import {
 } from '../variables/scales';
 
 const ModalComponent = ({ showModal, setShowModal, children}) => {
-
   return (
     <>
       {showModal ? (
