@@ -12,12 +12,37 @@ const WeeklyCalendar = (arg) => {
   const { width, height, date, day } = arg.source;
   const [checked, setChecked] = useState(false);
 
+  let dateString;
+  switch(date){
+    case 0:
+        dateString='일';
+        break;
+    case 1:
+        dateString='월';
+        break;
+    case 2:
+        dateString='화';
+        break;
+    case 3:
+        dateString='수';
+        break;
+    case 4:
+        dateString='목';
+        break;
+    case 5:
+        dateString='금';
+        break;
+    case 6:
+        dateString='토';
+        break;
+}
+
   let OutWrapper = {
-    width: "15%",
-    height: "120%",
+    width: width,
+    height: height,
     borderRadius: 13,
     margin: 2,
-    backgroundColor: checked ? theme.dateCheckedGrey : theme.dateUnCheckedWhite,
+    backgroundColor: checked ? theme.dateCheckedGrey : theme.inputBackground2,
   };
 
   let numChecked = {
@@ -43,7 +68,7 @@ const WeeklyCalendar = (arg) => {
           <Text style={numChecked}>{day}</Text>
         </View>
         <View style={styles.dateWrapper}>
-          <Text style={textChecked}>{date}</Text>
+          <Text style={textChecked}>{dateString}</Text>
         </View>
       </Pressable>
     </View>
@@ -61,7 +86,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
-    height: 16,
+    height: 12,
     width: "100%",
     marginTop: 2,
   },
@@ -71,7 +96,7 @@ const styles = StyleSheet.create({
   },
   dateWrapper: {
     alignItems: "center",
-    flex: 4,
+    flex: 3,
   },
   redDot: {
     width: 8,
