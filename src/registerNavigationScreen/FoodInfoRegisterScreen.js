@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
         paddingVertical:10,
         width:'100%',
         height:120,
-        backgroundColor:theme.howcookBackgoundGrey,
+        backgroundColor:theme.darkGrey,
         borderRadius:30,
       
     },

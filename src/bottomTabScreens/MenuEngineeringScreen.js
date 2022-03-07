@@ -37,7 +37,6 @@ const handleSetCategory = (targetId, setter) => {
         'saleYm': '202202',
     }
     fetchServer('POST', '/engine/getCatEngine', dataToSend).then((responseJson) => {
-        console.log(responseJson);
         if(responseJson.data!==null){
             setter(responseJson.data);
         }
@@ -58,7 +57,6 @@ const MenuEngineeringScreen = ({navigation}) => {
         totalSale:0,
     });
 
-    //처음 화면이 마운트 되었을 때
     useEffect(()=>{
         initCategory(setCategories);
     },[]);
@@ -115,7 +113,6 @@ const MenuEngineeringScreen = ({navigation}) => {
             <View style={styles.graphSection}>
                 <GraphArrowUp></GraphArrowUp>
                 <GraphArrowRight></GraphArrowRight>
-                {/* 여기서 인풋받은 아이템들을 좌표대로 찍어주기 */}
                 {cateData.first.map((circle) => <MenuYellowCircle key={circleIndex++} source={circle}></MenuYellowCircle>)}
                 {cateData.second.map((circle) => <MenuYellowCircle key={circleIndex++} source={circle}></MenuYellowCircle>)}
                 {cateData.third.map((circle) => <MenuYellowCircle key={circleIndex++} source={circle}></MenuYellowCircle>)}
