@@ -36,6 +36,7 @@ export const dateObject = () => {
   const month=today.getMonth()+1;
   const date=today.getDate();
   const day=today.getDay();
+  const yyyymmdd=`${year}${month >= 10 ? month : '0' + month}${date >= 10 ? date : '0' + date}`;
   let dateString=''
   switch(day){
       case 0:
@@ -60,5 +61,5 @@ export const dateObject = () => {
           dateString='토요일';
           break;
   }
-  return {year, month,date, dateString};
+  return {year, month,date, dateString, yyyymmdd};
 }

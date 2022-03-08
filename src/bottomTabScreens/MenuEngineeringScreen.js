@@ -1,7 +1,8 @@
 
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Pressable, Image } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { StyleSheet, Text, View, Pressable, Image, Picker } from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
+import RNPickerSelect, { defaultStyles } from 'react-native-picker-select';
 
 import { theme } from '../variables/color';
 
@@ -17,26 +18,41 @@ import commonStyles from '../variables/commonStyles';
 
 let circleIndex=0;
 
+//페이지 로드 시 카테고리 리스트를 불러옴, 추후에 하드코딩된 아이디와 날짜를 수정해 주어야 함.
 const initCategory = async(cateSetter) => {
-    let categories=[]
+    const dataToSend={
+        'userId': 27,
+        'saleYm': '202109',
+    }
     try{
-        const categories = await getItemAsyncStorage('categories');
-        const cateJSON = JSON.parse(categories);
-        cateSetter(cateJSON);
+        fetchServer('POST', '/engine/getCatList', dataToSend).then((responseJson) => {
+            if(responseJson.data!==null){
+                cateSetter(responseJson.data);
+            }else{
+                cateSetter([]);
+            }
+        }).catch((error) => {
+            cateSetter([-1]);
+            console.log(error);
+        });
     }catch(err){
         alert(err);
     }finally{
-        return categories;
+        
     }
 }
 
+//피커에 의해 카테고리에 속한 아이템들을 불러옴, userId와 saleYm를 수정해 주어야 함.
 const handleSetCategory = (targetId, setter) => {
     const dataToSend={
         'catId': targetId,
         'userId': 27,
         'saleYm': '202202',
-    }
+    };
+    console.log('dataToSend');
+    console.log(dataToSend);
     fetchServer('POST', '/engine/getCatEngine', dataToSend).then((responseJson) => {
+        console.log(responseJson);
         if(responseJson.data!==null){
             setter(responseJson.data);
         }
@@ -45,10 +61,16 @@ const handleSetCategory = (targetId, setter) => {
     });
 }
 
+//picker를 열어주는 역할을 하면 될 듯
+const openCategoryPicker=()=>{
+
+};
+
 const MenuEngineeringScreen = ({navigation}) => {
     const {month, date, dateString}=dateObject();
     const [categories, setCategories] = useState([]);
     const [categoryTxt, setCategoryTxt] = useState('카테고리를 불러오고 있습니다');
+    const [categoryId, setCategoryId]=useState(-1);
     const [cateData, setCateData] = useState({
         first:[],
         second:[],
@@ -57,6 +79,17 @@ const MenuEngineeringScreen = ({navigation}) => {
         totalSale:0,
     });
 
+    const pickerRef = useRef();
+
+    function open() {
+        pickerRef.current.focus();
+    }
+
+    function close() {
+        pickerRef.current.blur();
+    }
+
+    //마운트 시 카테고리를 서버로부터 불러옴
     useEffect(()=>{
         initCategory(setCategories);
     },[]);
@@ -64,10 +97,31 @@ const MenuEngineeringScreen = ({navigation}) => {
     //categories가 업데이트 되면 첫 번째 카테고리의 이름과 데이터를 화면에 랜더링 합니다.
     useEffect(() => {
         if(categories.length>0){
+            if(categories[0]===-1){
+                setCategoryTxt('카테고리를 불러오는데 실패했습니다');
+                return;
+            }
+            //카테고리 중 첫 번째 카테고리의 이름, 아이디를 세팅
             setCategoryTxt(categories[0].catNm);
-            handleSetCategory(categories[0].catId, setCateData);
+            setCategoryId(categories[0].catId);
+        }else{
+            setCategoryTxt('엑셀을 추가하지 않았거나, 카테고리가 존재하지 않습니다.');
         }
-    },[categories])
+    },[categories]);
+
+    //카테고리 아이디에 변화가 있을 때 (카테고리 처음 불러올 때, 피커에서 변경될 때) 뷰의 텍스트와 점 렌더링
+    useEffect(()=>{
+        if(categoryId===-1 || categoryId===null) return;
+        const result=categories.find(category=>category.catId===categoryId);
+        if(result){
+            setCategoryTxt(result.catNm);
+            handleSetCategory(result.catId, setCateData);
+        }
+    },[categoryId]);
+
+    useEffect(()=>{
+        
+    },[cateData]);
 
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>
@@ -92,7 +146,7 @@ const MenuEngineeringScreen = ({navigation}) => {
                 <View style={styles.selectSection__selectRow}>
                     <Pressable 
                         style={styles.selectSection__pressable}
-                        onPress={() => handleSetCategory(1,setCateData)}
+                        onPress={openCategoryPicker}
                     >
                         <Text style={{width:'90%',textAlign:'center',}}>{categoryTxt}</Text>
                         <Text>^</Text>
@@ -139,6 +193,13 @@ const MenuEngineeringScreen = ({navigation}) => {
                     </View>
                 </View>
             </View>
+            <RNPickerSelect
+                onValueChange={value=>setCategoryId(value)}
+                selectedValue={categoryId}
+                items={categories.map(category=>{
+                    return {label:category.catNm, value:category.catId}
+                })}
+            />
         </LinearGradient>
     );
 };

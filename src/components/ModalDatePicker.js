@@ -27,6 +27,7 @@ const ModalDatePicker = (arg) => {
                 onCancel={() => {
                     setPickerOpen(false)
                 }}
+                mode={'date'}
             />
             <Text>날짜 : </Text>
             <Pressable style={styles.btnDate} onPress={handleDateSelect}>

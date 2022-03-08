@@ -24,7 +24,7 @@ const ExpeditureModal = ({ showModal, setShowModal,}) => {
     const [etcAmount, setEtcAmount]=useState('');
     
     const handleOutsideClick=()=>{
-        //setShowModal(false);
+        setShowModal(false);
         console.log('handleOutsideClick')
     };
 

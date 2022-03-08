@@ -1,13 +1,11 @@
-import React,{useState} from 'react';
+import React,{useState, useEffect} from 'react';
 import { StyleSheet, Text, View, Pressable, Image, ScrollView } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {LinearGradient} from 'expo-linear-gradient';
+
+import { fetchServer } from '../abstract/asyncTasks';
 
 import { theme } from '../variables/color';
 import {
-    CONTENT_SECTION_BORDER_RADIUS,
-    BASIC_SHADOW,
-    SCREEN_WIDTH,
     SCREEN_HEIGHT, 
 } from '../variables/scales';
 import {dateObject} from '../variables/scales';
@@ -17,16 +15,52 @@ import WeatherComponent from '../components/WeatherComponent';
 
 import ModalComponent from '../modals/ModalComponent';
 import FilterModal from '../modals/FilterModal';
+import IncomeAndSales from '../components/IncomeAndSales';
+
+const getDefaultEndYmd=()=>{
+    const d=new Date();
+    const year=d.getFullYear();;
+    const month=d.getMonth()+1;
+    const yyyymmdd=`${year}${month >= 10 ? month : '0' + month}01`;
+    return yyyymmdd;
+};
 
 const HistoryScreen = (({navigation}) => {
-    const {month, date, dateString}=dateObject();
+    const {year, month, date, dateString, yyyymmdd}=dateObject();
     const [filterVisible, setFilterVisible]=useState(false);
-    let i=0;
+    const [historyArr, setHistoryArr]=useState([]);
+    // const [sendObj, setSendObj]=useState({
+    //     'userId':27,
+    //     'startYmd':getDefaultEndYmd(),
+    //     'endYmd':yyyymmdd,
+    //     'historyType':'',
+    //     'specificType':'',
+    // });
+    const [sendObj, setSendObj]=useState({
+        'userId':27,
+        'startYmd':'20211201',
+        'endYmd':'20211231',
+        'historyType':'',
+        'specificType':'',
+    });
 
+    useEffect(()=>{
+        fetchServer('POST', '/account/getTotalHistoryList', sendObj).then((responseJson) => {
+            if(responseJson.data!==null){
+                setHistoryArr(responseJson.data);
+            }else{
+                setHistoryArr([]);
+            }
+        }).catch((error) => {
+            console.log(error);
+        });
+    },[sendObj]);
+
+    let i=0;
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>
             <ModalComponent key={i++} showModal={filterVisible} setShowModal={setFilterVisible}>
-                <FilterModal showModal={filterVisible} setShowModal={setFilterVisible}></FilterModal>
+                <FilterModal setSendObj={setSendObj} showModal={filterVisible} setShowModal={setFilterVisible}></FilterModal>
             </ModalComponent>
             <View style={commonStyles.headerSection}>
                 <View style={commonStyles.dateSection}>
@@ -64,7 +98,11 @@ const HistoryScreen = (({navigation}) => {
                         </Pressable>
                     </View>
                     <ScrollView style={styles.historyContentWrapper}>
-
+                        {historyArr.map(history=>
+                            <View style={styles.historyCompWrapper}>
+                                <IncomeAndSales source={history}></IncomeAndSales>
+                            </View>
+                        )}
                     </ScrollView>
                 </View>
             </View>
@@ -86,5 +124,10 @@ const styles=StyleSheet.create({
     historyContentWrapper:{
         flex:1,
         width:'100%',
-    }
+    },
+    historyCompWrapper:{
+        width:'100%',
+        height:55,
+        marginVertical:4,
+    },
 });

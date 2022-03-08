@@ -46,4 +46,8 @@ export const theme = {
     //AccountBookScreen
     dateCheckedGrey: "#636363",
     dateUnCheckedWhite: "#f4f4f4",
+
+    //IncomeAndSales
+    incomeRed: "#D84C3C",
+    outgoingBlue: "#3474CF",
 };
