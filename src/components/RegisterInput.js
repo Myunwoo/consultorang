@@ -2,11 +2,12 @@ import {StyleSheet, Keyboard, TextInput, View} from 'react-native';
 import { theme } from '../variables/color';
 
 const RegisterInput = (arg) => {
-    const {setter, placeHolder, secure: isSecure=false, editable: isEditable=true, keyType='default'}=arg.source;
+    const {prop='',setter, placeHolder, secure: isSecure=false, editable: isEditable=true, keyType='default'}=arg.source;
     return (
         <View style={styles.inputWrapper}>
             <TextInput
                 style={styles.inputStyle}
+                value={prop}
                 onChangeText={(txt) => setter(txt)}
                 placeholder={placeHolder}
                 placeholderTextColor={theme.placeholderColor}

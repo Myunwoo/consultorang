@@ -11,11 +11,11 @@ import {
 import {dateObject} from '../variables/scales';
 
 import commonStyles from '../variables/commonStyles';
-import WeatherComponent from '../components/WeatherComponent';
 
 import ModalComponent from '../modals/ModalComponent';
 import FilterModal from '../modals/FilterModal';
 import IncomeAndSales from '../components/IncomeAndSales';
+import WeatherHeader from '../components/WeatherHeader';
 
 const getDefaultEndYmd=()=>{
     const d=new Date();
@@ -62,22 +62,7 @@ const HistoryScreen = (({navigation}) => {
             <ModalComponent key={i++} showModal={filterVisible} setShowModal={setFilterVisible}>
                 <FilterModal setSendObj={setSendObj} showModal={filterVisible} setShowModal={setFilterVisible}></FilterModal>
             </ModalComponent>
-            <View style={commonStyles.headerSection}>
-                <View style={commonStyles.dateSection}>
-                    <View style={commonStyles.dateWrapper}>
-                        <Text style={{fontSize:12,color:'white',}}>Today</Text>
-                        <Text style={{fontSize:16,color:'white',}}>{`${month}/${date}`}</Text>
-                    </View>
-                    <View style={commonStyles.dayWrapper}>
-                        <Text style={{fontWeight:'bold',fontSize:20,color:theme.engineeringYellow,}}>{dateString}</Text>
-                    </View>
-                </View>
-                <View style={commonStyles.weatherImgWrapper}>
-                    <WeatherComponent 
-                        key={i++} source={{size:(SCREEN_HEIGHT*0.06) > 60 ? 60 : (SCREEN_HEIGHT*0.06)}}>    
-                    </WeatherComponent>
-                </View>
-            </View>
+            <WeatherHeader></WeatherHeader>
             <View style={commonStyles.contentSection}>
                 <View style={commonStyles.titleWrapper}>
                     <Text style={commonStyles.txtTitle}>월간 가계부</Text>

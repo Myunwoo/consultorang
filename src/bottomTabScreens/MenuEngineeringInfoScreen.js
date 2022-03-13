@@ -7,40 +7,31 @@ import {dateObject, statusBarHeight,CONTENT_SECTION_BORDER_RADIUS, BASIC_SHADOW,
 import { getItemAsyncStorage, fetchServer } from '../abstract/asyncTasks';
 import commonStyles from '../variables/commonStyles';
 
-import WeatherComponent from '../components/WeatherComponent';
-import { initialWindowMetrics } from 'react-native-safe-area-context';
+import WeatherHeader from '../components/WeatherHeader';
 
 //이 함수는 useEffect를 이용해서 서버로부터 문자열을 받아야 할 가능성이 있음
 const init=(type)=>{
     let img;
     let medalColor='#E5E5E5';
     let medalText='';
-    let analysisText='';
-    let solutionText='';
     switch(type){
         case 0:
             img=require('../../image/medal_gold.png');
             medalColor='#FFE279';
             medalText='금메달 메뉴';
-            analysisText='식당의 수익을 가장 크게 견인하고 있는 메뉴입니다.\n현재 수준을 유지하는게 중요해요!';
-            solutionText='은메달, 동메달 메뉴를 개선하여 금메달로 성장시켜주세요!';
             break;
         case 1:
             img=require('../../image/medal_silver.png');
             medalColor='#E0E0DF';
             medalText='은메달 메뉴';
-            analysisText='판매가 상대적으로 부진하여 개선이 필요합니다!\n각 메뉴의 문제점에 적합한 솔루션을 적용해 보세요.';
-            solutionText='이잉 몰루 은메달임';
             break;
         case 2:
             img=require('../../image/medal_bronze.png');
             medalColor='#D7654F';
             medalText='동메달 메뉴';
-            analysisText='앙 동메달띠';
-            solutionText='이잉 몰루 동메달임';
             break;
     }
-    return {img, medalColor, medalText, analysisText, solutionText};
+    return {img, medalColor, medalText,};
 }
 
 const MenuEngineeringInfoScreen = (({route, navigation}) => {
@@ -52,30 +43,50 @@ const MenuEngineeringInfoScreen = (({route, navigation}) => {
     const [category, setCategory]=useState(categoryTxt);
     
     const {month, date, dateString}=dateObject();
-    const {img, medalColor, medalText, analysisText, solutionText}=init(type);
+    const {img, medalColor, medalText,}=init(type);
 
+    ///////
+    //
+    //
+    ///////
+
+    // {
+    // 		"medalType" : Number, //금(1),은(2),동(3)
+    // 		"userId" : 30,
+    // 		"hasMenu": Boolean, //true(메뉴가 존재), false(메뉴가 없음)
+    // }
+
+    //sendObj구성하는 법
+    //medalType에 들어갈 데이터는 type변수에 있습니다.(1을 더해서 사용하면 맞을거에요).
+    //userId는 우선 30으로 고정하고 해주세요.
+    //hasMenu는 array변수의 array.length한 번 찍어 보시고 0이면 hasMenu를 false, 데이터가 있으면 hasMenu를 true
+
+    //fetchServer활용법
+    // fetchServer('POST', '/engine/getEngineSolList', sendObj).then((responseJson) => {
+    //     console.log(responseJson);
+    // }).catch((error) => {
+    //     console.log(error);
+    // });
+
+    //구현해야 할 일
+    //1. 화면이 처음 열리면 sendObj를 만들어 주세요.
+    //2. 만든 sendObj를 서버에 전달 해주세요.
+    //3. response가 도착할 탠데, totalSol 내용을 키키에 넣어주세요.
+    //4. solutions의 solTitle은 크크
+    //5. solution의 solContent는 케케
+    //6. imgId에 따라서 ??????된 이미지의 내용을 바꿔 주세요.
+
+
+    
+    //1번 내용을 작성할 곳
     useEffect(()=>{
-        
+        //서버로부터 키키, 케케, 크크에 넣을 데이터를 받으면 그 데이터를 useState를 이용해서 세팅 해주셔야
+        //화면이 달라질 겁니다. 
     },[])
 
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>
-            <View style={commonStyles.headerSection}>
-                <View style={commonStyles.dateSection}>
-                    <View style={commonStyles.dateWrapper}>
-                        <Text style={{fontSize:12,color:'white',}}>Today</Text>
-                        <Text style={{fontSize:16,color:'white',}}>{`${month}/${date}`}</Text>
-                    </View>
-                    <View style={commonStyles.dayWrapper}>
-                        <Text style={{fontWeight:'bold',fontSize:20,color:theme.engineeringYellow,}}>{dateString}</Text>
-                    </View>
-                </View>
-                <View style={commonStyles.weatherImgWrapper}>
-                    <WeatherComponent 
-                        source={{size:(SCREEN_HEIGHT*0.06) > 60 ? 60 : (SCREEN_HEIGHT*0.06)}}>    
-                    </WeatherComponent>
-                </View>
-            </View>
+            <WeatherHeader></WeatherHeader>
             <View style={commonStyles.contentSection}>
             <View style={commonStyles.titleWrapper}>
                 <Text style={commonStyles.txtTitle}>메뉴 엔지니어링</Text>
@@ -105,7 +116,7 @@ const MenuEngineeringInfoScreen = (({route, navigation}) => {
                                 </View>
                             </View>
                             <View style={styles.analysisTextWrapper}>
-                                <Text>{analysisText}</Text>
+                                <Text>키키</Text>
                             </View>
                             <View style={styles.categoryListWrapper}>
                                 {menus.map((menu)=><Text>{`${index++}. ${menu.menuNm}`}</Text>)}
@@ -118,13 +129,41 @@ const MenuEngineeringInfoScreen = (({route, navigation}) => {
                         </View>
                         <View style={styles.solutionOutterWrapper}>
                             <View style={styles.solutionImgWrapper}>
-                                {/* 여기 화살표, 집 이미지 추가해야 됨 */}
+                                {/* <Image
+                                    resizeMode='contain'
+                                    style={{width:30, height:30,}}
+                                    source={??????}
+                                >
+                                </Image> */}
                             </View>
                             <View style={{position:'absolute', top:22, left:18, width:52, height:1, backgroundColor:theme.engineeringCircleNavy, zIndex:3333}}></View>
                             <View style={{position:'absolute', top:19, left:66, width:8, height:8, borderRadius:8, backgroundColor:theme.engineeringCircleNavy, zIndex:3333}}></View>
                             <View style={{width:50}}></View>
                             <View style={styles.solutionContentWrapper}>
-                                <Text>{solutionText}</Text>
+                                <Text>크크</Text>
+                                <Text>케케</Text>
+                            </View>
+                        </View>
+                        <View style={styles.analysisTitleWrapper}>
+                            <View style={{width:20, height:4, backgroundColor:'#E5E5E5'}}></View>
+                            <View style={{width:10, height:10, borderRadius:20, backgroundColor:'#E5E5E5', marginRight:8,}}></View>
+                            <Text style={styles.txtTitle}>Solution</Text>
+                        </View>
+                        <View style={styles.solutionOutterWrapper}>
+                            <View style={styles.solutionImgWrapper}>
+                                {/* <Image
+                                    resizeMode='contain'
+                                    style={{width:30, height:30,}}
+                                    source={??????}
+                                >
+                                </Image> */}
+                            </View>
+                            <View style={{position:'absolute', top:22, left:18, width:52, height:1, backgroundColor:theme.engineeringCircleNavy, zIndex:3333}}></View>
+                            <View style={{position:'absolute', top:19, left:66, width:8, height:8, borderRadius:8, backgroundColor:theme.engineeringCircleNavy, zIndex:3333}}></View>
+                            <View style={{width:50}}></View>
+                            <View style={styles.solutionContentWrapper}>
+                                <Text>크크</Text>
+                                <Text>케케</Text>
                             </View>
                         </View>
                     </ScrollView>
@@ -194,7 +233,7 @@ const styles=StyleSheet.create({
     },
     solutionOutterWrapper:{
         width:'90%',
-        height:400,
+        height:200,
         flexDirection:'row',
     },
     solutionImgWrapper:{

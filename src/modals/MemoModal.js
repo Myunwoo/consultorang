@@ -3,15 +3,13 @@ import { StyleSheet, Text, View, Pressable, TextInput, Keyboard, Image } from 'r
 import {
     CONTENT_SECTION_BORDER_RADIUS,
 } from '../variables/scales';
-import * as DocumentPicker from 'expo-document-picker';
-import AsyncStorage from '@react-native-async-storage/async-storage';
   
 import { theme } from '../variables/color';
 import {dateObject} from '../variables/scales';
 import ModalTitle from '../components/ModalTitle';
 import ModalDatePicker from '../components/ModalDatePicker';
 
-//메모의 양을 제한하는 과정이 필요할 것 같음. 메모가 늘어남에 따라 뷰는 어떻게 되는지 확인해야 함.
+import { fetchServer } from '../abstract/asyncTasks';
 
 const MemoModal = ({ showModal, setShowModal,}) => {
     const {year, month, date, dateString}=dateObject();
@@ -27,12 +25,27 @@ const MemoModal = ({ showModal, setShowModal,}) => {
         setShowModal(false);
     };
 
-    const handleDateSelect=()=>{
-
-    };
-
     const handleSend=()=>{
+        const dataToSend={
+            userId:27,
+            memoYmd:dateToSend.replaceAll('.',''),
+            memoStr:memo,
+        };
+        if(memo===''){
+            alert('메모를 입력하세요');
+            return;
+        }
 
+        fetchServer('POST', '/account/insertMemo', dataToSend).then((responseJson) => {
+            if(responseJson.retCode==='0'){
+                alert('메모가 추가되었습니다');
+                setMemo('');
+            }else{
+                alert('memo insertion error');
+            }
+        }).catch((error) => {
+            console.log(error);
+        });
     };
 
     return (
@@ -47,6 +60,7 @@ const MemoModal = ({ showModal, setShowModal,}) => {
                     <View style={styles.memoInputWrapper}>
                         <TextInput
                             style={styles.inputStyle}
+                            value={memo}
                             onChangeText={(txt) => setMemo(txt)}
                             placeholder={'내용 입력'}
                             placeholderTextColor={theme.placeholderColor}
@@ -57,12 +71,12 @@ const MemoModal = ({ showModal, setShowModal,}) => {
                             returnKeyType="next"
                             secureTextEntry={false}
                             editable={true}
-                            maxLength={600}
+                            maxLength={300}
                             multiline={true}
                         />
                     </View>
                     <View style={styles.lengthWrapper}>
-                        <Text style={{marginRight:12,}}>{`${memoLen}/600`}</Text>
+                        <Text style={{marginRight:12,}}>{`${memoLen}/300`}</Text>
                     </View>
                     <View style={styles.btnSendWrapper}>
                         <Pressable onPress={handleSend} style={{width:'100%', height:'100%', justifyContent:'center', alignItems:'center', }}>

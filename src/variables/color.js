@@ -50,4 +50,8 @@ export const theme = {
     //IncomeAndSales
     incomeRed: "#D84C3C",
     outgoingBlue: "#3474CF",
+
+    //IncomeStatement
+    selectedOrange:'#F2662F',
+    unselectedGrey:'#61A3AB',
 };

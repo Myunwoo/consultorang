@@ -9,7 +9,7 @@ import { theme } from '../variables/color';
 import {dateObject, statusBarHeight,CONTENT_SECTION_BORDER_RADIUS, BASIC_SHADOW, SCREEN_HEIGHT, WEATHER_LIST} from '../variables/scales';
 import { getItemAsyncStorage, fetchServer } from '../abstract/asyncTasks';
 
-import WeatherComponent from '../components/WeatherComponent';
+import WeatherHeader from '../components/WeatherHeader';
 import MedalComponent from '../components/MedalComponent';
 import GraphArrowUp from '../components/GraphArrowUp';
 import GraphArrowRight from '../components/GraphArrowRight';
@@ -47,7 +47,7 @@ const handleSetCategory = (targetId, setter) => {
     const dataToSend={
         'catId': targetId,
         'userId': 27,
-        'saleYm': '202202',
+        'saleYm': '202112',
     };
     console.log('dataToSend');
     console.log(dataToSend);
@@ -60,11 +60,6 @@ const handleSetCategory = (targetId, setter) => {
         console.log(error);
     });
 }
-
-//picker를 열어주는 역할을 하면 될 듯
-const openCategoryPicker=()=>{
-
-};
 
 const MenuEngineeringScreen = ({navigation}) => {
     const {month, date, dateString}=dateObject();
@@ -81,11 +76,11 @@ const MenuEngineeringScreen = ({navigation}) => {
 
     const pickerRef = useRef();
 
-    function open() {
-        pickerRef.current.focus();
+    function openCategoryPicker() {
+        //pickerRef.current.focus();
     }
 
-    function close() {
+    function closeCategoryPicker() {
         pickerRef.current.blur();
     }
 
@@ -125,23 +120,7 @@ const MenuEngineeringScreen = ({navigation}) => {
 
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>
-            <View style={commonStyles.headerSection}>
-                <View style={commonStyles.dateSection}>
-                    <View style={commonStyles.dateWrapper}>
-                        <Text style={{fontSize:12,color:'white',}}>Today</Text>
-                        <Text style={{fontSize:16,color:'white',}}>{`${month}/${date}`}</Text>
-                    </View>
-                    <View style={commonStyles.dayWrapper}>
-                        <Text style={{fontWeight:'bold',fontSize:20,color:theme.engineeringYellow,}}>{dateString}</Text>
-                    </View>
-                </View>
-                <View style={commonStyles.weatherImgWrapper}>
-                    {/* 날씨 api와의 연동에서 한 번 더 고민 필요 */}
-                    <WeatherComponent 
-                        source={{size:(SCREEN_HEIGHT*0.06) > 60 ? 60 : (SCREEN_HEIGHT*0.06)}}>    
-                    </WeatherComponent>
-                </View>
-            </View>
+            <WeatherHeader></WeatherHeader>
             <View style={styles.selectSection}>
                 <View style={styles.selectSection__selectRow}>
                     <Pressable 

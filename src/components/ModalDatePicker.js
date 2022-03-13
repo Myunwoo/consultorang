@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { StyleSheet, Text, View, Pressable, Image } from 'react-native';
 import DatePicker from 'react-native-date-picker'
 
@@ -9,9 +9,16 @@ const ModalDatePicker = (arg) => {
     const [pickerDate, setPickerDate]=useState(new Date());
     const [pickerOpen, setPickerOpen]=useState(false);
 
-    const handleDateSelect=()=>{
+    const handleOpenPicker=()=>{
         setPickerOpen(true);
     };
+
+    useEffect(()=>{
+        const year=pickerDate.getFullYear();
+        const month=pickerDate.getMonth()+1;
+        const date=pickerDate.getDate();
+        setter(`${year}.${month}.${date}`);
+    },[pickerDate]);
 
     //date picker 문제는 배포 후 시험해 보아야 하겠네요...
     return (
@@ -30,7 +37,7 @@ const ModalDatePicker = (arg) => {
                 mode={'date'}
             />
             <Text>날짜 : </Text>
-            <Pressable style={styles.btnDate} onPress={handleDateSelect}>
+            <Pressable style={styles.btnDate} onPress={handleOpenPicker}>
                 <Text>{date}</Text>
                 <Image
                     resizeMode='contain'
