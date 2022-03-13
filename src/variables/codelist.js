@@ -51,3 +51,11 @@ export const WEATHER_LIST=[
     // {image:require('../../image/weather_sunny.png'), name:'weather_sunny'},
     // {image:require('../../image/weather_wind.png'), name:'weather_wind'},
 ]
+
+export const EXPEND_TYPE_LIST={
+    all:'',
+    food:'ET001',
+    human:'ET002',
+    fixed:'ET003',
+    etc:'ET004',
+};

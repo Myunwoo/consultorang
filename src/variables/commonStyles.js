@@ -24,28 +24,6 @@ export const commonStyles = StyleSheet.create({
         paddingTop:statusBarHeight,
         justifyContent:'flex-end',
     },
-    headerSection:{
-        flexDirection:'row',
-        height:'7%',
-        maxHeight:64,
-        marginHorizontal:'5%',
-        alignItems:'center',
-    },
-    dateSection:{
-        flexDirection:'row',
-        marginRight:8,
-    },
-    dateWrapper:{
-        alignItems:'center',
-        marginRight:8,
-    },
-    dayWrapper:{
-        justifyContent:'center',
-        marginRight:8,
-    },
-    weatherImgWrapper:{
-
-    },
     contentSection:{
         flex:1,
     },

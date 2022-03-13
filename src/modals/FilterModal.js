@@ -3,6 +3,52 @@ import { StyleSheet, Text, View, Pressable, TextInput, Keyboard, Image } from 'r
 import {
     CONTENT_SECTION_BORDER_RADIUS,
 } from '../variables/scales';
+<<<<<<< HEAD
+  
+import {dateObject} from '../variables/scales';
+import { theme } from '../variables/color';
+import {EXPEND_TYPE_LIST} from '../variables/codelist';
+import ModalTitle from '../components/ModalTitle';
+import FilterItem from '../components/FilterItem';
+
+const getCurYmd=()=>{
+    const d=new Date();
+    const year=d.getFullYear();;
+    const month=d.getMonth()+1;
+    const yyyymmdd=`${year}${month >= 10 ? month : '0' + month}01`;
+    return yyyymmdd;
+};
+
+const getOneYmd=()=>{
+    const d=new Date();
+    const year=d.getFullYear();
+    const month=d.getMonth()===0?12:d.getMonth();
+    const date=d.getDate();
+    const yyyymmdd=`${year}${month >= 10 ? month : '0' + month}${date >= 10 ? date : '0' + date}`;
+    return yyyymmdd;
+};
+
+const getThreeYmd=()=>{
+    const c=new Date();
+    const year=c.getFullYear();;
+    const month=c.getMonth()-3;
+    const date=c.getDate();
+
+    const target=new Date(year, month, date);
+    const y=target.getFullYear();;
+    const m=target.getMonth()+1;
+    const d=target.getDate();
+    const yyyymmdd=`${y}${m >= 10 ? m : '0' + m}${d >= 10 ? d : '0' + d}`;
+    return yyyymmdd;
+};
+
+
+const FilterModal = ({ showModal, setShowModal, setSendObj}) => {
+    const {year, month, date, dateString, yyyymmdd}=dateObject();
+    const [searchLen, setSearchLen]=useState('');
+    const [searchType, setSearchType]=useState('');
+    const [searchDetail, setSearchDetail]=useState('');
+=======
 import * as DocumentPicker from 'expo-document-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
   
@@ -17,16 +63,61 @@ const FilterModal = ({ showModal, setShowModal,}) => {
     const [searchLen, setSearchLen]=useState(0);
     const [searchType, setSearchType]=useState(0);
     const [searchDetail, setSearchDetail]=useState(0);
+>>>>>>> master
 
     const handleOutsideClick=()=>{
         setShowModal(false);
     };
 
+<<<<<<< HEAD
+    const getSearchLen=()=>{
+        if(searchLen==='' || searchLen==='당월'){
+            return getCurYmd();
+        }else if(searchLen==='1개월'){
+            return getOneYmd();
+        }else if(searchLen==='3개월'){
+            return getThreeYmd();
+        }else if(searchLen==='직접입력'){
+            //아직 미구현
+            return getCurYmd();
+        }
+        return getCurYmd();
+    };
+
+    const getHistoryType=()=>{
+        if(searchType==='' || searchType==='전체') return '';
+        else if(searchType==='수익') return 'SALE';
+        else if(searchType==='지출') return 'EXPAND';
+        return '';
+    };
+
+    const getSpecificType=()=>{
+        if(searchType!=='지출') return '';
+        if(searchDetail==='전체' || searchDetail==='') return EXPEND_TYPE_LIST.all;
+        else if(searchDetail==='식재료비') return EXPEND_TYPE_LIST.food;
+        else if(searchDetail==='인건비') return EXPEND_TYPE_LIST.human;
+        else if(searchDetail==='고정비') return EXPEND_TYPE_LIST.fixed;
+    };
+
+    const handleApply=()=>{
+        const sendObj={
+            'userId':27,
+            'startYmd':getSearchLen(),
+            'endYmd':yyyymmdd,
+            'historyType':getHistoryType(),
+            'specificType':getSpecificType(),
+        };
+
+        setSendObj(sendObj);
+    };
+
+=======
     const handleApply=()=>{
 
     };
 
     //type이 지출일경우, 스타일 면에서는 detail이 사라졌지만 서버에 데이터를 요청하는 경우엔 detail에 대한 조건이 필요합니다
+>>>>>>> master
     let detailWrapper= searchType==='지출'?{
         flexDirection:'row',
         height:72,
@@ -50,7 +141,11 @@ const FilterModal = ({ showModal, setShowModal,}) => {
                 <View style={styles.contentOutterWrapper}>
                     <ModalTitle text={'열람 기간'}></ModalTitle>
                     <View style={styles.filterItemWrapper}>
+<<<<<<< HEAD
+                        <FilterItem source={{name:searchLen, setter:setSearchLen,title:'당월',}}></FilterItem>
+=======
                         <FilterItem source={{name:searchLen, setter:setSearchLen,title:'당월'}}></FilterItem>
+>>>>>>> master
                         <FilterItem source={{name:searchLen, setter:setSearchLen,title:'1개월'}}></FilterItem>
                         <FilterItem source={{name:searchLen, setter:setSearchLen,title:'3개월'}}></FilterItem>
                         <FilterItem source={{name:searchLen, setter:setSearchLen,title:'직접입력'}}></FilterItem>
