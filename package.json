@@ -2,7 +2,11 @@
   "name": "consultorang_dev",
   "version": "1.0.0",
   "scripts": {
+<<<<<<< HEAD
     "start": "expo start",
+=======
+    "start":"expo start",
+>>>>>>> master
     "start_client": "expo start --dev-client",
     "android": "expo run:android",
     "ios": "expo run:ios",
@@ -14,7 +18,10 @@
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-community/slider": "^4.2.0",
+<<<<<<< HEAD
     "@react-native-picker/picker": "2.2.1",
+=======
+>>>>>>> master
     "@react-navigation/bottom-tabs": "^6.0.9",
     "@react-navigation/drawer": "^6.1.8",
     "@react-navigation/material-top-tabs": "^6.0.6",
@@ -44,7 +51,8 @@
     "react-native-tab-view": "^3.1.1",
     "react-native-web": "0.17.1",
     "react-native-webview": "^11.17.2",
-    "yarn": "^1.22.17"
+    "yarn": "^1.22.17",
+    "expo-splash-screen": "~0.14.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

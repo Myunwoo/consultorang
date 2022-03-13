@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Pressable, TextInput, Keyboard, Image } from 'r
 import {
     CONTENT_SECTION_BORDER_RADIUS,
 } from '../variables/scales';
+<<<<<<< HEAD
   
 import {dateObject} from '../variables/scales';
 import { theme } from '../variables/color';
@@ -47,11 +48,28 @@ const FilterModal = ({ showModal, setShowModal, setSendObj}) => {
     const [searchLen, setSearchLen]=useState('');
     const [searchType, setSearchType]=useState('');
     const [searchDetail, setSearchDetail]=useState('');
+=======
+import * as DocumentPicker from 'expo-document-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+  
+import { theme } from '../variables/color';
+import ModalTitle from '../components/ModalTitle';
+import FilterItem from '../components/FilterItem';
+
+//메모의 양을 제한하는 과정이 필요할 것 같음. 메모가 늘어남에 따라 뷰는 어떻게 되는지 확인해야 함.
+
+const FilterModal = ({ showModal, setShowModal,}) => {
+    const [memo, setMemo]=useState('');
+    const [searchLen, setSearchLen]=useState(0);
+    const [searchType, setSearchType]=useState(0);
+    const [searchDetail, setSearchDetail]=useState(0);
+>>>>>>> master
 
     const handleOutsideClick=()=>{
         setShowModal(false);
     };
 
+<<<<<<< HEAD
     const getSearchLen=()=>{
         if(searchLen==='' || searchLen==='당월'){
             return getCurYmd();
@@ -93,6 +111,13 @@ const FilterModal = ({ showModal, setShowModal, setSendObj}) => {
         setSendObj(sendObj);
     };
 
+=======
+    const handleApply=()=>{
+
+    };
+
+    //type이 지출일경우, 스타일 면에서는 detail이 사라졌지만 서버에 데이터를 요청하는 경우엔 detail에 대한 조건이 필요합니다
+>>>>>>> master
     let detailWrapper= searchType==='지출'?{
         flexDirection:'row',
         height:72,
@@ -116,7 +141,11 @@ const FilterModal = ({ showModal, setShowModal, setSendObj}) => {
                 <View style={styles.contentOutterWrapper}>
                     <ModalTitle text={'열람 기간'}></ModalTitle>
                     <View style={styles.filterItemWrapper}>
+<<<<<<< HEAD
                         <FilterItem source={{name:searchLen, setter:setSearchLen,title:'당월',}}></FilterItem>
+=======
+                        <FilterItem source={{name:searchLen, setter:setSearchLen,title:'당월'}}></FilterItem>
+>>>>>>> master
                         <FilterItem source={{name:searchLen, setter:setSearchLen,title:'1개월'}}></FilterItem>
                         <FilterItem source={{name:searchLen, setter:setSearchLen,title:'3개월'}}></FilterItem>
                         <FilterItem source={{name:searchLen, setter:setSearchLen,title:'직접입력'}}></FilterItem>
