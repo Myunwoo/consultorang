@@ -7,8 +7,6 @@ import { SCREEN_WIDTH, } from '../variables/scales';
 
 import { getItemAsyncStorage } from '../abstract/asyncTasks';
 
-import { getItemAsyncStorage } from '../abstract/asyncTasks';
-
 import commonStyles from '../variables/commonStyles';
 import WeatherHeader from '../components/WeatherHeader';
 import WeeklyCalendar from '../components/WeeklyCalendar';

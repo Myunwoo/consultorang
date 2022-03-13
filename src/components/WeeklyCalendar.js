@@ -34,32 +34,7 @@ const WeeklyCalendar = (arg) => {
     case 6:
         dateString='토';
         break;
-}
-
-  let dateString;
-  switch(date){
-    case 0:
-        dateString='일';
-        break;
-    case 1:
-        dateString='월';
-        break;
-    case 2:
-        dateString='화';
-        break;
-    case 3:
-        dateString='수';
-        break;
-    case 4:
-        dateString='목';
-        break;
-    case 5:
-        dateString='금';
-        break;
-    case 6:
-        dateString='토';
-        break;
-}
+  };
 
   let OutWrapper = {
     width: width,
