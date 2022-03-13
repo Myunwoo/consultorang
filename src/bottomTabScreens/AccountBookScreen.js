@@ -3,28 +3,14 @@ import { Platform, StyleSheet, Text, View, Pressable, Image, Modal } from 'react
 import {LinearGradient} from 'expo-linear-gradient';
 
 import { theme } from '../variables/color';
-<<<<<<< HEAD
 import { SCREEN_WIDTH, } from '../variables/scales';
 
 import { getItemAsyncStorage } from '../abstract/asyncTasks';
-=======
-import {
-    CONTENT_SECTION_BORDER_RADIUS,
-    BASIC_SHADOW,
-    SCREEN_WIDTH,
-    SCREEN_HEIGHT, 
-} from '../variables/scales';
-import {dateObject} from '../variables/scales';
->>>>>>> master
 
 import { getItemAsyncStorage } from '../abstract/asyncTasks';
 
 import commonStyles from '../variables/commonStyles';
-<<<<<<< HEAD
 import WeatherHeader from '../components/WeatherHeader';
-=======
-import WeatherComponent from '../components/WeatherComponent';
->>>>>>> master
 import WeeklyCalendar from '../components/WeeklyCalendar';
 
 import ModalComponent from '../modals/ModalComponent';
@@ -53,10 +39,6 @@ const getCalArr=()=>{
 };
 
 const AccountBookScreen = (({navigation}) => {
-<<<<<<< HEAD
-=======
-    const {month, date, dateString}=dateObject();
->>>>>>> master
     const [inModalVisible, setInModalVisible]=useState(false);
     const [expModalVisible, setExpModalVisible]=useState(false);
     const [excelModalVisible, setExcelModalVisible]=useState(false);
@@ -93,26 +75,7 @@ const AccountBookScreen = (({navigation}) => {
             <ModalComponent key={i++} showModal={memoModalVisible} setShowModal={setMemoModalVisible}>
                 <MemoModal showModal={memoModalVisible} setShowModal={setMemoModalVisible}></MemoModal>
             </ModalComponent>
-<<<<<<< HEAD
             <WeatherHeader></WeatherHeader>
-=======
-            <View style={commonStyles.headerSection}>
-                <View style={commonStyles.dateSection}>
-                    <View style={commonStyles.dateWrapper}>
-                        <Text style={{fontSize:12,color:'white',}}>Today</Text>
-                        <Text style={{fontSize:16,color:'white',}}>{`${month}/${date}`}</Text>
-                    </View>
-                    <View style={commonStyles.dayWrapper}>
-                        <Text style={{fontWeight:'bold',fontSize:20,color:theme.engineeringYellow,}}>{dateString}</Text>
-                    </View>
-                </View>
-                <View style={commonStyles.weatherImgWrapper}>
-                    <WeatherComponent 
-                        key={i++} source={{size:(SCREEN_HEIGHT*0.06) > 60 ? 60 : (SCREEN_HEIGHT*0.06)}}>    
-                    </WeatherComponent>
-                </View>
-            </View>
->>>>>>> master
             <View style={commonStyles.contentSection}>
                 <View style={commonStyles.titleWrapper}>
                     <Text style={commonStyles.txtTitle}>월간 가계부</Text>
@@ -208,19 +171,11 @@ const styles=StyleSheet.create({
         height:64,
         flexDirection: "row",
         justifyContent:'space-between',
-<<<<<<< HEAD
     },
     dotWrapper:{
         width:52,
         height:'100%',
     },
-=======
-    },
-    dotWrapper:{
-        width:52,
-        height:'100%',
-    },
->>>>>>> master
     commonTitleWrapper:{
         marginTop:4,
         width:'90%',

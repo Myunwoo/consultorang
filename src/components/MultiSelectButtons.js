@@ -1,10 +1,5 @@
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, Pressable } from 'react-native';
-<<<<<<< HEAD
-=======
-
-import { theme } from '../variables/color';
->>>>>>> master
 
 const MultiSelectButtons = (arg) => {
     const {list, setter, prop} = arg.source;

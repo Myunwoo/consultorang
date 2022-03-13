@@ -61,9 +61,5 @@ export const dateObject = () => {
           dateString='토요일';
           break;
   }
-<<<<<<< HEAD
   return {year, month,date, dateString, yyyymmdd};
-=======
-  return {year, month,date, dateString};
->>>>>>> master
 }

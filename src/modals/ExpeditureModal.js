@@ -3,11 +3,6 @@ import { StyleSheet, Text, View, Pressable, Image } from 'react-native';
 import {
     CONTENT_SECTION_BORDER_RADIUS,
 } from '../variables/scales';
-<<<<<<< HEAD
-=======
-import * as DocumentPicker from 'expo-document-picker';
-import AsyncStorage from '@react-native-async-storage/async-storage';
->>>>>>> master
   
 import { theme } from '../variables/color';
 import {dateObject} from '../variables/scales';
@@ -27,11 +22,7 @@ const ExpeditureModal = ({ showModal, setShowModal,}) => {
     const [etcAmount, setEtcAmount]=useState('');
     
     const handleOutsideClick=()=>{
-<<<<<<< HEAD
         setShowModal(false);
-=======
-        //setShowModal(false);
->>>>>>> master
         console.log('handleOutsideClick')
     };
 
@@ -42,7 +33,6 @@ const ExpeditureModal = ({ showModal, setShowModal,}) => {
 
     const handleFixedSend=()=>{
         const dataToSend={
-<<<<<<< HEAD
             userId:27,
             expendType:fixedContentName,
             expendCost:fixedAmount,
@@ -56,18 +46,11 @@ const ExpeditureModal = ({ showModal, setShowModal,}) => {
             alert('지출 액수에는 숫자를 입력해주세요.');
             return;
         }
-=======
-            name:fixedContentName,
-            amount:fixedAmount,
-            date:fixedDate,
-        };
->>>>>>> master
         console.log(dataToSend);
     };
 
     const handleEtcSend=()=>{
         const dataToSend={
-<<<<<<< HEAD
             userId:27,
             expendType:etcContentName,
             expendCost:etcAmount,
@@ -75,16 +58,6 @@ const ExpeditureModal = ({ showModal, setShowModal,}) => {
         };
         console.log(dataToSend);
     };
-
-
-=======
-            name:etcContentName,
-            amount:etcAmount,
-            date:etcDate,
-        };
-        console.log(dataToSend);
-    }
->>>>>>> master
 
     return (
         <Pressable style={styles.outside} onPress={handleOutsideClick}>
@@ -184,11 +157,7 @@ const styles = StyleSheet.create({
     fixedContentWrapper:{
         width:'100%',
         flex:1,
-<<<<<<< HEAD
         maxHeight:120,
-=======
-        maxHeight:200,
->>>>>>> master
         flexDirection:'row',
         justifyContent:'space-between',
     },

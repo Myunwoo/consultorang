@@ -52,10 +52,6 @@ const handleSetCategory = (targetId, setter) => {
     console.log('dataToSend');
     console.log(dataToSend);
     fetchServer('POST', '/engine/getCatEngine', dataToSend).then((responseJson) => {
-<<<<<<< HEAD
-        console.log(responseJson);
-=======
->>>>>>> master
         if(responseJson.data!==null){
             setter(responseJson.data);
         }
@@ -77,7 +73,6 @@ const MenuEngineeringScreen = ({navigation}) => {
         totalSale:0,
     });
 
-<<<<<<< HEAD
     const pickerRef = useRef();
 
     function openCategoryPicker() {
@@ -89,8 +84,6 @@ const MenuEngineeringScreen = ({navigation}) => {
     }
 
     //마운트 시 카테고리를 서버로부터 불러옴
-=======
->>>>>>> master
     useEffect(()=>{
         initCategory(setCategories);
     },[]);

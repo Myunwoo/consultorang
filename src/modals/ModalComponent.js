@@ -10,10 +10,6 @@ import {
 } from '../variables/scales';
 
 const ModalComponent = ({ showModal, setShowModal, children}) => {
-<<<<<<< HEAD
-
-=======
->>>>>>> master
   return (
     <>
       {showModal ? (

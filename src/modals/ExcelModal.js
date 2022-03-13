@@ -71,11 +71,6 @@ const ExcelModal = ({ showModal, setShowModal,}) => {
             if(responseJson.retCode==='1'){
                 alert(responseJson.errMsg);
             }else if(responseJson.retCode==='0'){
-<<<<<<< HEAD
-=======
-                AsyncStorage.setItem('categories', JSON.stringify(responseJson.data.menuList));
-                console.log('엑셀 전송 완료');
->>>>>>> master
                 setShowModal(false);
             }        
         });
