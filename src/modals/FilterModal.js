@@ -69,7 +69,7 @@ const FilterModal = ({ showModal, setShowModal, setSendObj}) => {
     const getHistoryType=()=>{
         if(searchType==='' || searchType==='전체') return '';
         else if(searchType==='수익') return 'SALE';
-        else if(searchType==='지출') return 'EXPAND';
+        else if(searchType==='지출') return 'EXPEND';
         return '';
     };
 
@@ -89,8 +89,8 @@ const FilterModal = ({ showModal, setShowModal, setSendObj}) => {
             'historyType':getHistoryType(),
             'specificType':getSpecificType(),
         };
-
         setSendObj(sendObj);
+        setShowModal(false);
     };
 
     let detailWrapper= searchType==='지출'?{

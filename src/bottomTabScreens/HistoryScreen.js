@@ -28,22 +28,24 @@ const HistoryScreen = (({navigation}) => {
     const {year, month, date, dateString, yyyymmdd}=dateObject();
     const [filterVisible, setFilterVisible]=useState(false);
     const [historyArr, setHistoryArr]=useState([]);
-    // const [sendObj, setSendObj]=useState({
-    //     'userId':27,
-    //     'startYmd':getDefaultEndYmd(),
-    //     'endYmd':yyyymmdd,
-    //     'historyType':'',
-    //     'specificType':'',
-    // });
     const [sendObj, setSendObj]=useState({
         'userId':27,
-        'startYmd':'20211201',
-        'endYmd':'20211231',
+        'startYmd':getDefaultEndYmd(),
+        'endYmd':yyyymmdd,
         'historyType':'',
         'specificType':'',
     });
+    // const [sendObj, setSendObj]=useState({
+    //     'userId':27,
+    //     'startYmd':'20211201',
+    //     'endYmd':'20211231',
+    //     'historyType':'',
+    //     'specificType':'',
+    // });
 
     useEffect(()=>{
+        console.log('sendObj');
+        console.log(sendObj);
         fetchServer('POST', '/account/getTotalHistoryList', sendObj).then((responseJson) => {
             if(responseJson.data!==null){
                 setHistoryArr(responseJson.data);
@@ -81,13 +83,15 @@ const HistoryScreen = (({navigation}) => {
                             </Image>
                         </Pressable>
                     </View>
-                    <ScrollView style={styles.historyContentWrapper}>
-                        {historyArr.map(history=>
-                            <View style={styles.historyCompWrapper}>
-                                <IncomeAndSales source={history}></IncomeAndSales>
-                            </View>
-                        )}
-                    </ScrollView>
+                    {historyArr.length===0 
+                    ? <View style={{flex:1, width:'100%', justifyContent:'center', alignItems:'center',}}><Text>히스토리가 없습니다.</Text></View>
+                    : <ScrollView style={styles.historyContentWrapper}>
+                            {historyArr.map(history=>
+                                <View style={styles.historyCompWrapper}>
+                                    <IncomeAndSales source={history}></IncomeAndSales>
+                                </View>
+                            )}
+                        </ScrollView>}
                 </View>
             </View>
         </LinearGradient>

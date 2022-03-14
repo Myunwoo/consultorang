@@ -175,34 +175,34 @@ const AuthInfoRegisterScreen = ({route,navigation}) => {
             </View>
             <View style={styles.inputSection}>
                 <View style={styles.inputCompOuterWrapper}>
-                    <RegisterInput source={{setter:setBusinessName, placeHolder:'상호명 입력'}}></RegisterInput>
+                    <RegisterInput source={{prop:businessName , setter:setBusinessName, placeHolder:'상호명 입력'}}></RegisterInput>
                 </View>
                 <View style={styles.inputCompOuterWrapper}>
-                    <RegisterInput source={{setter:setUserEmail, placeHolder:'이메일 입력'}}></RegisterInput>
+                    <RegisterInput source={{prop:userEmail ,setter:setUserEmail, placeHolder:'이메일 입력'}}></RegisterInput>
                     <Pressable {...emailCheckProps}>
                         <Text numberOfLines={1} adjustsFontSizeToFit style={styles.inputCompText}>중복 확인</Text>
                     </Pressable>
                 </View>
                 <View style={styles.inputCompOuterWrapper}>
-                    <RegisterInput source={{setter:setUserPassword, placeHolder:'비밀번호 입력', secure:true}}></RegisterInput>
+                    <RegisterInput source={{prop: userPassword, setter:setUserPassword, placeHolder:'비밀번호 입력', secure:true}}></RegisterInput>
                 </View>
                 <View style={styles.inputCompOuterWrapper}>
-                    <RegisterInput source={{setter:setConfirmPassword, placeHolder:'비밀번호 확인', secure:true}}></RegisterInput>
+                    <RegisterInput source={{prop:confirmPassword ,setter:setConfirmPassword, placeHolder:'비밀번호 확인', secure:true}}></RegisterInput>
                 </View>
                 <View style={styles.inputCompOuterWrapper}>
-                    <RegisterInput source={{setter:setUserPhoneNumber, placeHolder:'핸드폰 번호 입력'}}></RegisterInput>
+                    <RegisterInput source={{prop:userPhoneNumber ,setter:setUserPhoneNumber, placeHolder:'핸드폰 번호 입력'}}></RegisterInput>
                     <Pressable {...authorSendProp}>
                         <Text numberOfLines={1} adjustsFontSizeToFit>인증번호 전송</Text>
                     </Pressable>
                 </View>
                 <View style={styles.inputCompOuterWrapper}>
-                    <RegisterInput source={{setter:setAuthorNum, placeHolder:'인증번호 입력', editable:!isAuthorized}}></RegisterInput>
+                    <RegisterInput source={{prop:authorNum , setter:setAuthorNum, placeHolder:'인증번호 입력', editable:!isAuthorized}}></RegisterInput>
                     <Pressable {...authorNumProps}>
                         <Text numberOfLines={1} adjustsFontSizeToFit>인증번호 확인</Text>
                     </Pressable>
                 </View>
                 <View style={styles.inputCompOuterWrapper}>
-                    <RegisterInput source={{setter:setBusinessNum, placeHolder:'사업자 번호 입력'}}></RegisterInput>
+                    <RegisterInput source={{prop:businessNum ,setter:setBusinessNum, placeHolder:'사업자 번호 입력'}}></RegisterInput>
                     <Pressable {...businessNumProp}>
                         <Text numberOfLines={1} adjustsFontSizeToFit>사업자 번호 확인</Text>
                     </Pressable>

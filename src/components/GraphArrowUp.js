@@ -4,21 +4,21 @@ import {LinearGradient} from 'expo-linear-gradient';
 import { theme } from '../variables/color';
 
 const GraphArrowUp = (arg) => {
-    const {text}=arg;
+    const {width, height}=arg.source;
+    const leftPosition=Math.round(width/2)-15;
 
     return (
-        <View style={styles.mainbody}>
+        <View style={{
+            height:'100%',
+            alignSelf:'center',
+            width:30,
+            position:'absolute',
+            top:0,
+            left:leftPosition
+        }}>
             <View style={styles.triangle}></View>
             <LinearGradient colors={['#A17082', '#58789F', '#2A7AB2']} style={styles.arrowbody}>
             </LinearGradient>
-            <View style={styles.imgWrapper}>
-                <Image
-                    resizeMode='contain'
-                    style={{width:30,height:30,}}
-                    source={require('../../image/engineering_won.png')}
-                >
-                </Image>
-            </View>
         </View>
     );
 }
@@ -26,11 +26,6 @@ const GraphArrowUp = (arg) => {
 export default GraphArrowUp;
 
 const styles = StyleSheet.create({
-    mainbody:{
-        height:'100%',
-        alignSelf:'center',
-        width:30,
-    },
     triangle: {
         width: 0,
         height: 0,
@@ -52,10 +47,4 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius:4,
         borderBottomRightRadius:4,
     },
-    imgWrapper:{
-        width:30,
-        height:30,
-        alignSelf:'center',
-        marginTop:5,
-    }
 });

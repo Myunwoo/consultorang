@@ -6,9 +6,25 @@ const handlePress = (menuNm) => {
 }
 
 const MenuYellowCircle = (arg) => {
-    let {menuNm,popularity:x ,contributionMargin:y}=arg.source;
-    x=String(x)+'%';
-    y=String(100-y)+'%';
+    const {menuNm,popularity:x ,contributionMargin:y, type}=arg.source;
+    let posX=0;
+    let posY=0;
+
+    switch(type){
+        case 'first':
+            posX=String((x-50)*2)+'%';
+            posY=String((y-50)*2)+'%';
+            break;
+        case 'second':
+            posX=String(x)+'%';
+            posY=String((y-50)*2)+'%';
+            break;
+        case 'third':
+            posX=String(x)+'%';
+            posY=String(y)+'%';
+            break;
+    }
+    
     return (
         <View 
             style={{
@@ -19,8 +35,8 @@ const MenuYellowCircle = (arg) => {
                 justifyContent:'center',
                 alignItems:'center',
                 position:'absolute',
-                top:y,
-                left:x,
+                left:posX,
+                bottom:posY,
                 // translateX:-10,
             }}
         >

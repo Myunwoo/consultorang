@@ -49,8 +49,6 @@ const handleSetCategory = (targetId, setter) => {
         'userId': 27,
         'saleYm': '202112',
     };
-    console.log('dataToSend');
-    console.log(dataToSend);
     fetchServer('POST', '/engine/getCatEngine', dataToSend).then((responseJson) => {
         if(responseJson.data!==null){
             setter(responseJson.data);
@@ -72,6 +70,8 @@ const MenuEngineeringScreen = ({navigation}) => {
         totalCnt:0,
         totalSale:0,
     });
+
+    const [graphSize, setGraphSize]=useState({width:0, height:0});
 
     const pickerRef = useRef();
 
@@ -114,7 +114,7 @@ const MenuEngineeringScreen = ({navigation}) => {
     },[categoryId]);
 
     useEffect(()=>{
-        
+        console.log(cateData);
     },[cateData]);
 
     return (
@@ -143,11 +143,52 @@ const MenuEngineeringScreen = ({navigation}) => {
             </View>
             <View style={styles.divider}></View>
             <View style={styles.graphSection}>
-                <GraphArrowUp></GraphArrowUp>
-                <GraphArrowRight></GraphArrowRight>
-                {cateData.first.map((circle) => <MenuYellowCircle key={circleIndex++} source={circle}></MenuYellowCircle>)}
-                {cateData.second.map((circle) => <MenuYellowCircle key={circleIndex++} source={circle}></MenuYellowCircle>)}
-                {cateData.third.map((circle) => <MenuYellowCircle key={circleIndex++} source={circle}></MenuYellowCircle>)}
+                <View style={styles.graphUpperWrapper}>
+                    <View style={styles.heartImgWrapper}>
+                        <Image
+                            resizeMode='contain'
+                            style={{width:30,height:30,}}
+                            source={require('../../image/engineering_heart.png')}
+                        >
+                        </Image>
+                    </View>
+                    <View style={styles.graphWrapper} onLayout={(event)=>{
+                        setGraphSize({
+                            width:event.nativeEvent.layout.width,
+                            height:event.nativeEvent.layout.height,
+                        })
+                    }}>
+                        <GraphArrowRight source={graphSize}></GraphArrowRight>
+                        <GraphArrowUp source={graphSize}></GraphArrowUp>
+                        <View style={styles.graphLeftWrapper}>
+                            <View style={styles.graphTopLeft}>
+
+                            </View>
+                            <View style={styles.graphBottomLeft}>
+                                {cateData.third.map((circle) => <MenuYellowCircle key={circleIndex++} source={{...circle, type:'third'}}></MenuYellowCircle>)}
+                            </View>
+                        </View>
+                        <View style={styles.graphRightWrapper}>
+                            <View style={styles.graphTopRight}>
+                                {cateData.first.map((circle) => <MenuYellowCircle key={circleIndex++} source={{...circle, type:'first'}}></MenuYellowCircle>)}
+                            </View>
+                            <View style={styles.graphBottomRight}>
+                                {cateData.second.map((circle) => <MenuYellowCircle key={circleIndex++} source={{...circle, type:'second'}}></MenuYellowCircle>)}
+                            </View>
+                        </View>
+                    </View>
+                </View>
+                <View style={styles.graphDownWrapper}>
+                    <View style={{width:30, height:30,}}></View>
+                    <View style={styles.moneyImgWrapper}>
+                        <Image
+                            resizeMode='contain'
+                            style={{width:30,height:30,}}
+                            source={require('../../image/engineering_won.png')}
+                        >
+                        </Image>
+                    </View>
+                </View>
             </View>
             <View style={styles.resultSection}>
                 <View style={styles.resultSection__headerWrapper}>
@@ -264,10 +305,65 @@ const styles = StyleSheet.create({
     graphSection:{
         flex:1,
     },
+    graphUpperWrapper:{
+        flex:1,
+        flexDirection:'row',
+    },
+    graphWrapper:{
+        flex:1,
+        height:'100%',
+        flexDirection:'row',
+    },
+    graphDownWrapper:{
+        flexDirection:'row',
+        width:'100%',
+        height:30,
+    },
+    moneyImgWrapper:{
+        flex:1,
+        height:'100%',
+        alignItems:'center',
+    },
+    heartImgWrapper:{
+        width:30,
+        height:'100%',
+        justifyContent:'center',
+    },
+    graphLeftWrapper:{
+        flex:1,
+        height:'100%',
+    },
+    graphRightWrapper:{
+        flex:1,
+        height:'100%',
+    },
+    graphTopLeft:{
+        width:'100%',
+        flex:1,
+        backgroundColor:'teal',
+        opacity:0.2,
+    },
+    graphTopRight:{
+        width:'100%',
+        flex:1,
+        backgroundColor:'cyan',
+        opacity:0.2,
+    },
+    graphBottomLeft:{
+        width:'100%',
+        flex:1,
+        backgroundColor:'tomato',
+        opacity:0.2,
+    },
+    graphBottomRight:{
+        width:'100%',
+        flex:1,
+        backgroundColor:'blue',
+        opacity:0.2,
+    },
     resultSection:{
         height:'40%',
         maxHeight:220,
-        
     },
     resultSection__headerWrapper:{
         marginLeft:'5%',

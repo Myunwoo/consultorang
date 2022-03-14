@@ -60,10 +60,10 @@ const IncomeModal = ({ showModal, setShowModal,}) => {
                     setShowModal(false);
                 }
                 else{
-                    alert('기타 수익을 추가를 실패하였습니다');
+                    alert('기타 수익 추가를 실패하였습니다');
                 }
             }else{
-                alert('기타 수익을 추가를 실패하였습니다');
+                alert('기타 수익 추가를 실패하였습니다');
                 setShowModal(false);
             }
         }).catch((error) => {

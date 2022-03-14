@@ -1,15 +1,19 @@
 import React, {useState} from 'react';
-import { StyleSheet, Text, View, Pressable, Image } from 'react-native';
+import { StyleSheet, Text, View, Pressable, ScrollView } from 'react-native';
 import {
     CONTENT_SECTION_BORDER_RADIUS,
 } from '../variables/scales';
-  
+
+import {fetchServer} from '../abstract/asyncTasks';
 import { theme } from '../variables/color';
 import {dateObject} from '../variables/scales';
 import RegisterInput from '../components/RegisterInput';
 import FixedContentComponent from '../components/FixedContentComponent';
 import ModalTitle from '../components/ModalTitle';
 import ModalDatePicker from '../components/ModalDatePicker';
+import ModalItem from '../components/ModalItem';
+
+let i=0;
 
 const ExpeditureModal = ({ showModal, setShowModal,}) => {
     const {year, month, date, dateString}=dateObject();
@@ -20,15 +24,10 @@ const ExpeditureModal = ({ showModal, setShowModal,}) => {
     const [etcDate, setEtcDate]=useState(`${year}.${month}.${date}`);
     const [etcContentName, setEtcContentName]=useState('');
     const [etcAmount, setEtcAmount]=useState('');
+    const [commands, setCommands]=useState([]);
     
     const handleOutsideClick=()=>{
         setShowModal(false);
-        console.log('handleOutsideClick')
-    };
-
-
-    const handleDateSelect=(type)=>{
-        console.log(type);
     };
 
     const handleFixedSend=()=>{
@@ -36,17 +35,22 @@ const ExpeditureModal = ({ showModal, setShowModal,}) => {
             userId:27,
             expendType:fixedContentName,
             expendCost:fixedAmount,
-            expendYmd:fixedDate,
+            expendYmd:fixedDate.replaceAll('.',''),
         };
-        if(expendType==='' || expendCost===''){
+        if(fixedContentName==='' || fixedAmount===''){
             alert('지출 타입과 액수를 입력해 주세요');
             return;
         }
-        if(isNaN(expendCost)){
+        if(isNaN(fixedAmount)){
             alert('지출 액수에는 숫자를 입력해주세요.');
             return;
         }
-        console.log(dataToSend);
+        setFixedContentName('');
+        setFixedAmount('');
+        setFixedDate(`${year}.${month}.${date}`);
+        let t=commands.slice();
+        t.push(dataToSend);
+        setCommands(t);
     };
 
     const handleEtcSend=()=>{
@@ -54,9 +58,41 @@ const ExpeditureModal = ({ showModal, setShowModal,}) => {
             userId:27,
             expendType:etcContentName,
             expendCost:etcAmount,
-            expendYmd:etcDate,
+            expendYmd:etcDate.replaceAll('.',''),
         };
-        console.log(dataToSend);
+        if(etcContentName==='' || etcAmount===''){
+            alert('지출 내용과 액수를 입력해 주세요');
+            return;
+        }
+        if(isNaN(etcAmount)){
+            alert('지출 액수에는 숫자를 입력해 주세요');
+            return;
+        }
+        setEtcContentName('');
+        setEtcAmount('');
+        setEtcDate(`${year}.${month}.${date}`);
+        let t=commands.slice();
+        t.push(dataToSend);
+        setCommands(t);
+    };
+
+    const handleApply=()=>{
+        fetchServer('POST', '/account/insertExpend', commands).then((responseJson) => {
+            if(responseJson.retCode){
+                if(responseJson.retCode==='0'){
+                    alert('지출을 추가하였습니다');
+                    setShowModal(false);
+                }
+                else{
+                    alert('지출 추가를 실패하였습니다');
+                }
+            }else{
+                alert('지출 추가를 실패하였습니다');
+                setShowModal(false);
+            }
+        }).catch((error) => {
+            console.log(error);
+        });
     };
 
     return (
@@ -78,7 +114,7 @@ const ExpeditureModal = ({ showModal, setShowModal,}) => {
                     </View>
                     <View style={styles.inputOutterWrapper}>
                         <View style={{flex:25 ,height:36, marginRight:4,}}>
-                            <RegisterInput source={{setter:setFixedAmount, placeHolder:'금액',keyType:'numeric'}}></RegisterInput>
+                            <RegisterInput source={{prop:fixedAmount, setter:setFixedAmount, placeHolder:'금액',keyType:'numeric'}}></RegisterInput>
                         </View>
                         <View style={styles.btnSendWrapper}>
                             <Pressable onPress={handleFixedSend} style={styles.btnSend}>
@@ -92,16 +128,27 @@ const ExpeditureModal = ({ showModal, setShowModal,}) => {
                     </View>
                     <View style={styles.inputOutterWrapper}>
                         <View style={{flex:25 ,height:36, marginRight:4,}}>
-                            <RegisterInput source={{setter:setEtcContentName, placeHolder:'기타',}}></RegisterInput>
+                            <RegisterInput source={{prop: etcContentName, setter:setEtcContentName, placeHolder:'기타',}}></RegisterInput>
                         </View>
                         <View style={{flex:55, height:36, marginRight:4,}}>
-                            <RegisterInput source={{setter:setEtcAmount, placeHolder:'금액', keyType:'numeric'}}></RegisterInput>
+                            <RegisterInput source={{prop: etcAmount, setter:setEtcAmount, placeHolder:'금액', keyType:'numeric'}}></RegisterInput>
                         </View>
                         <View style={styles.btnSendWrapper}>
                             <Pressable onPress={handleEtcSend} style={styles.btnSend}>
                                 <Text style={{color:'white',}}>입력</Text>
                             </Pressable>
                         </View>
+                    </View>
+                    <ScrollView style={styles.scrollView}>
+                        {commands.map(command=>
+                            <View key={i++} style={styles.modalItemWrapper}>
+                                <ModalItem name={command.expendType} date={command.expendYmd} amount={command.expendCost} setter={setCommands} prop={commands} key={i++}></ModalItem>
+                            </View>)}
+                    </ScrollView>
+                    <View style={styles.btnApplyWrapper}>
+                        <Pressable style={styles.btnApply} onPress={handleApply}>
+                            <Text style={{color:'white',}}>적용</Text>
+                        </Pressable>
                     </View>
                 </View>
             </View>
@@ -180,6 +227,30 @@ const styles = StyleSheet.create({
     btnSend:{
         width:'100%',
         height:40,
+        justifyContent:'center',
+        alignItems:'center',
+    },
+    scrollView:{
+        width:'90%',
+        flex:1,
+        marginBottom:20,
+        marginTop:8,
+    },
+    modalItemWrapper:{
+        marginVertical:2,
+        width:'100%',
+        height:44,
+    },
+    btnApplyWrapper:{
+        width:160,
+        height:40,
+        backgroundColor:theme.btnExpenditureBlue,
+        marginBottom:40,
+        borderRadius:CONTENT_SECTION_BORDER_RADIUS,
+    },
+    btnApply:{
+        width:'100%',
+        height:'100%',
         justifyContent:'center',
         alignItems:'center',
     },

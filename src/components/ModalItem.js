@@ -1,13 +1,23 @@
 import React from 'react';
 import { StyleSheet, Text, View, Pressable } from 'react-native';
 
-import { theme } from '../variables/color';
-
 const ModalItem = (arg) => {
     const {name, amount, date, setter, prop}=arg;
 
     const handleDel=()=>{
-        console.log('handleDel');
+        let t=prop.slice();
+        const itemToFind = t.find(function(item) {
+            if(item.menuNm){
+                if(item.menuNm===name && item.menuSale===amount && item.saleYmd===date) return true;
+                else return false;
+            }else if(item.expendType){
+                if(item.expendType===name && item.expendCost===amount && item.expendYmd===date) return true;
+                else return false;
+            }
+        });
+        const idx = t.indexOf(itemToFind)
+        if (idx > -1) t.splice(idx, 1);
+        setter(t);
     };
 
     return (

@@ -4,18 +4,19 @@ import {LinearGradient} from 'expo-linear-gradient';
 import { theme } from '../variables/color';
 
 const GraphArrowRight = (arg) => {
-    const {text}=arg;
+    const {width, height}=arg.source;
+    
+    const topPosition=Math.round(height/2)-15;
 
     return (
-        <View style={styles.mainbody}>
-            <View style={styles.imgWrapper}>
-                <Image
-                    resizeMode='contain'
-                    style={{width:30,height:30,}}
-                    source={require('../../image/engineering_heart.png')}
-                >
-                </Image>
-            </View>
+        <View style={{
+            width:'100%',
+            height:30,
+            flexDirection:'row',
+            position:'absolute',
+            top:topPosition,
+            left:0,
+        }}>
             <LinearGradient 
                 colors={['#A17082', '#58789F', '#2A7AB2']}
                 style={styles.arrowbody}
@@ -30,19 +31,6 @@ const GraphArrowRight = (arg) => {
 export default GraphArrowRight;
 
 const styles = StyleSheet.create({
-    mainbody:{
-        width:'90%',
-        flexDirection:'row',
-        position:'absolute',
-        top:'50%',
-        left:'5%',
-        height:30,
-    },
-    imgWrapper:{
-        width:30,
-        height:30,
-        marginRight:5,
-    },
     triangle: {
         width: 0,
         height: 0,

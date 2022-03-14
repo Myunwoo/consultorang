@@ -25,6 +25,7 @@
     "expo-dev-client": "~0.8.4",
     "expo-document-picker": "~10.1.1",
     "expo-linear-gradient": "~11.0.1",
+    "expo-location": "~14.0.1",
     "expo-splash-screen": "~0.14.1",
     "expo-status-bar": "~1.2.0",
     "or": "^0.2.0",
