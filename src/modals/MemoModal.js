@@ -49,7 +49,8 @@ const MemoModal = ({ showModal, setShowModal,}) => {
     };
 
     return (
-        <Pressable style={styles.outside} onPress={handleOutsideClick}>
+        <View style={styles.outside}>
+            <Pressable onPress={handleOutsideClick} style={{flex:2, width:'100%',}}></Pressable>
             <View style={styles.mainbody}>
                 <View style={styles.headerWrapper}><Text style={styles.txtHeader}>+</Text></View>
                 <View style={styles.contentOutterWrapper}>
@@ -85,7 +86,7 @@ const MemoModal = ({ showModal, setShowModal,}) => {
                     </View>
                 </View>
             </View>
-        </Pressable>
+        </View>
     );
 }
 
@@ -100,7 +101,7 @@ const styles = StyleSheet.create({
     },
     mainbody:{
         width:'100%',
-        height:'80%',
+        flex:8,
         alignItems:'center',
         backgroundColor:theme.inputBackground2,
         borderRadius:CONTENT_SECTION_BORDER_RADIUS,

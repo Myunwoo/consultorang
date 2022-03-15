@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Alert, Modal, StyleSheet, Text, Pressable, View, Platform } from "react-native";
+import { Modal, StyleSheet, Pressable, View, } from "react-native";
 import {
   statusBarHeight,
   CONTENT_SECTION_BORDER_RADIUS,
@@ -10,6 +10,7 @@ import {
 } from '../variables/scales';
 
 const ModalComponent = ({ showModal, setShowModal, children}) => {
+
   return (
     <>
       {showModal ? (
