@@ -3,10 +3,6 @@ import { StyleSheet } from 'react-native';
 import {
     statusBarHeight,
     CONTENT_SECTION_BORDER_RADIUS,
-    BASIC_SHADOW,
-    SCREEN_HEIGHT, 
-    BOTTOM_TAP_NAVIGATOR_HEIGHT_IOS,
-    BOTTOM_TAP_NAVIGATOR_HEIGHT_ANDROID
 } from '../variables/scales';
 
 export const circleBtnProp=(defaultStyle ,target, setter, pressFunc)=>{
@@ -64,7 +60,6 @@ export const commonStyles = StyleSheet.create({
         flex:1,
         backgroundColor:theme.inputBackground2,
         alignItems:'center',
-        paddingTop:15,
     },
 });
 

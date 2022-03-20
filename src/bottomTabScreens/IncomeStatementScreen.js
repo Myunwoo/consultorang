@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { StyleSheet, Text, View, Pressable } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 
 import { theme } from '../variables/color';

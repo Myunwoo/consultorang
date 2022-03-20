@@ -9,25 +9,13 @@ import {dateObject,CONTENT_SECTION_BORDER_RADIUS, BASIC_SHADOW} from '../variabl
 import commonStyles from '../variables/commonStyles';
 import WeatherHeader from '../components/WeatherHeader';
 
-const MenuCalculatorScreen = (({navigation}) => {
-    const {month, date, dateString}=dateObject();
-    const [menuImg, setMenuImg]=useState(require('../../image/account_cart.png'));
-    const [menuName, setMenuName]=useState('');
+const MenuCalculatorCalcScreen = (({navigation, route}) => {
+    const {menuImg, menuName}=route.params;
+    
+    //console.log(navigation.getState());
 
+    const handleCalc=()=>{
 
-    //로그아웃 함수
-    const temp=()=>{
-        navigation.replace('Auth');
-        AsyncStorage.setItem('autoLogin', 'false');
-        AsyncStorage.setItem('emailSave', 'false');
-    };
-
-    const handleIngre=()=>{
-        
-    };
-
-    const handleApply=()=>{
-        navigation.navigate('MenuCalculatorCalcScreen', { menuImg, menuName });
     };
 
     return (
@@ -50,60 +38,13 @@ const MenuCalculatorScreen = (({navigation}) => {
                         </View>
                         <View style={styles.menuNameWrapper}>
                             <Text>ddd</Text>
-                            <TextInput
-                                style={styles.inputStyle}
-                                onChangeText={(txt) => setMenuName(txt)}
-                                placeholder={'메뉴 이름을 입력 해 주세요'}
-                                placeholderTextColor={theme.placeholderColor}
-                                onSubmitEditing={Keyboard.dismiss}
-                                blurOnSubmit={false}
-                                underlineColorAndroid="#f000"
-                                returnKeyType="next"
-                                maxLength={20}
-                                multiline={false}
-                            />
+                            <Text>{menuName}</Text>
                             <Text>ddd</Text>
                         </View>
                         <View style={styles.contentWrapper}>
-                            <View style={styles.stepWrapper}>
-                                <Text style={{color:theme.loginBlue}}>STEP 1</Text>
-                            </View>
-                            <View style={styles.stepTitleWrapper}>
-                                <Text style={{color:theme.loginBlue, fontWeight:'bold', fontSize:24,}}>식재료 원가 구하기</Text>
-                            </View>
-                            <View style={styles.stepContentWrapper}>
-                                <Text>메뉴에 사용되는 재료와 용량을 알려주세요.</Text>
-                                <Text>원가는 ~~~ 을 바탕으로 자동 계산됩니다.</Text>
-                            </View>
-                            <View style={styles.btnIngreOutterWrapper}>
-                                <Pressable onPress={handleIngre} style={styles.btnIngre}>
-                                    <View style={styles.btnIngreInner}>
-                                        <Image
-                                            resizeMode='contain'
-                                            style={{width:72, height:72, position:'absolute', left:0}}
-                                            source={require('../../image/account_cart.png')}
-                                        >   
-                                        </Image>
-                                        <Text style={{color:'white', fontSize:24, fontWeight:'bold',}}>식재료 담기</Text>
-                                    </View>
-                                </Pressable>
-                            </View>
-                            <View style={styles.stepWrapper}>
-                                <Text style={{color:theme.loginBlue}}>STEP 2</Text>
-                            </View>
-                            <View style={styles.stepTitleWrapper}>
-                                <Text style={{color:theme.loginBlue, fontWeight:'bold', fontSize:24,}}>재료 확인</Text>
-                            </View>
-                            <View style={styles.stepContentWrapper}>
-                                <Text>입력한 재료가 맞는지 다시 한 번 확인 해 주세요.</Text>
-                                <Text>정확한 원가계산은 가격결정의 핵심입니다.</Text>
-                            </View>
-                            <ScrollView style={styles.ingreScrollView}>
-
-                            </ScrollView>
-                            <View style={styles.btnApplyWrapper}>
-                                <Pressable onPress={handleApply} style={{width:'100%', height:'100%', justifyContent:'center',alignItems:'center',}}>
-                                    <Text style={{color:'white', fontSize:20, fontWeight:'bold',}}>확인</Text>
+                            <View style={styles.btnCalcWrapper}>
+                                <Pressable onPress={handleCalc} style={{width:'100%', height:'100%', justifyContent:'center',alignItems:'center',}}>
+                                    <Text style={{color:'black', fontSize:20, fontWeight:'bold',}}>계산하기</Text>
                                 </Pressable>
                             </View>
                         </View>
@@ -114,7 +55,7 @@ const MenuCalculatorScreen = (({navigation}) => {
     );
 });
 
-export default MenuCalculatorScreen;
+export default MenuCalculatorCalcScreen;
 
 const styles=StyleSheet.create({
     scrollview:{
@@ -198,10 +139,10 @@ const styles=StyleSheet.create({
         borderRadius:CONTENT_SECTION_BORDER_RADIUS,
         ...BASIC_SHADOW,
     },
-    btnApplyWrapper:{
+    btnCalcWrapper:{
         width:'80%',
         height:44,
-        backgroundColor:theme.titleWrapperBlue,
+        backgroundColor:theme.torangYellow,
         marginTop:20,
         marginBottom:12,
         alignSelf:'center',

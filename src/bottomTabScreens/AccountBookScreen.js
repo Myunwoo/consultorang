@@ -5,7 +5,7 @@ import {LinearGradient} from 'expo-linear-gradient';
 import { theme } from '../variables/color';
 import { SCREEN_WIDTH, } from '../variables/scales';
 
-import { getItemAsyncStorage } from '../abstract/asyncTasks';
+import { fetchServer, getItemAsyncStorage } from '../abstract/asyncTasks';
 
 import commonStyles from '../variables/commonStyles';
 import WeatherHeader from '../components/WeatherHeader';
@@ -24,17 +24,25 @@ const getCalArr=()=>{
     let year;
     let month;
     let day;
+    let endYmd, startYmd;
     const calendarArr=[];
     for(let i=0;i<calendarCount; i++){
         year = d.getFullYear(); // 년
         month = d.getMonth();   // 월
         day = d.getDate();      // 일
-        let tempDay=new Date(year, month, day - i)
+        let tempDay=new Date(year, month, day - i);
+        if(i===0) endYmd=tempDay;
+        if(i===calendarCount-1) startYmd=tempDay;
         calendarArr.push({ width: 52, height: '100%', date: tempDay.getDay(), day: tempDay.getDate() })
     }
+    console.log(endYmd);
+    console.log(startYmd);
     calendarArr.reverse();
     return calendarArr;
 };
+
+
+
 
 const AccountBookScreen = (({navigation}) => {
     const [inModalVisible, setInModalVisible]=useState(false);
@@ -42,21 +50,116 @@ const AccountBookScreen = (({navigation}) => {
     const [excelModalVisible, setExcelModalVisible]=useState(false);
     const [memoModalVisible, setMemoModalVisible]=useState(false);
     const [percentVisible, setPercentVisible]=useState(false);
+    const [saleExpend, setSaleExpend]=useState({
+        curSale:0,
+        curExpend:0,
+        prevSale:0,
+        prevExpend:0,
+    });
+    const [calArr, setCalArr]=useState([]);
+
+    const SaleAndExpend=()=>{
+        const {curSale, curExpend, prevSale, prevExpend}=saleExpend;
+        if(percentVisible){
+            if(curSale===0 && curExpend===0){
+                return (<View><Text style={{color:theme.placeholderColor}}>이번 달의 데이터를 불러오지 못했습니다. 데이터를 추가해주세요.</Text></View>);
+            }
+            if(prevSale===0 && prevExpend===0){
+                return (<View><Text style={{color:theme.placeholderColor}}>지난 달의 데이터를 불러오지 못했습니다. 데이터를 추가해주세요.</Text></View>);
+            }
+
+            let saleTriangle={
+                width: 0,
+                height: 0,
+                backgroundColor: "transparent",
+                borderStyle: "solid",
+                borderLeftWidth: 8,
+                borderRightWidth: 8,
+                borderBottomWidth: 16,
+                borderLeftColor: "transparent",
+                borderRightColor: "transparent",
+                marginBottom:-1,
+                alignSelf:'center',
+            };
+            let expendTriangle={
+                width: 0,
+                height: 0,
+                backgroundColor: "transparent",
+                borderStyle: "solid",
+                borderLeftWidth: 8,
+                borderRightWidth: 8,
+                borderBottomWidth: 16,
+                borderLeftColor: "transparent",
+                borderRightColor: "transparent",
+                marginBottom:-1,
+                alignSelf:'center',
+            };
+            
+            if(prevSale>curSale){
+                saleTriangle={...saleTriangle, borderBottomColor: theme.btnExpenditureBlue, transform: [{ rotate: "180deg" }],};
+            } else if(prevSale<curSale){
+                saleTriangle={...saleTriangle, borderBottomColor: theme.btnIncomeRed,};
+            }
+            if(prevExpend>curExpend){
+                expendTriangle={...expendTriangle, borderBottomColor: theme.btnExpenditureBlue, transform: [{ rotate: "180deg" }],}
+            } else if(prevExpend<curSale){
+                saleTriangle={...saleTriangle, borderBottomColor: theme.btnIncomeRed,};
+            }
+
+            const saleDiff=(Math.abs(prevSale-curSale)/prevSale*100).toFixed(1);
+            const expendDiff=(Math.abs(prevExpend-curExpend)/prevExpend*100).toFixed(1);
+
+            return(
+                <View style={{flex:1, width:'100%', flexDirection:'row',}}>
+                <View style={styles.percentWrapper}>
+                    <View style={styles.percentTitlerWrapper}><Text style={styles.txtPercentTitle}>수익</Text></View>
+                    <View style={styles.percentContentWrapper}>
+                        <Text style={styles.txtPercentContent}>{`${saleDiff}%`}</Text>
+                        <View style={saleTriangle}></View>
+                    </View>
+                </View>
+                <View style={{width:2, height:'100%', backgroundColor:theme.placeholderColor, opacity:0.2}}></View>
+                <View style={styles.percentWrapper}>
+                    <View style={styles.percentTitlerWrapper}><Text style={styles.txtPercentTitle}>지출</Text></View>
+                    <View style={styles.percentContentWrapper}>
+                        <Text style={styles.txtPercentContent}>{`${expendDiff}%`}</Text>
+                        <View style={expendTriangle}></View>
+                    </View>
+                </View>
+            </View>
+            );
+        }else{
+            return(<View><Text style={{color:theme.placeholderColor}}>이번 달과 지난 달의 데이터를 불러오지 못했습니다.</Text></View>);
+        }
+    };
 
     //1. 수익, 지출 퍼센트는 서버로부터의 데이터에 맞게 색과 화살표 방향을 변화해 주어야 함
     //지금은 asyncstorage에서 엑셀의 존재 여부를 판단하지만, 서버로부터 현재 월의 엑셀이 존재하는지 아닌지를 받아야 할 것으로 보입니다.
     //더불어, 비교에 의한 퍼센트 데이터 또한 서버로부터 받아 와야 합니다.
     useEffect(()=>{
-        getItemAsyncStorage('excelSended').then(res=>{
-            if(res==='true'){
+        const dataToSend={
+            'userId':27,
+            'ym':'202201',
+        };
+        fetchServer('POST', '/account/getCurPrevSaleExpend', dataToSend).then((responseJson) => {
+            if(responseJson.data!==null){
                 setPercentVisible(true);
+                setSaleExpend({
+                    curSale:responseJson.data.cur.totalSale,
+                    curExpend:responseJson.data.cur.totalExpend,
+                    prevSale:responseJson.data.prev.totalSale,
+                    prevExpend:responseJson.data.prev.totalExpend,
+                });
             }else{
-
+                setPercentVisible(false);
             }
-        })
-    });
+        }).catch((error) => {
+            console.log(error);
+        });
+        setCalArr(getCalArr());
+    },[]);
 
-    const calArr=getCalArr();
+    
 
     let i=0;
     return (
@@ -138,21 +241,7 @@ const AccountBookScreen = (({navigation}) => {
                     </View>
                     <View style={styles.memoWrapper}>
                         <View style={styles.memoInnerWrapper}>
-                            {
-                                percentVisible ? 
-                                <View style={{flex:1, width:'100%', flexDirection:'row',}}>
-                                    <View style={styles.percentWrapper}>
-                                        <View style={styles.percentTitlerWrapper}><Text style={styles.txtPercentTitle}>수익</Text></View>
-                                        <View style={styles.percentContentWrapper}><Text style={styles.txtPercentContent}>3.6%</Text></View>
-                                    </View>
-                                    <View style={{width:2, height:'100%', backgroundColor:theme.placeholderColor, opacity:0.2}}></View>
-                                    <View style={styles.percentWrapper}>
-                                        <View style={styles.percentTitlerWrapper}><Text style={styles.txtPercentTitle}>지출</Text></View>
-                                        <View style={styles.percentContentWrapper}><Text style={styles.txtPercentContent}>2.2%</Text></View>
-                                    </View>
-                                </View> :
-                                <View><Text style={{color:theme.placeholderColor}}>엑셀을 추가해 주세요</Text></View> 
-                            }
+                            { SaleAndExpend() }
                         </View>
                     </View>
                 </View>
@@ -169,6 +258,7 @@ const styles=StyleSheet.create({
         height:64,
         flexDirection: "row",
         justifyContent:'space-between',
+        marginTop:15,
     },
     dotWrapper:{
         width:52,
@@ -283,22 +373,25 @@ const styles=StyleSheet.create({
         flex:1,
         height:'100%',
         alignItems:'center',
+        justifyContent:'center',
     },
     percentTitlerWrapper:{
-        flex:1,
-        justifyContent:'flex-end',
+        height:40,
+        justifyContent:'center',
         alignItems:'center',
     },
     txtPercentTitle:{
         fontSize:20,
     },
     percentContentWrapper:{
-        flex:1,
+        height:40,
         marginTop:'5%',
-        justifyContent:'flex-start',
+        justifyContent:'center',
+        alignItems:'center',
+        flexDirection:'row',
     },
     txtPercentContent:{
-        fontSize:28,
+        fontSize:24,
         fontWeight:'bold',
     },
 });

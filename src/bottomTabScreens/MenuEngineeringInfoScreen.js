@@ -184,6 +184,7 @@ const styles=StyleSheet.create({
         backgroundColor:'#E5E5E5',
         borderRadius:CONTENT_SECTION_BORDER_RADIUS,
         marginBottom:12,
+        marginTop:15,
     },
     scrollbody:{
         width:'100%',

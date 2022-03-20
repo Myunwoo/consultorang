@@ -35,13 +35,6 @@ const HistoryScreen = (({navigation}) => {
         'historyType':'',
         'specificType':'',
     });
-    // const [sendObj, setSendObj]=useState({
-    //     'userId':27,
-    //     'startYmd':'20211201',
-    //     'endYmd':'20211231',
-    //     'historyType':'',
-    //     'specificType':'',
-    // });
 
     useEffect(()=>{
         console.log('sendObj');
@@ -72,7 +65,7 @@ const HistoryScreen = (({navigation}) => {
                 <View style={commonStyles.contentWrapper}>
                     <View style={styles.historyHeaderWrapper}>
                         <View style={styles.dateWrapper}>
-                            <Text style={{fontSize:20,}}>{`${month}월`}</Text>
+                            <Text style={{fontSize:20,}}>{`${sendObj.startYmd}  ~ ${sendObj.endYmd}`}</Text>
                         </View>
                         <Pressable onPress={()=>setFilterVisible(true)} style={{width:52, height:52,justifyContent:'center', alignItems:'center'}}>
                             <Image
@@ -108,6 +101,7 @@ const styles=StyleSheet.create({
         alignItems:'center',
         paddingHorizontal:'5%',
         flexDirection:'row',
+        marginTop:15,
     },
     historyContentWrapper:{
         flex:1,
