@@ -9,10 +9,14 @@ import {dateObject,CONTENT_SECTION_BORDER_RADIUS, BASIC_SHADOW} from '../variabl
 import commonStyles from '../variables/commonStyles';
 import WeatherHeader from '../components/WeatherHeader';
 
+import ModalComponent from '../modals/ModalComponent';
+import IngreModal from '../modals/IngreModal';
+
 const MenuCalculatorScreen = (({navigation}) => {
-    const {month, date, dateString}=dateObject();
-    const [menuImg, setMenuImg]=useState(require('../../image/account_cart.png'));
+    const [menuImg, setMenuImg]=useState(require('../../image/calc_placeholder.png'));
     const [menuName, setMenuName]=useState('');
+    const [ingreVisible, setIngreVisible]=useState(false);
+    const [ingreArr, setIngreArr]=useState([]);
 
 
     //로그아웃 함수
@@ -23,7 +27,7 @@ const MenuCalculatorScreen = (({navigation}) => {
     };
 
     const handleIngre=()=>{
-        
+        setIngreVisible(true);
     };
 
     const handleApply=()=>{
@@ -32,6 +36,9 @@ const MenuCalculatorScreen = (({navigation}) => {
 
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>
+            <ModalComponent showModal={ingreVisible} setShowModal={setIngreVisible}>
+                <IngreModal setSendObj={setIngreArr} showModal={ingreVisible} setShowModal={setIngreVisible}></IngreModal>
+            </ModalComponent>
             <WeatherHeader></WeatherHeader>
             <View style={commonStyles.contentSection}>
                 <View style={commonStyles.titleWrapper}>

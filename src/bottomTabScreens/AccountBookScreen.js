@@ -35,8 +35,6 @@ const getCalArr=()=>{
         if(i===calendarCount-1) startYmd=tempDay;
         calendarArr.push({ width: 52, height: '100%', date: tempDay.getDay(), day: tempDay.getDate() })
     }
-    console.log(endYmd);
-    console.log(startYmd);
     calendarArr.reverse();
     return calendarArr;
 };
