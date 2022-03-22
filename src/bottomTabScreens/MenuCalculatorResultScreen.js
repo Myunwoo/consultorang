@@ -10,12 +10,13 @@ import commonStyles from '../variables/commonStyles';
 import WeatherHeader from '../components/WeatherHeader';
 
 import ModalComponent from '../modals/ModalComponent';
-import IngreModal from '../modals/IngreModal';
+import PrimeCostModal from '../modals/PrimeCostModal';
 
 const MenuCalculatorResultScreen = (({navigation, route}) => {
     //이전 화면으로부터 넘겨받은 데이터를 이용해 계산해주어야 함
     const {menuName}=route.params;
 
+    const [primeVisible, setPrimeVisible]=useState(false);
     const [cost, setCost]=useState({
        ingre:1,
        human:2, 
@@ -33,8 +34,15 @@ const MenuCalculatorResultScreen = (({navigation, route}) => {
        max:98, 
     });
 
+    const handlePrimeOpen=()=>{
+        setPrimeVisible(true);
+    };
+
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>
+            <ModalComponent showModal={primeVisible} setShowModal={setPrimeVisible}>
+                <PrimeCostModal showModal={primeVisible} setShowModal={setPrimeVisible}></PrimeCostModal>
+            </ModalComponent>
             <WeatherHeader></WeatherHeader>
             <View style={commonStyles.contentSection}>
                 <View style={commonStyles.titleWrapper}>
@@ -70,7 +78,7 @@ const MenuCalculatorResultScreen = (({navigation, route}) => {
                                     <View style={{backgroundColor:theme.primeCostOrange ,...styles.cardTitleInnerWrapper}}>
                                         <Text style={styles.txtCardTitle}>프라임 코스트법</Text>
                                     </View>
-                                    <Pressable style={styles.btnCardInfo}>
+                                    <Pressable onPress={handlePrimeOpen} style={styles.btnCardInfo}>
                                         <Image
                                             resizeMode='contain'
                                             style={{width:'100%', height:'100%',marginLeft:8,}}

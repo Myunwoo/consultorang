@@ -59,9 +59,7 @@ const handleSetCategory = (targetId, setter) => {
 }
 
 const MenuEngineeringScreen = ({navigation}) => {
-    const {month, date, dateString}=dateObject();
     const [categories, setCategories] = useState([]);
-    const [categoryTxt, setCategoryTxt] = useState('카테고리를 불러오고 있습니다');
     const [categoryId, setCategoryId]=useState(-1);
     const [cateData, setCateData] = useState({
         first:[],
@@ -88,27 +86,11 @@ const MenuEngineeringScreen = ({navigation}) => {
         initCategory(setCategories);
     },[]);
 
-    //categories가 업데이트 되면 첫 번째 카테고리의 이름과 데이터를 화면에 랜더링 합니다.
-    useEffect(() => {
-        if(categories.length>0){
-            if(categories[0]===-1){
-                setCategoryTxt('카테고리를 불러오는데 실패했습니다');
-                return;
-            }
-            //카테고리 중 첫 번째 카테고리의 이름, 아이디를 세팅
-            setCategoryTxt(categories[0].catNm);
-            setCategoryId(categories[0].catId);
-        }else{
-            setCategoryTxt('엑셀을 추가하지 않았거나, 카테고리가 존재하지 않습니다.');
-        }
-    },[categories]);
-
     //카테고리 아이디에 변화가 있을 때 (카테고리 처음 불러올 때, 피커에서 변경될 때) 뷰의 텍스트와 점 렌더링
     useEffect(()=>{
         if(categoryId===-1 || categoryId===null) return;
         const result=categories.find(category=>category.catId===categoryId);
         if(result){
-            setCategoryTxt(result.catNm);
             handleSetCategory(result.catId, setCateData);
         }
     },[categoryId]);
@@ -122,13 +104,34 @@ const MenuEngineeringScreen = ({navigation}) => {
             <WeatherHeader></WeatherHeader>
             <View style={styles.selectSection}>
                 <View style={styles.selectSection__selectRow}>
-                    <Pressable 
-                        style={styles.selectSection__pressable}
-                        onPress={openCategoryPicker}
-                    >
-                        <Text style={{width:'90%',textAlign:'center',}}>{categoryTxt}</Text>
-                        <Text>^</Text>
-                    </Pressable>
+                    <RNPickerSelect
+                        onValueChange={value=>setCategoryId(value)}
+                        selectedValue={categoryId}
+                        items={categories.map(category=>{
+                            return {label:category.catNm, value:category.catId}
+                        })}
+                        style={pickerSelectStyles}
+                        Icon={() => {
+                            return (
+                              <View
+                                style={{
+                                  backgroundColor: 'transparent',
+                                  borderTopWidth: 8,
+                                  borderTopColor: 'gray',
+                                  borderRightWidth: 10,
+                                  alignItems:'center',
+                                  justifyContent:'center',
+                                  borderRightColor: 'transparent',
+                                  borderLeftWidth: 10,
+                                  borderLeftColor: 'transparent',
+                                  width: 10,
+                                  height:30,
+                                  marginTop:12,
+                                }}
+                              />
+                            );
+                          }}
+                    />
                 </View>
                 <View style={styles.selectSection__showRow}>
                     <View style={styles.selectSection__showColumn}>
@@ -162,7 +165,7 @@ const MenuEngineeringScreen = ({navigation}) => {
                         <GraphArrowUp source={graphSize}></GraphArrowUp>
                         <View style={styles.graphLeftWrapper}>
                             <View style={styles.graphTopLeft}>
-
+                                {cateData.second.map((circle) => <MenuYellowCircle key={circleIndex++} source={{...circle, type:'second'}}></MenuYellowCircle>)}
                             </View>
                             <View style={styles.graphBottomLeft}>
                                 {cateData.third.map((circle) => <MenuYellowCircle key={circleIndex++} source={{...circle, type:'third'}}></MenuYellowCircle>)}
@@ -173,7 +176,7 @@ const MenuEngineeringScreen = ({navigation}) => {
                                 {cateData.first.map((circle) => <MenuYellowCircle key={circleIndex++} source={{...circle, type:'first'}}></MenuYellowCircle>)}
                             </View>
                             <View style={styles.graphBottomRight}>
-                                {cateData.second.map((circle) => <MenuYellowCircle key={circleIndex++} source={{...circle, type:'second'}}></MenuYellowCircle>)}
+                                
                             </View>
                         </View>
                     </View>
@@ -212,13 +215,6 @@ const MenuEngineeringScreen = ({navigation}) => {
                     </View>
                 </View>
             </View>
-            <RNPickerSelect
-                onValueChange={value=>setCategoryId(value)}
-                selectedValue={categoryId}
-                items={categories.map(category=>{
-                    return {label:category.catNm, value:category.catId}
-                })}
-            />
         </LinearGradient>
     );
 };
@@ -264,14 +260,9 @@ const styles = StyleSheet.create({
         maxWidth:700,
         flex:1,
         backgroundColor:theme.inputBackground2,
-        ...BASIC_SHADOW,
-    },
-    selectSection__pressable:{
-        flexDirection:'row',
-        width:'100%',
-        height:'100%',
         justifyContent:'center',
         alignItems:'center',
+        ...BASIC_SHADOW,
     },
     selectSection__showRow:{
         flexDirection:'row',
@@ -401,5 +392,27 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         justifyContent:'center',
         alignItems:'center',
+    },
+});
+
+const pickerSelectStyles = StyleSheet.create({
+    inputIOS: {
+        fontSize: 16,
+        height: '100%', 
+        width:'100%',
+        color: '#000000',
+        padding: 10,
+        textAlign:'center',
+    },
+    inputAndroid: {
+        fontSize: 16,
+        height: '100%', 
+        width: '100%', 
+        color: '#000000',
+        padding: 10,
+        textAlign:'center',
+    },
+    iconContainer: {
+        right: 10,
     },
 });

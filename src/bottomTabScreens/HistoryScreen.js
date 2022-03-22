@@ -37,8 +37,6 @@ const HistoryScreen = (({navigation}) => {
     });
 
     useEffect(()=>{
-        console.log('sendObj');
-        console.log(sendObj);
         fetchServer('POST', '/account/getTotalHistoryList', sendObj).then((responseJson) => {
             if(responseJson.data!==null){
                 setHistoryArr(responseJson.data);

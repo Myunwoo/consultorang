@@ -12,19 +12,40 @@ const MenuYellowCircle = (arg) => {
 
     switch(type){
         case 'first':
-            posX=String((x-50)*2)+'%';
-            posY=String((y-50)*2)+'%';
+            posX=(x-50)*2;
+            posY=(y-50)*2;
             break;
         case 'second':
-            posX=String(x)+'%';
-            posY=String((y-50)*2)+'%';
+            posX=x;
+            posY=(y-50)*2;
             break;
         case 'third':
-            posX=String(x)+'%';
-            posY=String(y)+'%';
+            posX=x;
+            posY=y;
             break;
     }
-    
+    let diffX=Math.abs(50-posX)/20;
+    let diffY=Math.abs(50-posY)/20;
+
+    //first, second, third가 어떤 기준으로 오는지 알아야될듯??????
+    /////
+    if(posX>=50 && posY>=50){
+        posX-=diffX;
+        posY-=diffY;
+    }else if(posX<50 && posY>=50){
+        posX+=diffX;
+        posY-=diffY;
+    }else if(posX>=50 && posY<50){
+        posX-=diffX;
+        posY+=diffY;
+    }else{
+        posX+=diffX;
+        posY+=diffY;
+    }
+
+    posX=String(posX)+'%';
+    posY=String(posY)+'%';
+
     return (
         <View 
             style={{
