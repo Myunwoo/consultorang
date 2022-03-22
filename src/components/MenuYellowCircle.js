@@ -6,9 +6,49 @@ const handlePress = (menuNm) => {
 }
 
 const MenuYellowCircle = (arg) => {
-    let {menuNm,popularity:x ,contributionMargin:y}=arg.source;
-    x=String(x)+'%';
-    y=String(100-y)+'%';
+    const {menuNm,popularity:x ,contributionMargin:y, type}=arg.source;
+    let posX=0;
+    let posY=0;
+
+    switch(type){
+        case 'first':
+            posX=(x-50)*2;
+            posY=(y-50)*2;
+            break;
+        case 'second':
+            posX=x;
+            posY=(y-50)*2;
+            break;
+        case 'third':
+            posX=x;
+            posY=y;
+            break;
+    }
+    let diffX=Math.abs(50-posX)/20;
+    let diffY=Math.abs(50-posY)/20;
+
+    //first, second, third가 어떤 기준으로 오는지 알아야될듯??????
+    /////
+    if(posX>=50 && posY>=50){
+        posX-=diffX;
+        posY-=diffY;
+    }else if(posX<50 && posY>=50){
+        posX+=diffX;
+        posY-=diffY;
+    }else if(posX>=50 && posY<50){
+        posX-=diffX;
+        posY+=diffY;
+    }else{
+        posX+=diffX;
+        posY+=diffY;
+    }
+
+    posX=String(posX)+'%';
+    posY=String(posY)+'%';
+    // console.log(menuNm)
+    // console.log(posX);
+    // console.log(posY);
+
     return (
         <View 
             style={{
@@ -19,8 +59,8 @@ const MenuYellowCircle = (arg) => {
                 justifyContent:'center',
                 alignItems:'center',
                 position:'absolute',
-                top:y,
-                left:x,
+                left:posX,
+                bottom:posY,
                 // translateX:-10,
             }}
         >

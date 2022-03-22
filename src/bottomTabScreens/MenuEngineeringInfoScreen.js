@@ -41,48 +41,45 @@ const MenuEngineeringInfoScreen = (({route, navigation}) => {
     const [medal, setMedal]=useState(type);
     const [menus, setMenus]=useState(array);
     const [category, setCategory]=useState(categoryTxt);
-    
-    const {month, date, dateString}=dateObject();
+    const [sendObj, setSendObj]=useState({
+        'userId':30,
+        'medalType':0,
+        'hasMenu':false,
+    });
     const {img, medalColor, medalText,}=init(type);
 
-    ///////
-    //
-    //
-    ///////
-
-    // {
-    // 		"medalType" : Number, //금(1),은(2),동(3)
-    // 		"userId" : 30,
-    // 		"hasMenu": Boolean, //true(메뉴가 존재), false(메뉴가 없음)
-    // }
-
-    //sendObj구성하는 법
-    //medalType에 들어갈 데이터는 type변수에 있습니다.(1을 더해서 사용하면 맞을거에요).
-    //userId는 우선 30으로 고정하고 해주세요.
-    //hasMenu는 array변수의 array.length한 번 찍어 보시고 0이면 hasMenu를 false, 데이터가 있으면 hasMenu를 true
-
-    //fetchServer활용법
-    // fetchServer('POST', '/engine/getEngineSolList', sendObj).then((responseJson) => {
-    //     console.log(responseJson);
-    // }).catch((error) => {
-    //     console.log(error);
-    // });
-
     //구현해야 할 일
-    //1. 화면이 처음 열리면 sendObj를 만들어 주세요.
-    //2. 만든 sendObj를 서버에 전달 해주세요.
     //3. response가 도착할 탠데, totalSol 내용을 키키에 넣어주세요.
     //4. solutions의 solTitle은 크크
     //5. solution의 solContent는 케케
     //6. imgId에 따라서 ??????된 이미지의 내용을 바꿔 주세요.
 
-
-    
-    //1번 내용을 작성할 곳
     useEffect(()=>{
         //서버로부터 키키, 케케, 크크에 넣을 데이터를 받으면 그 데이터를 useState를 이용해서 세팅 해주셔야
         //화면이 달라질 겁니다. 
-    },[])
+        if(array.length<=0){
+            setSendObj({
+                'userId':30,
+                'medalType':type,
+                'hasMenu':false,
+            });
+        } else{
+            setSendObj({
+                'userId':30,
+                'medalType':type,
+                'hasMenu':true,
+            });
+        }
+    },[]);
+
+    useEffect(()=>{
+        if(sendObj.medalType===0) return;
+        // fetchServer('POST', '/engine/getEngineSolList', sendObj).then((responseJson) => {
+        //     console.log(responseJson);
+        // }).catch((error) => {
+        //     console.log(error);
+        // });
+    },[sendObj]);
 
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>
@@ -184,6 +181,7 @@ const styles=StyleSheet.create({
         backgroundColor:'#E5E5E5',
         borderRadius:CONTENT_SECTION_BORDER_RADIUS,
         marginBottom:12,
+        marginTop:15,
     },
     scrollbody:{
         width:'100%',

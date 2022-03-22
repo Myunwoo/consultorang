@@ -54,4 +54,7 @@ export const theme = {
     //IncomeStatement
     selectedOrange:'#F2662F',
     unselectedGrey:'#61A3AB',
+
+    //MenuCalculator
+    primeCostOrange:'#F88825',
 };

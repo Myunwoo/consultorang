@@ -2,8 +2,6 @@ import React from 'react';
 import { StyleSheet, Text, View,  } from 'react-native';
 
 import { SCREEN_HEIGHT, } from '../variables/scales';
-
-import commonStyles from '../variables/commonStyles';
 import { theme } from '../variables/color';
 import {dateObject} from '../variables/scales';
 

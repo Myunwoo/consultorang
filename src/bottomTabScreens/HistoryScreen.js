@@ -28,17 +28,10 @@ const HistoryScreen = (({navigation}) => {
     const {year, month, date, dateString, yyyymmdd}=dateObject();
     const [filterVisible, setFilterVisible]=useState(false);
     const [historyArr, setHistoryArr]=useState([]);
-    // const [sendObj, setSendObj]=useState({
-    //     'userId':27,
-    //     'startYmd':getDefaultEndYmd(),
-    //     'endYmd':yyyymmdd,
-    //     'historyType':'',
-    //     'specificType':'',
-    // });
     const [sendObj, setSendObj]=useState({
         'userId':27,
-        'startYmd':'20211201',
-        'endYmd':'20211231',
+        'startYmd':getDefaultEndYmd(),
+        'endYmd':yyyymmdd,
         'historyType':'',
         'specificType':'',
     });
@@ -70,7 +63,7 @@ const HistoryScreen = (({navigation}) => {
                 <View style={commonStyles.contentWrapper}>
                     <View style={styles.historyHeaderWrapper}>
                         <View style={styles.dateWrapper}>
-                            <Text style={{fontSize:20,}}>{`${month}월`}</Text>
+                            <Text style={{fontSize:20,}}>{`${sendObj.startYmd}  ~ ${sendObj.endYmd}`}</Text>
                         </View>
                         <Pressable onPress={()=>setFilterVisible(true)} style={{width:52, height:52,justifyContent:'center', alignItems:'center'}}>
                             <Image
@@ -81,13 +74,15 @@ const HistoryScreen = (({navigation}) => {
                             </Image>
                         </Pressable>
                     </View>
-                    <ScrollView style={styles.historyContentWrapper}>
-                        {historyArr.map(history=>
-                            <View style={styles.historyCompWrapper}>
-                                <IncomeAndSales source={history}></IncomeAndSales>
-                            </View>
-                        )}
-                    </ScrollView>
+                    {historyArr.length===0 
+                    ? <View style={{flex:1, width:'100%', justifyContent:'center', alignItems:'center',}}><Text>히스토리가 없습니다.</Text></View>
+                    : <ScrollView style={styles.historyContentWrapper}>
+                            {historyArr.map(history=>
+                                <View style={styles.historyCompWrapper}>
+                                    <IncomeAndSales source={history}></IncomeAndSales>
+                                </View>
+                            )}
+                        </ScrollView>}
                 </View>
             </View>
         </LinearGradient>
@@ -104,6 +99,7 @@ const styles=StyleSheet.create({
         alignItems:'center',
         paddingHorizontal:'5%',
         flexDirection:'row',
+        marginTop:15,
     },
     historyContentWrapper:{
         flex:1,

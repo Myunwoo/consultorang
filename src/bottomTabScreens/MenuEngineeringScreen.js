@@ -49,8 +49,6 @@ const handleSetCategory = (targetId, setter) => {
         'userId': 27,
         'saleYm': '202112',
     };
-    console.log('dataToSend');
-    console.log(dataToSend);
     fetchServer('POST', '/engine/getCatEngine', dataToSend).then((responseJson) => {
         if(responseJson.data!==null){
             setter(responseJson.data);
@@ -61,10 +59,9 @@ const handleSetCategory = (targetId, setter) => {
 }
 
 const MenuEngineeringScreen = ({navigation}) => {
-    const {month, date, dateString}=dateObject();
     const [categories, setCategories] = useState([]);
-    const [categoryTxt, setCategoryTxt] = useState('카테고리를 불러오고 있습니다');
     const [categoryId, setCategoryId]=useState(-1);
+    const [categoryTxt, setCategoryTxt]=useState('');
     const [cateData, setCateData] = useState({
         first:[],
         second:[],
@@ -72,6 +69,8 @@ const MenuEngineeringScreen = ({navigation}) => {
         totalCnt:0,
         totalSale:0,
     });
+
+    const [graphSize, setGraphSize]=useState({width:0, height:0});
 
     const pickerRef = useRef();
 
@@ -88,47 +87,55 @@ const MenuEngineeringScreen = ({navigation}) => {
         initCategory(setCategories);
     },[]);
 
-    //categories가 업데이트 되면 첫 번째 카테고리의 이름과 데이터를 화면에 랜더링 합니다.
-    useEffect(() => {
-        if(categories.length>0){
-            if(categories[0]===-1){
-                setCategoryTxt('카테고리를 불러오는데 실패했습니다');
-                return;
-            }
-            //카테고리 중 첫 번째 카테고리의 이름, 아이디를 세팅
-            setCategoryTxt(categories[0].catNm);
-            setCategoryId(categories[0].catId);
-        }else{
-            setCategoryTxt('엑셀을 추가하지 않았거나, 카테고리가 존재하지 않습니다.');
-        }
-    },[categories]);
-
     //카테고리 아이디에 변화가 있을 때 (카테고리 처음 불러올 때, 피커에서 변경될 때) 뷰의 텍스트와 점 렌더링
     useEffect(()=>{
         if(categoryId===-1 || categoryId===null) return;
         const result=categories.find(category=>category.catId===categoryId);
         if(result){
-            setCategoryTxt(result.catNm);
             handleSetCategory(result.catId, setCateData);
+            setCategoryTxt(result.catNm);
         }
     },[categoryId]);
 
-    useEffect(()=>{
-        
-    },[cateData]);
+    // useEffect(()=>{
+    //     console.log(cateData);
+    // },[cateData]);
 
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>
             <WeatherHeader></WeatherHeader>
             <View style={styles.selectSection}>
                 <View style={styles.selectSection__selectRow}>
-                    <Pressable 
-                        style={styles.selectSection__pressable}
-                        onPress={openCategoryPicker}
-                    >
-                        <Text style={{width:'90%',textAlign:'center',}}>{categoryTxt}</Text>
-                        <Text>^</Text>
-                    </Pressable>
+                    <RNPickerSelect
+                        onValueChange={(value)=>{
+                            setCategoryId(value);
+                        }}
+                        selectedValue={categoryId}
+                        items={categories.map(category=>{
+                            return {label:category.catNm, value:category.catId}
+                        })}
+                        style={pickerSelectStyles}
+                        Icon={() => {
+                            return (
+                              <View
+                                style={{
+                                  backgroundColor: 'transparent',
+                                  borderTopWidth: 8,
+                                  borderTopColor: 'gray',
+                                  borderRightWidth: 10,
+                                  alignItems:'center',
+                                  justifyContent:'center',
+                                  borderRightColor: 'transparent',
+                                  borderLeftWidth: 10,
+                                  borderLeftColor: 'transparent',
+                                  width: 10,
+                                  height:30,
+                                  marginTop:12,
+                                }}
+                              />
+                            );
+                          }}
+                    />
                 </View>
                 <View style={styles.selectSection__showRow}>
                     <View style={styles.selectSection__showColumn}>
@@ -143,11 +150,52 @@ const MenuEngineeringScreen = ({navigation}) => {
             </View>
             <View style={styles.divider}></View>
             <View style={styles.graphSection}>
-                <GraphArrowUp></GraphArrowUp>
-                <GraphArrowRight></GraphArrowRight>
-                {cateData.first.map((circle) => <MenuYellowCircle key={circleIndex++} source={circle}></MenuYellowCircle>)}
-                {cateData.second.map((circle) => <MenuYellowCircle key={circleIndex++} source={circle}></MenuYellowCircle>)}
-                {cateData.third.map((circle) => <MenuYellowCircle key={circleIndex++} source={circle}></MenuYellowCircle>)}
+                <View style={styles.graphUpperWrapper}>
+                    <View style={styles.heartImgWrapper}>
+                        <Image
+                            resizeMode='contain'
+                            style={{width:30,height:30,}}
+                            source={require('../../image/engineering_heart.png')}
+                        >
+                        </Image>
+                    </View>
+                    <View style={styles.graphWrapper} onLayout={(event)=>{
+                        setGraphSize({
+                            width:event.nativeEvent.layout.width,
+                            height:event.nativeEvent.layout.height,
+                        })
+                    }}>
+                        <GraphArrowRight source={graphSize}></GraphArrowRight>
+                        <GraphArrowUp source={graphSize}></GraphArrowUp>
+                        <View style={styles.graphLeftWrapper}>
+                            <View style={styles.graphTopLeft}>
+                                {cateData.second.map((circle) => <MenuYellowCircle key={circleIndex++} source={{...circle, type:'second'}}></MenuYellowCircle>)}
+                            </View>
+                            <View style={styles.graphBottomLeft}>
+                                {cateData.third.map((circle) => <MenuYellowCircle key={circleIndex++} source={{...circle, type:'third'}}></MenuYellowCircle>)}
+                            </View>
+                        </View>
+                        <View style={styles.graphRightWrapper}>
+                            <View style={styles.graphTopRight}>
+                                {cateData.first.map((circle) => <MenuYellowCircle key={circleIndex++} source={{...circle, type:'first'}}></MenuYellowCircle>)}
+                            </View>
+                            <View style={styles.graphBottomRight}>
+                                
+                            </View>
+                        </View>
+                    </View>
+                </View>
+                <View style={styles.graphDownWrapper}>
+                    <View style={{width:30, height:30,}}></View>
+                    <View style={styles.moneyImgWrapper}>
+                        <Image
+                            resizeMode='contain'
+                            style={{width:30,height:30,}}
+                            source={require('../../image/engineering_won.png')}
+                        >
+                        </Image>
+                    </View>
+                </View>
             </View>
             <View style={styles.resultSection}>
                 <View style={styles.resultSection__headerWrapper}>
@@ -171,13 +219,6 @@ const MenuEngineeringScreen = ({navigation}) => {
                     </View>
                 </View>
             </View>
-            <RNPickerSelect
-                onValueChange={value=>setCategoryId(value)}
-                selectedValue={categoryId}
-                items={categories.map(category=>{
-                    return {label:category.catNm, value:category.catId}
-                })}
-            />
         </LinearGradient>
     );
 };
@@ -223,14 +264,9 @@ const styles = StyleSheet.create({
         maxWidth:700,
         flex:1,
         backgroundColor:theme.inputBackground2,
-        ...BASIC_SHADOW,
-    },
-    selectSection__pressable:{
-        flexDirection:'row',
-        width:'100%',
-        height:'100%',
         justifyContent:'center',
         alignItems:'center',
+        ...BASIC_SHADOW,
     },
     selectSection__showRow:{
         flexDirection:'row',
@@ -264,10 +300,65 @@ const styles = StyleSheet.create({
     graphSection:{
         flex:1,
     },
+    graphUpperWrapper:{
+        flex:1,
+        flexDirection:'row',
+    },
+    graphWrapper:{
+        flex:1,
+        height:'100%',
+        flexDirection:'row',
+    },
+    graphDownWrapper:{
+        flexDirection:'row',
+        width:'100%',
+        height:30,
+    },
+    moneyImgWrapper:{
+        flex:1,
+        height:'100%',
+        alignItems:'center',
+    },
+    heartImgWrapper:{
+        width:30,
+        height:'100%',
+        justifyContent:'center',
+    },
+    graphLeftWrapper:{
+        flex:1,
+        height:'100%',
+    },
+    graphRightWrapper:{
+        flex:1,
+        height:'100%',
+    },
+    graphTopLeft:{
+        width:'100%',
+        flex:1,
+        backgroundColor:'teal',
+        opacity:0.2,
+    },
+    graphTopRight:{
+        width:'100%',
+        flex:1,
+        backgroundColor:'cyan',
+        opacity:0.2,
+    },
+    graphBottomLeft:{
+        width:'100%',
+        flex:1,
+        backgroundColor:'tomato',
+        opacity:0.2,
+    },
+    graphBottomRight:{
+        width:'100%',
+        flex:1,
+        backgroundColor:'blue',
+        opacity:0.2,
+    },
     resultSection:{
         height:'40%',
         maxHeight:220,
-        
     },
     resultSection__headerWrapper:{
         marginLeft:'5%',
@@ -305,5 +396,27 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         justifyContent:'center',
         alignItems:'center',
+    },
+});
+
+const pickerSelectStyles = StyleSheet.create({
+    inputIOS: {
+        fontSize: 16,
+        height: '100%', 
+        width:'100%',
+        color: '#000000',
+        padding: 10,
+        textAlign:'center',
+    },
+    inputAndroid: {
+        fontSize: 16,
+        height: '100%', 
+        width: '100%', 
+        color: '#000000',
+        padding: 10,
+        textAlign:'center',
+    },
+    iconContainer: {
+        right: 10,
     },
 });
