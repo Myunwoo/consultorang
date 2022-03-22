@@ -45,6 +45,9 @@ const MenuYellowCircle = (arg) => {
 
     posX=String(posX)+'%';
     posY=String(posY)+'%';
+    // console.log(menuNm)
+    // console.log(posX);
+    // console.log(posY);
 
     return (
         <View 

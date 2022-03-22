@@ -61,6 +61,7 @@ const handleSetCategory = (targetId, setter) => {
 const MenuEngineeringScreen = ({navigation}) => {
     const [categories, setCategories] = useState([]);
     const [categoryId, setCategoryId]=useState(-1);
+    const [categoryTxt, setCategoryTxt]=useState('');
     const [cateData, setCateData] = useState({
         first:[],
         second:[],
@@ -92,12 +93,13 @@ const MenuEngineeringScreen = ({navigation}) => {
         const result=categories.find(category=>category.catId===categoryId);
         if(result){
             handleSetCategory(result.catId, setCateData);
+            setCategoryTxt(result.catNm);
         }
     },[categoryId]);
 
-    useEffect(()=>{
-        console.log(cateData);
-    },[cateData]);
+    // useEffect(()=>{
+    //     console.log(cateData);
+    // },[cateData]);
 
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>
@@ -105,7 +107,9 @@ const MenuEngineeringScreen = ({navigation}) => {
             <View style={styles.selectSection}>
                 <View style={styles.selectSection__selectRow}>
                     <RNPickerSelect
-                        onValueChange={value=>setCategoryId(value)}
+                        onValueChange={(value)=>{
+                            setCategoryId(value);
+                        }}
                         selectedValue={categoryId}
                         items={categories.map(category=>{
                             return {label:category.catNm, value:category.catId}
