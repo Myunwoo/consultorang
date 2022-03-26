@@ -45,11 +45,11 @@ const LoginScreen = (({route,navigation}) => {
     const handleSubmitPress = () => {
         setErrorText('');
         if(!checkEmailFormat(userEmail)){
-            alert("email error");
+            alert("올바른 이메일을 입력해주세요.");
             return
         }
         if(!checkPwdFormat(userPassword)){
-            alert("password error");
+            alert("올바른 비밀번호를 입력해주세요.");
             return
         }
         setLoading(true);
@@ -130,7 +130,7 @@ const LoginScreen = (({route,navigation}) => {
                     </View>
                     <View style={styles.loginInputSectionColumn2}>
                         <Pressable style={({pressed}) => [
-                            {backgroundColor:pressed? 'tomato' : theme.registerBtnCyan},styles.btnLogin]}
+                            {backgroundColor:pressed? theme.checkedBlue : theme.registerBtnCyan},styles.btnLogin]}
                             onPress={handleSubmitPress}>
                             <Text style={styles.txtLogin}>로그인</Text>
                         </Pressable>

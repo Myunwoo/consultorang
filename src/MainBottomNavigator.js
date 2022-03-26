@@ -6,6 +6,7 @@ import AccountBookNavigator from './bottomTabScreens/AccountBookNavigator';
 import MenuEngineeringNavigator from './bottomTabScreens/MenuEngineeringNavigator';
 import IncomeStatementScreen from './bottomTabScreens/IncomeStatementScreen';
 import MenuCalculatorNavigator from './bottomTabScreens/MenuCalculatorNavigator';
+import SettingScreen from './bottomTabScreens/SettingScreen';
 
 import {BOTTOM_TAP_NAVIGATOR_HEIGHT_IOS, BOTTOM_TAP_NAVIGATOR_HEIGHT_ANDROID} from './variables/scales';
 import { Platform } from 'react-native';
@@ -31,6 +32,7 @@ const MainBottomNavigator = (props) => {
             <Tab.Screen name="IncomeStatement" component={IncomeStatementScreen} options={{headerShown:false}}/>
             <Tab.Screen name="MenuCalculator" component={MenuCalculatorNavigator} options={{headerShown:false}}/>
             <Tab.Screen name="MenuEngineering" component={MenuEngineeringNavigator} options={{headerShown:false}}/>
+            <Tab.Screen name="SettingScreen" component={SettingScreen} options={{headerShown:false}}/>
         </Tab.Navigator>
     );
 }

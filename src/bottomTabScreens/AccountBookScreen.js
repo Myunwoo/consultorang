@@ -18,30 +18,6 @@ import ExpenditureModal from '../modals/ExpeditureModal';
 import MemoModal from '../modals/MemoModal';
 import { useEffect } from 'react/cjs/react.development';
 
-const getCalArr=()=>{
-    const calendarCount=parseInt(SCREEN_WIDTH*0.9/52)-2;
-    let d=new Date();
-    let year;
-    let month;
-    let day;
-    let endYmd, startYmd;
-    const calendarArr=[];
-    for(let i=0;i<calendarCount; i++){
-        year = d.getFullYear(); // 년
-        month = d.getMonth();   // 월
-        day = d.getDate();      // 일
-        let tempDay=new Date(year, month, day - i);
-        if(i===0) endYmd=tempDay;
-        if(i===calendarCount-1) startYmd=tempDay;
-        calendarArr.push({ width: 52, height: '100%', date: tempDay.getDay(), day: tempDay.getDate() })
-    }
-    calendarArr.reverse();
-    return calendarArr;
-};
-
-
-
-
 const AccountBookScreen = (({navigation}) => {
     const [inModalVisible, setInModalVisible]=useState(false);
     const [expModalVisible, setExpModalVisible]=useState(false);
@@ -131,6 +107,54 @@ const AccountBookScreen = (({navigation}) => {
         }
     };
 
+    const initCalArr=()=>{
+        const calendarCount=parseInt(SCREEN_WIDTH*0.9/52)-2;
+        let d=new Date();
+        let year;
+        let month;
+        let day;
+        let endD, startD;
+        const calendarArr=[];
+        for(let i=0;i<calendarCount; i++){
+            year = d.getFullYear(); // 년
+            month = d.getMonth();   // 월
+            day = d.getDate();      // 일
+            let tempDay=new Date(year, month, day - i);
+            if(i===0) endD=new Date(tempDay.getFullYear(), tempDay.getMonth(), tempDay.getDate()+1);
+            if(i===calendarCount-1) startD=tempDay;
+            calendarArr.push({ width: 52, height: '100%', date: tempDay.getDay(), day: tempDay.getDate() })
+        }
+        calendarArr.reverse();
+        
+        const startYear=startD.getFullYear();
+        const startMonth=startD.getMonth()+1;
+        const startDate=startD.getDate();
+        const startYmd=`${startYear}${startMonth >= 10 ? startMonth : '0' + startMonth}${startDate >= 10 ? startDate : '0' + startDate}`;
+        const endYear=endD.getFullYear();
+        const endMonth=endD.getMonth()+1;
+        const endDate=endD.getDate();
+        const endYmd=`${endYear}${endMonth >= 10 ? endMonth : '0' + endMonth}${endDate >= 10 ? endDate : '0' + endDate}`;
+        const dataToSend={
+            userId:27,
+            startYmd:startYmd,
+            endYmd:endYmd,
+        };
+        fetchServer('POST', '/account/getSaleExpendYmd', dataToSend).then((responseJson) => {
+            if(responseJson.data!==null){
+                const res=responseJson.data;
+                for(let i=0;i<res.length;i++){
+                    calendarArr[i]={...res[i], ...calendarArr[i]};
+                }
+                setCalArr(calendarArr);
+            }else{
+                setCalArr(calendarArr);
+            }
+        }).catch((error) => {
+            console.log(error);
+            setCalArr(calendarArr);
+        });
+    };
+
     //1. 수익, 지출 퍼센트는 서버로부터의 데이터에 맞게 색과 화살표 방향을 변화해 주어야 함
     //지금은 asyncstorage에서 엑셀의 존재 여부를 판단하지만, 서버로부터 현재 월의 엑셀이 존재하는지 아닌지를 받아야 할 것으로 보입니다.
     //더불어, 비교에 의한 퍼센트 데이터 또한 서버로부터 받아 와야 합니다.
@@ -154,7 +178,7 @@ const AccountBookScreen = (({navigation}) => {
         }).catch((error) => {
             console.log(error);
         });
-        setCalArr(getCalArr());
+        initCalArr();
     },[]);
 
     

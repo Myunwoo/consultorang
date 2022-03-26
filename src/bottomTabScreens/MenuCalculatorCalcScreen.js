@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Pressable, Image, ScrollView, TextInput, Keyboard } from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { theme } from '../variables/color';
 import {CONTENT_SECTION_BORDER_RADIUS, BASIC_SHADOW} from '../variables/scales';
@@ -20,6 +19,18 @@ const MenuCalculatorCalcScreen = (({navigation, route}) => {
     const [numCount, setNumCount]=useState('');
 
     const handleCalc=()=>{
+        if(isNaN(numHuman) || numHuman==='0' || numHuman===''){
+            alert('시급/월급을 올바르게 입력해주세요.');
+            return;
+        }
+        if(isNaN(numTime) || numTime==='0' || numTime===''){
+            alert('분/시간을 올바르게 입력해주세요.');
+            return;
+        }
+        if(isNaN(numCount) || numCount==='0' || numCount===''){
+            alert('인분/개를 올바르게 입력해주세요.');
+            return;
+        }
         navigation.navigate('MenuCalculatorResultScreen', { menuName });
     };
 
@@ -73,6 +84,7 @@ const MenuCalculatorCalcScreen = (({navigation, route}) => {
                                     onSubmitEditing={Keyboard.dismiss}
                                     blurOnSubmit={false}
                                     underlineColorAndroid="#f000"
+                                    keyboardType={'numeric'}
                                     returnKeyType="next"
                                     maxLength={20}
                                     multiline={false}
@@ -104,6 +116,7 @@ const MenuCalculatorCalcScreen = (({navigation, route}) => {
                                     onSubmitEditing={Keyboard.dismiss}
                                     blurOnSubmit={false}
                                     underlineColorAndroid="#f000"
+                                    keyboardType={'numeric'}
                                     returnKeyType="next"
                                     maxLength={20}
                                     multiline={false}
@@ -137,6 +150,7 @@ const MenuCalculatorCalcScreen = (({navigation, route}) => {
                                     onSubmitEditing={Keyboard.dismiss}
                                     blurOnSubmit={false}
                                     underlineColorAndroid="#f000"
+                                    keyboardType={'numeric'}
                                     returnKeyType="next"
                                     maxLength={20}
                                     multiline={false}

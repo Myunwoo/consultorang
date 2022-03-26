@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Pressable, Image, ScrollView, TextInput, Keyboard } from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { theme } from '../variables/color';
 import {dateObject,CONTENT_SECTION_BORDER_RADIUS, BASIC_SHADOW} from '../variables/scales';

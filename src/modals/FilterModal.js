@@ -10,37 +10,41 @@ import {EXPEND_TYPE_LIST} from '../variables/codelist';
 import ModalTitle from '../components/ModalTitle';
 import FilterItem from '../components/FilterItem';
 
-const getCurYmd=()=>{
-    const d=new Date();
-    const year=d.getFullYear();;
-    const month=d.getMonth()+1;
-    const yyyymmdd=`${year}${month >= 10 ? month : '0' + month}01`;
+
+const getYmd=(type)=>{
+    let d=new Date();
+    let year=d.getFullYear();
+    let month;
+    let date;
+    let yyyymmdd;
+    if(type==='' || type==='당월'){
+        month=d.getMonth()+1;
+        yyyymmdd=`${year}${month >= 10 ? month : '0' + month}01`;
+    }else if(type==='1개월'){
+        month=d.getMonth()===0?12:d.getMonth();
+        date=d.getDate();
+        yyyymmdd=`${year}${month >= 10 ? month : '0' + month}${date >= 10 ? date : '0' + date}`;
+    }else if(type==='3개월'){
+        d=new Date();
+        month=d.getMonth()-3;
+        date=d.getDate();
+        let target=new Date(year, month, date);
+        let y=target.getFullYear();;
+        let m=target.getMonth()+1;
+        let d=target.getDate();
+        yyyymmdd=`${y}${m >= 10 ? m : '0' + m}${d >= 10 ? d : '0' + d}`;
+    }else if(type==='6개월'){
+        d=new Date();
+        month=d.getMonth()-6;
+        date=d.getDate();
+        let target=new Date(year, month, date);
+        let y=target.getFullYear();;
+        let m=target.getMonth()+1;
+        let d=target.getDate();
+        yyyymmdd=`${y}${m >= 10 ? m : '0' + m}${d >= 10 ? d : '0' + d}`;
+    }
     return yyyymmdd;
-};
-
-const getOneYmd=()=>{
-    const d=new Date();
-    const year=d.getFullYear();
-    const month=d.getMonth()===0?12:d.getMonth();
-    const date=d.getDate();
-    const yyyymmdd=`${year}${month >= 10 ? month : '0' + month}${date >= 10 ? date : '0' + date}`;
-    return yyyymmdd;
-};
-
-const getThreeYmd=()=>{
-    const c=new Date();
-    const year=c.getFullYear();;
-    const month=c.getMonth()-3;
-    const date=c.getDate();
-
-    const target=new Date(year, month, date);
-    const y=target.getFullYear();;
-    const m=target.getMonth()+1;
-    const d=target.getDate();
-    const yyyymmdd=`${y}${m >= 10 ? m : '0' + m}${d >= 10 ? d : '0' + d}`;
-    return yyyymmdd;
-};
-
+}
 
 const FilterModal = ({ showModal, setShowModal, setSendObj}) => {
     const {year, month, date, dateString, yyyymmdd}=dateObject();
@@ -50,20 +54,6 @@ const FilterModal = ({ showModal, setShowModal, setSendObj}) => {
 
     const handleOutsideClick=()=>{
         setShowModal(false);
-    };
-
-    const getSearchLen=()=>{
-        if(searchLen==='' || searchLen==='당월'){
-            return getCurYmd();
-        }else if(searchLen==='1개월'){
-            return getOneYmd();
-        }else if(searchLen==='3개월'){
-            return getThreeYmd();
-        }else if(searchLen==='직접입력'){
-            //아직 미구현
-            return getCurYmd();
-        }
-        return getCurYmd();
     };
 
     const getHistoryType=()=>{
@@ -84,7 +74,7 @@ const FilterModal = ({ showModal, setShowModal, setSendObj}) => {
     const handleApply=()=>{
         const sendObj={
             'userId':27,
-            'startYmd':getSearchLen(),
+            'startYmd':getYmd(searchLen),
             'endYmd':yyyymmdd,
             'historyType':getHistoryType(),
             'specificType':getSpecificType(),
@@ -102,7 +92,8 @@ const FilterModal = ({ showModal, setShowModal, setSendObj}) => {
     }
 
     return (
-        <Pressable style={styles.outside} onPress={handleOutsideClick}>
+        <View style={styles.outside}>
+            <Pressable onPress={handleOutsideClick} style={{flex:2, width:'100%',}}></Pressable>
             <View style={styles.mainbody}>
                 <View style={styles.headerWrapper}>
                     <Image
@@ -119,7 +110,7 @@ const FilterModal = ({ showModal, setShowModal, setSendObj}) => {
                         <FilterItem source={{name:searchLen, setter:setSearchLen,title:'당월',}}></FilterItem>
                         <FilterItem source={{name:searchLen, setter:setSearchLen,title:'1개월'}}></FilterItem>
                         <FilterItem source={{name:searchLen, setter:setSearchLen,title:'3개월'}}></FilterItem>
-                        <FilterItem source={{name:searchLen, setter:setSearchLen,title:'직접입력'}}></FilterItem>
+                        <FilterItem source={{name:searchLen, setter:setSearchLen,title:'6개월'}}></FilterItem>
                     </View>
                     <ModalTitle text={'구분'}></ModalTitle>
                     <View style={styles.filterItemWrapper}>
@@ -140,7 +131,7 @@ const FilterModal = ({ showModal, setShowModal, setSendObj}) => {
                         </Pressable>
                     </View>
             </View>
-        </Pressable>
+        </View>
     );
 }
 

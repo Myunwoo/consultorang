@@ -18,19 +18,19 @@ const MenuCalculatorScreen = (({navigation}) => {
     const [ingreVisible, setIngreVisible]=useState(false);
     const [ingreArr, setIngreArr]=useState([]);
 
-
-    //로그아웃 함수
-    const temp=()=>{
-        navigation.replace('Auth');
-        AsyncStorage.setItem('autoLogin', 'false');
-        AsyncStorage.setItem('emailSave', 'false');
-    };
-
     const handleIngre=()=>{
+        if(menuName===''){
+            alert('메뉴 이름을 먼저 입력해 주세요.');
+            return;
+        }
         setIngreVisible(true);
     };
 
     const handleApply=()=>{
+        // if(ingreArr.length<=0){
+        //     alert('재료를 추가하지 않았습니다.');
+        //     return;
+        // }
         navigation.navigate('MenuCalculatorCalcScreen', { menuImg, menuName });
     };
 

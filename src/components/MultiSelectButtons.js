@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, Pressable } from 'react-native';
+import { theme } from '../variables/color';
 
 const MultiSelectButtons = (arg) => {
     const {list, setter, prop} = arg.source;
@@ -33,10 +34,15 @@ const MyButton = (arg) => {
         alignItems:'center',
         paddingHorizontal:15,
         paddingVertical:10,
-        backgroundColor: prop.includes(code) ? 'blue':'white',
+        backgroundColor: prop.includes(code) ? theme.checkedBlue : theme.backgroundGrey,
         borderRadius:20,
         marginHorizontal:5,
         marginVertical:2,
+    };
+
+    let buttonText={
+        fontWeight:'bold',
+        color:prop.includes(code) ? 'white' : 'black',
     };
 
     return(
@@ -44,7 +50,7 @@ const MyButton = (arg) => {
             <Pressable 
                 hitSlop={ { top: 10, right: 15, bottom: 10, left: 15 } }
                 onPress={clicked}>
-                <Text style={styles.buttonText}>{myName}</Text>
+                <Text style={buttonText}>{myName}</Text>
             </Pressable>
         </View>
     )
@@ -56,8 +62,5 @@ const styles = StyleSheet.create({
     outterWrapper:{
         flexWrap:'wrap',
         flexDirection:'row',
-    },
-    buttonText:{
-        fontWeight:'bold',
     },
 });

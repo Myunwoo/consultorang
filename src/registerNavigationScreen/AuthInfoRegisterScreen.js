@@ -27,6 +27,10 @@ const AuthInfoRegisterScreen = ({route,navigation}) => {
     const [businessNum, setBusinessNum]=useState('');
     const [userAgree, setUserAgree]=useState(false);
 
+
+    //인증번호 인증 여부
+    const [isAuthorized, setIsAuthorized]=useState(false);
+
     const [errortext, setErrorText]=useState('');
     const [loading, setLoading]=useState(false);
     const [isRegisterSuccess, setIsRegistraionSuccess]=useState(false);
@@ -67,9 +71,6 @@ const AuthInfoRegisterScreen = ({route,navigation}) => {
     useEffect(()=>{
         setIsRightBusinessNum(false);
     },[businessNum]);
-
-    //인증번호 인증 여부
-    const [isAuthorized, setIsAuthorized]=useState(false);
 
     //button handlers
     const handleCheckEmailButton = () => {
@@ -141,31 +142,34 @@ const AuthInfoRegisterScreen = ({route,navigation}) => {
     //AuthInfo를 navigate를 통해 FoodInfoRegisterScreen으로 넘기고, FoodInfoRegisterScreen에서 데이터를 서버로 전송하도록 수정합시다.
     //Navigator로부터 세터를 전달 받는 등의 동작은 삭제하도록 하겠습니다.
     const handleGoNext=(arg)=>{
-        // if(!isRightEmail){
-        //     alert('이메일 중복확인을 먼저 해주세요');
-        //     return;
-        // }
-        // if(!checkPwdFormat(userPassword)){
-        //     alert('올바른 비밀번호를 입력해 주세요');
-        //     return;
-        // }
-        // if(userPassword!==confirmPassword){
-        //     alert('비밀번호 확인을 비밀번호와 동일하게 입력해주세요');
-        //     return;
-        // }
-        // if(!isAuthorized){
-        //     alert('핸드폰 인증을 먼저 진행해 주세요');
-        //     return;
-        // }
-        // if(!isRightBusinessNum){
-        //     alert('사업자 번호 확인을 먼저 해주세요');
-        //     return;
-        // }
-        // if(!userAgree){
-        //     alert('이용약관에 동의해 주세요');
-        //     return;
-        // }
-        navigation.navigate('FoodInfoRegisterScreen');
+        if(!isRightEmail){
+            alert('이메일 중복확인을 먼저 해주세요');
+            return;
+        }
+        if(!checkPwdFormat(userPassword)){
+            alert('올바른 비밀번호를 입력해 주세요');
+            return;
+        }
+        if(userPassword!==confirmPassword){
+            alert('비밀번호 확인을 비밀번호와 동일하게 입력해주세요');
+            return;
+        }
+        if(!isAuthorized){
+            alert('핸드폰 인증을 먼저 진행해 주세요');
+            return;
+        }
+        if(!isRightBusinessNum){
+            alert('사업자 번호 확인을 먼저 해주세요');
+            return;
+        }
+        if(!userAgree){
+            alert('이용약관에 동의해 주세요');
+            return;
+        }
+
+        navigation.navigate('FoodInfoRegisterScreen',{
+            businessName, userEmail, userPassword, userPhoneNumber, businessNum, userAgree
+        });
     }
 
     return (
@@ -196,7 +200,7 @@ const AuthInfoRegisterScreen = ({route,navigation}) => {
                     </Pressable>
                 </View>
                 <View style={styles.inputCompOuterWrapper}>
-                    <RegisterInput source={{prop:authorNum , setter:setAuthorNum, placeHolder:'인증번호 입력', editable:!isAuthorized}}></RegisterInput>
+                    <RegisterInput source={{prop:authorNum , setter:setAuthorNum, placeHolder:'인증번호 입력', editable:true}}></RegisterInput>
                     <Pressable {...authorNumProps}>
                         <Text numberOfLines={1} adjustsFontSizeToFit>인증번호 확인</Text>
                     </Pressable>

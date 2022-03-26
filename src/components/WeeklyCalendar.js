@@ -9,7 +9,7 @@ import { BASIC_SHADOW } from "../variables/scales";
 // 2. Today —> true이면 까맣도록
 
 const WeeklyCalendar = (arg) => {
-  const { width, height, date, day } = arg.source;
+  const { width, height, date, day, expend=false, sale=false } = arg.source;
   const [checked, setChecked] = useState(false);
   let dateString;
   switch(date){
@@ -61,7 +61,8 @@ const WeeklyCalendar = (arg) => {
     <View style={OutWrapper}>
       <Pressable style={styles.pressable} onPress={onClicked}>
         <View style={styles.dotWrapper}>
-          <View style={styles.redDot}></View>
+          {expend ? <View style={styles.redDot}></View> : <></>}
+          {sale ? <View style={styles.blueDot}></View> : <></>}
         </View>
         <View style={styles.numWrapper}>
           <Text style={numChecked}>{day}</Text>
@@ -101,6 +102,14 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 10,
-    backgroundColor: "red",
+    backgroundColor: theme.incomeRed,
+    marginHorizontal:4,
+  },
+  blueDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 10,
+    backgroundColor: theme.btnExpenditureBlue,
+    marginHorizontal:4,
   },
 });

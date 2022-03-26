@@ -1,7 +1,8 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 
+import { fetchServer } from '../abstract/asyncTasks';
 import { theme } from '../variables/color';
 import commonStyles from '../variables/commonStyles';
 
@@ -12,11 +13,55 @@ const GT_LIST = [
     {text:'동일 업종'},
     {text:'동일 매출액'},
     {text:'동일 규모'},
-]
-
+];
 
 const IncomeStatementScreen = (({navigation}) => {
     const [graphType, setGraphType]=useState(GT_LIST[0].text);
+    const [data, setData]=useState({
+        sameBusiness: {
+            foodCost: 0,
+            humanCost: 0,
+            totalSale: 0,
+        },
+        sameSale: {
+            foodCost: 0,
+            humanCost: 0,
+            totalSale: 0,
+        },
+        sameSize: {
+            foodCost: 0,
+            humanCost: 0,
+            totalSale: 0,
+        },
+        updateDate: "",
+        userModel: {
+            foodCost: 0,
+            humanCost: 0,
+            totalSale: 0,
+        },
+    })
+
+    useEffect(()=>{
+        const dataToSend={
+            userId:27,
+            ym:'202012',
+        }
+        fetchServer('POST', '/state/getComparison', dataToSend).then((responseJson) => {
+            if(responseJson.retCode==='0'){
+                if(responseJson.data!==null){
+                    setData(responseJson.data);
+                }
+            }else{
+                alert('데이터를 불러오기를 실패하였습니다');
+            }
+        }).catch((error) => {
+            console.log(error);
+        });
+    },[]);
+
+    useEffect(()=>{
+        console.log(data);
+    },[graphType]);
 
     let i=0;
     return (
