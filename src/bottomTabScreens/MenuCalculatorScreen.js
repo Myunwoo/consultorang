@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Pressable, Image, ScrollView, TextInput, Keyboard } from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,30 +9,51 @@ import {dateObject,CONTENT_SECTION_BORDER_RADIUS, BASIC_SHADOW} from '../variabl
 import commonStyles from '../variables/commonStyles';
 import WeatherHeader from '../components/WeatherHeader';
 
+import CalcResultCard from '../components/CalcResultCard';
 import ModalComponent from '../modals/ModalComponent';
 import IngreModal from '../modals/IngreModal';
+import GraphType from '../components/GraphType';
+
+const TYPE=[
+    {text:'메뉴 가격 계산기'},
+    {text:'목록'}
+]
+let i=0;
+
+const tempHistory=[
+    {name:'레몬 마들렌', date:'2022/03/18'},
+    {name:'바닐라 까눌레', date:'2022/02/11'},
+    {name:'아', date:'2022/01/01'},
+]
 
 const MenuCalculatorScreen = (({navigation}) => {
     const [menuImg, setMenuImg]=useState(require('../../image/calc_placeholder.png'));
     const [menuName, setMenuName]=useState('');
     const [ingreVisible, setIngreVisible]=useState(false);
     const [ingreArr, setIngreArr]=useState([]);
-
-
-    //로그아웃 함수
-    const temp=()=>{
-        navigation.replace('Auth');
-        AsyncStorage.setItem('autoLogin', 'false');
-        AsyncStorage.setItem('emailSave', 'false');
-    };
+    const [type, setType]=useState(TYPE[0].text);
 
     const handleIngre=()=>{
+        if(menuName===''){
+            alert('메뉴 이름을 먼저 입력해 주세요.');
+            return;
+        }
         setIngreVisible(true);
     };
 
     const handleApply=()=>{
+        // if(ingreArr.length<=0){
+        //     alert('재료를 추가하지 않았습니다.');
+        //     return;
+        // }
         navigation.navigate('MenuCalculatorCalcScreen', { menuImg, menuName });
     };
+
+    //useEffect가 되었든, 어떤 방식이 되었든 로컬에 저장된 히스토리를 불러와야 합니다.
+    //일단 tempHistory배열을 사용해서 구현합니다.
+    useEffect(()=>{
+
+    });
 
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>
@@ -41,80 +62,83 @@ const MenuCalculatorScreen = (({navigation}) => {
             </ModalComponent>
             <WeatherHeader></WeatherHeader>
             <View style={commonStyles.contentSection}>
-                <View style={commonStyles.titleWrapper}>
-                    <Text style={commonStyles.txtTitle}>메뉴 가격 계산기</Text>
+                <View style={styles.titleWrapper}>
+                    {TYPE.map(g=><GraphType key={i++} source={{prop:type, setter:setType, ...g}}></GraphType>)}
                 </View>       
-                <View style={{width:50, height:50, backgroundColor:theme.titleWrapperBlue, position:'absolute', top:30, left:0, zIndex:1}}></View>
                 <View style={commonStyles.contentWrapper}>
-                    <ScrollView style={{width:'100%',}} contentContainerStyle={styles.scrollview}>
-                        <View style={styles.imgWrapper}>
-                            <Image
-                                resizeMode='contain'
-                                style={{width:72, height:72,}}
-                                source={menuImg}
-                            >
-                            </Image>
+                    {type===TYPE[0].text 
+                    ? <ScrollView style={{width:'100%',}} contentContainerStyle={styles.scrollview}>
+                    <View style={styles.imgWrapper}>
+                        <Image
+                            resizeMode='contain'
+                            style={{width:72, height:72,}}
+                            source={menuImg}
+                        >
+                        </Image>
+                    </View>
+                    <View style={styles.menuNameWrapper}>
+                        <Text>ddd</Text>
+                        <TextInput
+                            style={styles.inputStyle}
+                            onChangeText={(txt) => setMenuName(txt)}
+                            placeholder={'메뉴 이름을 입력 해 주세요'}
+                            placeholderTextColor={theme.placeholderColor}
+                            onSubmitEditing={Keyboard.dismiss}
+                            blurOnSubmit={false}
+                            underlineColorAndroid="#f000"
+                            returnKeyType="next"
+                            maxLength={20}
+                            multiline={false}
+                        />
+                        <Text>ddd</Text>
+                    </View>
+                    <View style={styles.contentWrapper}>
+                        <View style={styles.stepWrapper}>
+                            <Text style={{color:theme.loginBlue}}>STEP 1</Text>
                         </View>
-                        <View style={styles.menuNameWrapper}>
-                            <Text>ddd</Text>
-                            <TextInput
-                                style={styles.inputStyle}
-                                onChangeText={(txt) => setMenuName(txt)}
-                                placeholder={'메뉴 이름을 입력 해 주세요'}
-                                placeholderTextColor={theme.placeholderColor}
-                                onSubmitEditing={Keyboard.dismiss}
-                                blurOnSubmit={false}
-                                underlineColorAndroid="#f000"
-                                returnKeyType="next"
-                                maxLength={20}
-                                multiline={false}
-                            />
-                            <Text>ddd</Text>
+                        <View style={styles.stepTitleWrapper}>
+                            <Text style={{color:theme.loginBlue, fontWeight:'bold', fontSize:24,}}>식재료 원가 구하기</Text>
                         </View>
-                        <View style={styles.contentWrapper}>
-                            <View style={styles.stepWrapper}>
-                                <Text style={{color:theme.loginBlue}}>STEP 1</Text>
-                            </View>
-                            <View style={styles.stepTitleWrapper}>
-                                <Text style={{color:theme.loginBlue, fontWeight:'bold', fontSize:24,}}>식재료 원가 구하기</Text>
-                            </View>
-                            <View style={styles.stepContentWrapper}>
-                                <Text>메뉴에 사용되는 재료와 용량을 알려주세요.</Text>
-                                <Text>원가는 ~~~ 을 바탕으로 자동 계산됩니다.</Text>
-                            </View>
-                            <View style={styles.btnIngreOutterWrapper}>
-                                <Pressable onPress={handleIngre} style={styles.btnIngre}>
-                                    <View style={styles.btnIngreInner}>
-                                        <Image
-                                            resizeMode='contain'
-                                            style={{width:72, height:72, position:'absolute', left:0}}
-                                            source={require('../../image/account_cart.png')}
-                                        >   
-                                        </Image>
-                                        <Text style={{color:'white', fontSize:24, fontWeight:'bold',}}>식재료 담기</Text>
-                                    </View>
-                                </Pressable>
-                            </View>
-                            <View style={styles.stepWrapper}>
-                                <Text style={{color:theme.loginBlue}}>STEP 2</Text>
-                            </View>
-                            <View style={styles.stepTitleWrapper}>
-                                <Text style={{color:theme.loginBlue, fontWeight:'bold', fontSize:24,}}>재료 확인</Text>
-                            </View>
-                            <View style={styles.stepContentWrapper}>
-                                <Text>입력한 재료가 맞는지 다시 한 번 확인 해 주세요.</Text>
-                                <Text>정확한 원가계산은 가격결정의 핵심입니다.</Text>
-                            </View>
-                            <ScrollView style={styles.ingreScrollView}>
+                        <View style={styles.stepContentWrapper}>
+                            <Text>메뉴에 사용되는 재료와 용량을 알려주세요.</Text>
+                            <Text>원가는 ~~~ 을 바탕으로 자동 계산됩니다.</Text>
+                        </View>
+                        <View style={styles.btnIngreOutterWrapper}>
+                            <Pressable onPress={handleIngre} style={styles.btnIngre}>
+                                <View style={styles.btnIngreInner}>
+                                    <Image
+                                        resizeMode='contain'
+                                        style={{width:72, height:72, position:'absolute', left:0}}
+                                        source={require('../../image/account_cart.png')}
+                                    >   
+                                    </Image>
+                                    <Text style={{color:'white', fontSize:24, fontWeight:'bold',}}>식재료 담기</Text>
+                                </View>
+                            </Pressable>
+                        </View>
+                        <View style={styles.stepWrapper}>
+                            <Text style={{color:theme.loginBlue}}>STEP 2</Text>
+                        </View>
+                        <View style={styles.stepTitleWrapper}>
+                            <Text style={{color:theme.loginBlue, fontWeight:'bold', fontSize:24,}}>재료 확인</Text>
+                        </View>
+                        <View style={styles.stepContentWrapper}>
+                            <Text>입력한 재료가 맞는지 다시 한 번 확인 해 주세요.</Text>
+                            <Text>정확한 원가계산은 가격결정의 핵심입니다.</Text>
+                        </View>
+                        <ScrollView style={styles.ingreScrollView}>
 
-                            </ScrollView>
-                            <View style={styles.btnApplyWrapper}>
-                                <Pressable onPress={handleApply} style={{width:'100%', height:'100%', justifyContent:'center',alignItems:'center',}}>
-                                    <Text style={{color:'white', fontSize:20, fontWeight:'bold',}}>확인</Text>
-                                </Pressable>
-                            </View>
+                        </ScrollView>
+                        <View style={styles.btnApplyWrapper}>
+                            <Pressable onPress={handleApply} style={{width:'100%', height:'100%', justifyContent:'center',alignItems:'center',}}>
+                                <Text style={{color:'white', fontSize:20, fontWeight:'bold',}}>확인</Text>
+                            </Pressable>
                         </View>
-                    </ScrollView>
+                    </View>
+                </ScrollView>
+                : <ScrollView style={{width:'100%',}} contentContainerStyle={styles.scrollview}>
+                    {tempHistory.map(history=><View style={{width:'100%', height:130, margin:15, paddingHorizontal:10,}}><CalcResultCard source={{...history, navigation}}></CalcResultCard></View>)}
+                </ScrollView>}
                 </View>
             </View>
         </LinearGradient>
@@ -124,6 +148,11 @@ const MenuCalculatorScreen = (({navigation}) => {
 export default MenuCalculatorScreen;
 
 const styles=StyleSheet.create({
+    titleWrapper:{
+        width:'100%',
+        height:60,
+        flexDirection:'row',
+    },
     scrollview:{
         alignItems:'center',
     },

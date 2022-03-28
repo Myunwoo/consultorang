@@ -97,10 +97,9 @@ const MenuEngineeringScreen = ({navigation}) => {
         }
     },[categoryId]);
 
-    // useEffect(()=>{
-    //     console.log(cateData);
-    // },[cateData]);
-
+    useEffect(()=>{
+        console.log(cateData);
+    },[cateData]);
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>
             <WeatherHeader></WeatherHeader>
@@ -169,15 +168,21 @@ const MenuEngineeringScreen = ({navigation}) => {
                         <GraphArrowUp source={graphSize}></GraphArrowUp>
                         <View style={styles.graphLeftWrapper}>
                             <View style={styles.graphTopLeft}>
-                                {cateData.second.map((circle) => <MenuYellowCircle key={circleIndex++} source={{...circle, type:'second'}}></MenuYellowCircle>)}
+                                <View style={styles.inner}>
+                                    {cateData.second.map((circle) => <MenuYellowCircle key={circleIndex++} source={{...circle, type:'second'}}></MenuYellowCircle>)}    
+                                </View>
                             </View>
                             <View style={styles.graphBottomLeft}>
-                                {cateData.third.map((circle) => <MenuYellowCircle key={circleIndex++} source={{...circle, type:'third'}}></MenuYellowCircle>)}
+                                <View style={styles.inner}>
+                                    {cateData.third.map((circle) => <MenuYellowCircle key={circleIndex++} source={{...circle, type:'third'}}></MenuYellowCircle>)}
+                                </View>
                             </View>
                         </View>
                         <View style={styles.graphRightWrapper}>
                             <View style={styles.graphTopRight}>
-                                {cateData.first.map((circle) => <MenuYellowCircle key={circleIndex++} source={{...circle, type:'first'}}></MenuYellowCircle>)}
+                                <View style={styles.inner}>
+                                    {cateData.first.map((circle) => <MenuYellowCircle key={circleIndex++} source={{...circle, type:'first'}}></MenuYellowCircle>)}
+                                </View>
                             </View>
                             <View style={styles.graphBottomRight}>
                                 
@@ -332,29 +337,33 @@ const styles = StyleSheet.create({
         flex:1,
         height:'100%',
     },
+    inner:{
+        width:'80%',
+        height:'80%',
+    },
     graphTopLeft:{
         width:'100%',
         flex:1,
-        backgroundColor:'teal',
-        opacity:0.2,
+        justifyContent:'center',
+        alignItems:'center',
     },
     graphTopRight:{
         width:'100%',
         flex:1,
-        backgroundColor:'cyan',
-        opacity:0.2,
+        justifyContent:'center',
+        alignItems:'center',
     },
     graphBottomLeft:{
         width:'100%',
         flex:1,
-        backgroundColor:'tomato',
-        opacity:0.2,
+        justifyContent:'center',
+        alignItems:'center',
     },
     graphBottomRight:{
         width:'100%',
         flex:1,
-        backgroundColor:'blue',
-        opacity:0.2,
+        justifyContent:'center',
+        alignItems:'center',
     },
     resultSection:{
         height:'40%',

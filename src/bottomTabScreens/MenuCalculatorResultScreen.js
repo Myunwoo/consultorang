@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Pressable, Image, ScrollView, TextInput, Keyboard } from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { theme } from '../variables/color';
 import {dateObject,CONTENT_SECTION_BORDER_RADIUS, BASIC_SHADOW} from '../variables/scales';
@@ -12,8 +11,7 @@ import WeatherHeader from '../components/WeatherHeader';
 import ModalComponent from '../modals/ModalComponent';
 import PrimeCostModal from '../modals/PrimeCostModal';
 
-const MenuCalculatorResultScreen = (({navigation, route}) => {
-    //이전 화면으로부터 넘겨받은 데이터를 이용해 계산해주어야 함
+const MenuCalculatorResultScreen = (({navigation, route}) => {0
     const {menuName}=route.params;
 
     const [primeVisible, setPrimeVisible]=useState(false);
@@ -38,6 +36,7 @@ const MenuCalculatorResultScreen = (({navigation, route}) => {
         setPrimeVisible(true);
     };
 
+    //로컬에 계산된 데이터를 저장해 주어야 합니다
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>
             <ModalComponent showModal={primeVisible} setShowModal={setPrimeVisible}>

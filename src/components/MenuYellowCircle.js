@@ -16,38 +16,40 @@ const MenuYellowCircle = (arg) => {
             posY=(y-50)*2;
             break;
         case 'second':
-            posX=x;
+            posX=x*2;
             posY=(y-50)*2;
             break;
         case 'third':
-            posX=x;
-            posY=y;
+            posX=x*2;
+            posY=y*2;
             break;
     }
-    let diffX=Math.abs(50-posX)/20;
-    let diffY=Math.abs(50-posY)/20;
+    if(posX>=90) posX=90;
+    if(posY>=90) posY=90;
+    // let diffX=Math.abs(50-posX)*(5/100);
+    // let diffY=Math.abs(50-posY)*(5/100);
 
-    //first, second, third가 어떤 기준으로 오는지 알아야될듯??????
-    /////
-    if(posX>=50 && posY>=50){
-        posX-=diffX;
-        posY-=diffY;
-    }else if(posX<50 && posY>=50){
-        posX+=diffX;
-        posY-=diffY;
-    }else if(posX>=50 && posY<50){
-        posX-=diffX;
-        posY+=diffY;
-    }else{
-        posX+=diffX;
-        posY+=diffY;
-    }
+    // //first, second, third가 어떤 기준으로 오는지 알아야될듯??????
+    // /////
+    // if(posX>=50 && posY>=50){
+    //     posX-=diffX;
+    //     posY-=diffY;
+    // }else if(posX<50 && posY>=50){
+    //     posX+=diffX;
+    //     posY-=diffY;
+    // }else if(posX>=50 && posY<50){
+    //     posX-=diffX;
+    //     posY+=diffY;
+    // }else{
+    //     posX+=diffX;
+    //     posY+=diffY;
+    // }
+    posX=String(Math.round(posX))+'%';
+    posY=String(Math.round(posY))+'%';
 
-    posX=String(posX)+'%';
-    posY=String(posY)+'%';
-    // console.log(menuNm)
-    // console.log(posX);
-    // console.log(posY);
+    console.log(menuNm);
+    console.log(`popularity: ${x}, contrinutionMargin: ${y}`);
+    console.log(`posX: ${posX}, posY: ${posY}`);
 
     return (
         <View 
