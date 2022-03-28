@@ -83,6 +83,12 @@ export const HOUR_LIST=[
 //     {text:'기타',code:'AL004'},
 // ]
 
+export const GT_LIST = [
+    {text:'동일 업종'},
+    {text:'동일 매출액'},
+    {text:'동일 규모'},
+];
+
 export const WEATHER_LIST=[
     {image:require('../../image/weather_cloud.png'), name:'weather_big_cloud'},
     // {image:require('../../image/weather_cloud_wind.png'), name:'weather_cloud_wind'},

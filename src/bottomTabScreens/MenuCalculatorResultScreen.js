@@ -12,7 +12,6 @@ import ModalComponent from '../modals/ModalComponent';
 import PrimeCostModal from '../modals/PrimeCostModal';
 
 const MenuCalculatorResultScreen = (({navigation, route}) => {
-    //이전 화면으로부터 넘겨받은 데이터를 이용해 계산해주어야 함
     const {menuName}=route.params;
 
     const [primeVisible, setPrimeVisible]=useState(false);
@@ -36,6 +35,8 @@ const MenuCalculatorResultScreen = (({navigation, route}) => {
     const handlePrimeOpen=()=>{
         setPrimeVisible(true);
     };
+
+    //로컬에 계산된 데이터를 저장해 주어야 합니다.
 
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>

@@ -9,11 +9,7 @@ import commonStyles from '../variables/commonStyles';
 import WeatherHeader from '../components/WeatherHeader';
 import GraphType from '../components/GraphType';
 
-const GT_LIST = [
-    {text:'동일 업종'},
-    {text:'동일 매출액'},
-    {text:'동일 규모'},
-];
+import {GT_LIST} from '../variables/codelist';
 
 const IncomeStatementScreen = (({navigation}) => {
     const [graphType, setGraphType]=useState(GT_LIST[0].text);
