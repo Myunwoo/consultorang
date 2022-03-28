@@ -11,7 +11,7 @@ import WeatherHeader from '../components/WeatherHeader';
 import ModalComponent from '../modals/ModalComponent';
 import PrimeCostModal from '../modals/PrimeCostModal';
 
-const MenuCalculatorResultScreen = (({navigation, route}) => {
+const MenuCalculatorResultScreen = (({navigation, route}) => {0
     const {menuName}=route.params;
 
     const [primeVisible, setPrimeVisible]=useState(false);
@@ -36,8 +36,7 @@ const MenuCalculatorResultScreen = (({navigation, route}) => {
         setPrimeVisible(true);
     };
 
-    //로컬에 계산된 데이터를 저장해 주어야 합니다.
-
+    //로컬에 계산된 데이터를 저장해 주어야 합니다
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>
             <ModalComponent showModal={primeVisible} setShowModal={setPrimeVisible}>

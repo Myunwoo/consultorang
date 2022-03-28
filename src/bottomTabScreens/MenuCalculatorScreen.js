@@ -139,7 +139,6 @@ const MenuCalculatorScreen = (({navigation}) => {
                 : <ScrollView style={{width:'100%',}} contentContainerStyle={styles.scrollview}>
                     {tempHistory.map(history=><View style={{width:'100%', height:130, margin:15, paddingHorizontal:10,}}><CalcResultCard source={{...history, navigation}}></CalcResultCard></View>)}
                 </ScrollView>}
-                    
                 </View>
             </View>
         </LinearGradient>
