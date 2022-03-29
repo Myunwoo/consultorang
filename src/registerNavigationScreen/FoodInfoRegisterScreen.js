@@ -70,8 +70,6 @@ const FoodInfoRegisterScreen = ({route,navigation}) => {
             return;
         }
 
-        
-
         const dataToSend={
             email:userEmail,
             pw:userPassword,
@@ -83,9 +81,11 @@ const FoodInfoRegisterScreen = ({route,navigation}) => {
             businessIngre,
             businessCookway,
             businessAlready,
-            businessSit,
+            businessSize:businessSit,
             businessStaff,
-            businessHours: `${startHour>=10 ? startHour : '0'+startHour}:00~${endHour>=10 ? endHour : '0'+endHour}:00`,
+            businessStart:startHour,
+            businessEnd:endHour+12,
+            // businessHours: `${startHour>=10 ? startHour : '0'+startHour}:00~${endHour>=10 ? endHour : '0'+endHour}:00`,
         };
         console.log(dataToSend);
     };

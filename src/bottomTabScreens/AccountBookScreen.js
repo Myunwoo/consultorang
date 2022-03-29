@@ -5,11 +5,12 @@ import {LinearGradient} from 'expo-linear-gradient';
 import { theme } from '../variables/color';
 import { SCREEN_WIDTH, } from '../variables/scales';
 
-import { fetchServer, getItemAsyncStorage } from '../abstract/asyncTasks';
+import { fetchServer, getItemAsyncStorage,AsyncStorageClear } from '../abstract/asyncTasks';
 
 import commonStyles from '../variables/commonStyles';
 import WeatherHeader from '../components/WeatherHeader';
 import WeeklyCalendar from '../components/WeeklyCalendar';
+import Loader from '../screens/Loader';
 
 import ModalComponent from '../modals/ModalComponent';
 import ExcelModal from '../modals/ExcelModal';
@@ -31,6 +32,8 @@ const AccountBookScreen = (({navigation}) => {
         prevExpend:0,
     });
     const [calArr, setCalArr]=useState([]);
+    const [loading, setLoading]=useState(false);
+
 
     const SaleAndExpend=()=>{
         const {curSale, curExpend, prevSale, prevExpend}=saleExpend;
@@ -107,7 +110,7 @@ const AccountBookScreen = (({navigation}) => {
         }
     };
 
-    const initCalArr=()=>{
+    const initCalArr=async()=>{
         const calendarCount=parseInt(SCREEN_WIDTH*0.9/52)-2;
         let d=new Date();
         let year;
@@ -134,6 +137,16 @@ const AccountBookScreen = (({navigation}) => {
         const endMonth=endD.getMonth()+1;
         const endDate=endD.getDate();
         const endYmd=`${endYear}${endMonth >= 10 ? endMonth : '0' + endMonth}${endDate >= 10 ? endDate : '0' + endDate}`;
+        let userId;
+        try{
+            userId= await getItemAsyncStorage('userid');
+            console.log('userId');
+            console.log(userId);
+        }catch(error){
+
+        }finally{
+
+        }
         const dataToSend={
             userId:27,
             startYmd:startYmd,
@@ -179,6 +192,7 @@ const AccountBookScreen = (({navigation}) => {
             console.log(error);
         });
         initCalArr();
+        setLoading(false);
     },[]);
 
     
@@ -186,6 +200,7 @@ const AccountBookScreen = (({navigation}) => {
     let i=0;
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>
+            <Loader loading={loading}></Loader>
             <ModalComponent key={i++} showModal={inModalVisible} setShowModal={setInModalVisible}>
                 <IncomeModal showModal={inModalVisible} setShowModal={setInModalVisible}></IncomeModal>
             </ModalComponent>

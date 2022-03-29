@@ -2,8 +2,8 @@ import React, {useState, useEffect} from 'react';
 import {ActivityIndicator, View, StyleSheet, Image} from 'react-native';
 ``
 import { theme } from '../variables/color';
-import { getItemAsyncStorage,fetchServer } from '../abstract/asyncTasks';
-import { isEmailRight } from '../abstract/commonTasks';
+import { getItemAsyncStorage,fetchServer,login } from '../abstract/asyncTasks';
+
 
 const SplashScreen = ({navigation}) => {
   const [animating, setAnimating] = useState(true);
@@ -21,12 +21,11 @@ const SplashScreen = ({navigation}) => {
           isEmailSave=retVal[1];
           //자동 로그인
           if(isAutoLogin==='true'){
-            console.log('autoLogin...');
             const dataToSend={
               email:'',
               pw:''
             };
-            Promise.all([getItemAsyncStorage('userEmail'),getItemAsyncStorage('userPassword')]).then(info => {
+            Promise.all([getItemAsyncStorage('email'),getItemAsyncStorage('pw')]).then(info => {
               dataToSend.email=info[0];
               dataToSend.pw=info[1];
               fetchServer('POST', '/login/signin', dataToSend).then((responseJson) => {
@@ -40,10 +39,12 @@ const SplashScreen = ({navigation}) => {
                 navigation.replace('Auth');
               });
             })
+            //로그인에 대한 실패, 성공 분기
           //아이디 저장
           }else if(isEmailSave==='true'){
+            //로그인에 대한 실패, 성공 분기
             console.log('emailSave...');
-            getItemAsyncStorage('userEmail').then(email => {
+            getItemAsyncStorage('email').then(email => {
               navigation.replace('Auth',{email:email});
             });
           }else{

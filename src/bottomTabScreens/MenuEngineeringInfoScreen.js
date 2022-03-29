@@ -4,7 +4,6 @@ import {LinearGradient} from 'expo-linear-gradient';
 
 import { theme } from '../variables/color';
 import {dateObject, statusBarHeight,CONTENT_SECTION_BORDER_RADIUS, BASIC_SHADOW, SCREEN_HEIGHT, WEATHER_LIST} from '../variables/scales';
-import { getItemAsyncStorage, fetchServer } from '../abstract/asyncTasks';
 import commonStyles from '../variables/commonStyles';
 
 import WeatherHeader from '../components/WeatherHeader';
