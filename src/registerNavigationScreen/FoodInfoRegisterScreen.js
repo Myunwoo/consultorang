@@ -5,6 +5,7 @@ import { theme } from '../variables/color';
 import {BASIC_SHADOW, CONTENT_SECTION_BORDER_RADIUS, statusBarHeight} from '../variables/scales';
 import { HOUR_LIST, SIT_LIST, EMPLOYEE_LIST, CODE_LIST_ROW1, CODE_LIST_ROW2, ING_LIST_ROW1, CODE_LIST_ROW3, ING_LIST_ROW2, HOW_LIST, ALCOHOL_LIST } from '../variables/codelist';
 import { SCREEN_WIDTH } from '../variables/scales';
+import { fetchServer } from '../abstract/asyncTasks';
 import RNPickerSelect, { defaultStyles } from 'react-native-picker-select';
 
 import TypeImageCard from '../components/TypeImageCard';
@@ -74,20 +75,39 @@ const FoodInfoRegisterScreen = ({route,navigation}) => {
             email:userEmail,
             pw:userPassword,
             phone:userPhoneNumber,
-            serviceYn:userAgree,
+            serviceYn:userAgree?'Y':'N',
             businessNum,
             businessName,
             businessType,
             businessIngre,
-            businessCookway,
-            businessAlready,
+            businessCookway:businessCookway.join(','),
+            //businessAlready,
+            businessAlready:30,
             businessSize:businessSit,
             businessStaff,
             businessStart:startHour,
             businessEnd:endHour+12,
-            // businessHours: `${startHour>=10 ? startHour : '0'+startHour}:00~${endHour>=10 ? endHour : '0'+endHour}:00`,
         };
-        console.log(dataToSend);
+
+        //fetchServer한 후 성공, 실패 여부 분기하기
+        fetchServer('POST','/login/signup',dataToSend)
+            .then((responseJson) => {
+                const {retCode,data}=responseJson;
+                if(data){
+                    if(retCode==='0'){
+                        alert('회원가입에 성공하였습니다.');
+                        navigation.replace('Auth');
+                    }
+                    else{
+                        alert('회원가입에 실패하였습니다');
+                        return;
+                    }
+                }else{
+                    alert('회원가입에 실패했습니다.');
+                    return;
+                }
+            })
+            .catch(error => console.log(error));
     };
 
     return (

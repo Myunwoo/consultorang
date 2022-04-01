@@ -4,6 +4,7 @@ import {LinearGradient} from 'expo-linear-gradient';
 
 import { theme } from '../variables/color';
 import {dateObject, statusBarHeight,CONTENT_SECTION_BORDER_RADIUS, BASIC_SHADOW, SCREEN_HEIGHT, WEATHER_LIST} from '../variables/scales';
+import { getItemAsyncStorage, fetchServer } from '../abstract/asyncTasks';
 import commonStyles from '../variables/commonStyles';
 
 import WeatherHeader from '../components/WeatherHeader';
@@ -36,13 +37,12 @@ const init=(type)=>{
 const MenuEngineeringInfoScreen = (({route, navigation}) => {
     let index=1;
     const {type, array, categoryTxt}=route.params;
-    
     const [medal, setMedal]=useState(type);
     const [menus, setMenus]=useState(array);
     const [category, setCategory]=useState(categoryTxt);
     const [sendObj, setSendObj]=useState({
         'userId':30,
-        'medalType':0,
+        'medalType':-1,
         'hasMenu':false,
     });
     const {img, medalColor, medalText,}=init(type);
@@ -53,32 +53,43 @@ const MenuEngineeringInfoScreen = (({route, navigation}) => {
     //5. solution의 solContent는 케케
     //6. imgId에 따라서 ??????된 이미지의 내용을 바꿔 주세요.
 
-    useEffect(()=>{
-        //서버로부터 키키, 케케, 크크에 넣을 데이터를 받으면 그 데이터를 useState를 이용해서 세팅 해주셔야
-        //화면이 달라질 겁니다. 
-        if(array.length<=0){
-            setSendObj({
-                'userId':30,
-                'medalType':type,
-                'hasMenu':false,
-            });
-        } else{
-            setSendObj({
-                'userId':30,
-                'medalType':type,
-                'hasMenu':true,
-            });
-        }
-    },[]);
+    useEffect(() => {
+      //서버로부터 키키, 케케, 크크에 넣을 데이터를 받으면 그 데이터를 useState를 이용해서 세팅 해주셔야
+      //화면이 달라질 겁니다.
+      if (array.length <= 0) {
+        setSendObj({
+          userId: 30,
+          medalType: type+1,
+          hasMenu: false,
+        });
+      } else {
+        setSendObj({
+          userId: 30,
+          medalType: type+1,
+          hasMenu: true,
+        });
+      }
+    }, []);
+  
+    useEffect(() => {
+      fetchServer("POST", "/engine/getEngineSolList", sendObj)
+        .then((responseJson) => {
+            console.log('responseJson');
+            console.log(responseJson);
+            console.log('responseJson.data.totalSol');
+            console.log(responseJson.data.totalSol);
+            
+            
 
-    useEffect(()=>{
-        if(sendObj.medalType===0) return;
-        // fetchServer('POST', '/engine/getEngineSolList', sendObj).then((responseJson) => {
-        //     console.log(responseJson);
-        // }).catch((error) => {
-        //     console.log(error);
-        // });
-    },[sendObj]);
+          if (responseJson.data !== null) {
+            //cateSetter(responseJson.data);
+            //setter(responseJson.data);
+          }
+        })
+        .catch((error) => {
+          //console.log(error);
+        });
+    }, [sendObj]);
 
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>

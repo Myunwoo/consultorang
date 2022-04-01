@@ -9,7 +9,6 @@ import {
     SCREEN_HEIGHT, 
 } from '../variables/scales';
 import {dateObject} from '../variables/scales';
-
 import commonStyles from '../variables/commonStyles';
 import ModalComponent from '../modals/ModalComponent';
 import FilterModal from '../modals/FilterModal';

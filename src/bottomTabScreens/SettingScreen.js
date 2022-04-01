@@ -10,6 +10,7 @@ const SettingScreen = ({navigation}) => {
         navigation.replace('Auth');
         AsyncStorage.setItem('autoLogin', 'false');
         AsyncStorage.setItem('emailSave', 'false');
+        AsyncStorage.clear();
     };
 
     return (

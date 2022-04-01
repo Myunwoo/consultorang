@@ -31,36 +31,7 @@ export const fetchServer = (_method, _url, data) => {
     .then((response)=>response.json());
 };
 
-//로그인 함수는 성공 시 saveUserData를 통해 정보를 모두 저장해 주어야 한다.
-//로그인 성공과 실패를 어떻게 알려주어야 할까?
-export const login=async()=>{
-  const dataToSend={
-    email:'',
-    pw:''
-  };
-  try{
-    const email=await getItemAsyncStorage('email');
-    const pw=await getItemAsyncStorage('pw');
-    console.log(email);
-    console.log(pw);
-  }catch(error){
-
-  }finally{
-
-  }
-  // fetchServer('POST', '/login/signin', dataToSend).then((responseJson) => {
-  //   if (responseJson.retCode === '0') {
-  //       navigation.replace('MainBottomNavigator');
-  //   } else {
-  //     navigation.replace('Auth');
-  //   }
-  // }).catch((error) => {
-  //   console.log(error);
-  //   navigation.replace('Auth');
-  // });
-}
-
-export const saveUserData=async(data)=>{
+export const saveUserData=(data)=>{
   const {businessAlready, businessCookway, businessEnd, businessIngre, businessName, 
     businessNum, businessSize, businessStaff, businessStart, businessType, email, phone,
     pw, serviceYn, token, userId,}=data;
@@ -89,7 +60,7 @@ export const AsyncStorageClear=()=>{
 
 
 //파일 업로드 수정 필요
-export const uploadFile = async (_method, _url, _file) => {
+export const uploadFile = async (_method, _url, _file, _userId, _saleYm) => {
   if(_file==null) return null;
 
   const fileUri = _file.uri;
@@ -97,12 +68,30 @@ export const uploadFile = async (_method, _url, _file) => {
   const extArr = /\.(\w+)$/.exec(fileName);
   const type = getMimeType(extArr[1]);
   const fileToUpload = _file;
-  const data = new FormData();
-  data.append("userId", 111);
-  data.append("saleYm","202202");
-  data.append('multipartFile', {
-    uri: fileUri, name: fileName, type 
-  });
+  // const data = new FormData();
+  // data.append("userId", _userId);
+  // data.append("saleYm",_saleYm);
+  // data.append('parsertype','CT001');
+  // data.append('multipartFile', {
+  //   uri: fileUri, name: fileName, type 
+  // });
+
+  // const dataToSend={
+  //   userId:_userId,
+  //   saleYm:_saleYm,
+  //   parserType:'CT001',
+  //   multipartFile:{
+  //     uri: fileUri, name: fileName, type 
+  //   }
+  // }
+  // console.log(dataToSend);
+
+  const data=new FormData();
+  data.append('userId',_userId);
+  data.append('saleYm',_saleYm);
+  data.append('parserType', 'CT001');
+  data.append('multipartFile', { uri: fileUri, name: fileName, type });
+  console.log(data);
 
   return fetch(url+_url,{
     method:_method,

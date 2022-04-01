@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import { Platform, StyleSheet, Text, View, Pressable, Image, Modal } from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 
@@ -17,7 +17,6 @@ import ExcelModal from '../modals/ExcelModal';
 import IncomeModal from '../modals/IncomeModal';
 import ExpenditureModal from '../modals/ExpeditureModal';
 import MemoModal from '../modals/MemoModal';
-import { useEffect } from 'react/cjs/react.development';
 
 const AccountBookScreen = (({navigation}) => {
     const [inModalVisible, setInModalVisible]=useState(false);
@@ -33,6 +32,7 @@ const AccountBookScreen = (({navigation}) => {
     });
     const [calArr, setCalArr]=useState([]);
     const [loading, setLoading]=useState(false);
+    let USER_ID='';
 
 
     const SaleAndExpend=()=>{
@@ -137,18 +137,8 @@ const AccountBookScreen = (({navigation}) => {
         const endMonth=endD.getMonth()+1;
         const endDate=endD.getDate();
         const endYmd=`${endYear}${endMonth >= 10 ? endMonth : '0' + endMonth}${endDate >= 10 ? endDate : '0' + endDate}`;
-        let userId;
-        try{
-            userId= await getItemAsyncStorage('userid');
-            console.log('userId');
-            console.log(userId);
-        }catch(error){
-
-        }finally{
-
-        }
         const dataToSend={
-            userId:27,
+            userId:USER_ID,
             startYmd:startYmd,
             endYmd:endYmd,
         };
@@ -159,40 +149,41 @@ const AccountBookScreen = (({navigation}) => {
                     calendarArr[i]={...res[i], ...calendarArr[i]};
                 }
                 setCalArr(calendarArr);
-            }else{
-                setCalArr(calendarArr);
             }
         }).catch((error) => {
-            console.log(error);
             setCalArr(calendarArr);
+            console.log(error);
         });
     };
 
-    //1. 수익, 지출 퍼센트는 서버로부터의 데이터에 맞게 색과 화살표 방향을 변화해 주어야 함
-    //지금은 asyncstorage에서 엑셀의 존재 여부를 판단하지만, 서버로부터 현재 월의 엑셀이 존재하는지 아닌지를 받아야 할 것으로 보입니다.
-    //더불어, 비교에 의한 퍼센트 데이터 또한 서버로부터 받아 와야 합니다.
     useEffect(()=>{
-        const dataToSend={
-            'userId':27,
-            'ym':'202201',
-        };
-        fetchServer('POST', '/account/getCurPrevSaleExpend', dataToSend).then((responseJson) => {
-            if(responseJson.data!==null){
-                setPercentVisible(true);
-                setSaleExpend({
-                    curSale:responseJson.data.cur.totalSale,
-                    curExpend:responseJson.data.cur.totalExpend,
-                    prevSale:responseJson.data.prev.totalSale,
-                    prevExpend:responseJson.data.prev.totalExpend,
-                });
-            }else{
-                setPercentVisible(false);
-            }
-        }).catch((error) => {
-            console.log(error);
+        getItemAsyncStorage('userId').then(res=>{
+            USER_ID=res;
+            const dataToSend={
+                'userId':USER_ID,
+                'ym':'202201',
+            };
+            fetchServer('POST', '/account/getCurPrevSaleExpend', dataToSend).then((responseJson) => {
+                if(responseJson.data!==null){
+                    setPercentVisible(true);
+                    setSaleExpend({
+                        curSale:responseJson.data.cur.totalSale,
+                        curExpend:responseJson.data.cur.totalExpend,
+                        prevSale:responseJson.data.prev.totalSale,
+                        prevExpend:responseJson.data.prev.totalExpend,
+                    });
+                }else{
+                    setPercentVisible(false);
+                }
+            }).catch((error) => {
+                console.log(error);
+            });
+            setLoading(false);
+        }).catch(error=>{
+            setLoading(false);
         });
         initCalArr();
-        setLoading(false);
+        
     },[]);
 
     

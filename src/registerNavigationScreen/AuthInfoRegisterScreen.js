@@ -16,10 +16,10 @@ import RegisterInput from '../components/RegisterInput';
 6. 핸드폰 번호 인증 기능 구현
 */
 
-
 const AuthInfoRegisterScreen = ({route,navigation}) => {
     const [businessName, setBusinessName]=useState('');
     const [userEmail, setUserEmail]=useState('');
+    const [emailRight, setEmailRight]=useState(false);
     const [userPassword, setUserPassword]=useState('');
     const [confirmPassword, setConfirmPassword]=useState('');
     const [userPhoneNumber, setUserPhoneNumber]=useState('');
