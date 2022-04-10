@@ -5,8 +5,6 @@ import { theme } from "../variables/color";
 
 const IncomeAndSales = (arg) => {
   const { historyType, typeNm, ymd, val, specificType } = arg.source;
-  console.log('arg.source');
-  console.log(arg);
 
   let sign;
   historyType==='SALE' ? (sign = "+") : (sign = "-");

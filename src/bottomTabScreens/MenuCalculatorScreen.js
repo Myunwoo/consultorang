@@ -25,6 +25,7 @@ const tempHistory=[
     {name:'바닐라 까눌레', date:'2022/02/11'},
     {name:'아', date:'2022/01/01'},
 ]
+
 const MenuCalculatorScreen = (({navigation}) => {
     const [menuImg, setMenuImg]=useState(require('../../image/calc_placeholder.png'));
     const [menuName, setMenuName]=useState('');

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { StyleSheet, Text, View, Pressable, TextInput, Keyboard, Image } from 'react-native';
 import {
     CONTENT_SECTION_BORDER_RADIUS,
@@ -9,7 +9,7 @@ import { theme } from '../variables/color';
 import {EXPEND_TYPE_LIST} from '../variables/codelist';
 import ModalTitle from '../components/ModalTitle';
 import FilterItem from '../components/FilterItem';
-
+import {getItemAsyncStorage} from '../abstract/asyncTasks';
 
 const getYmd=(type)=>{
     let d=new Date();
@@ -51,6 +51,13 @@ const FilterModal = ({ showModal, setShowModal, setSendObj}) => {
     const [searchLen, setSearchLen]=useState('');
     const [searchType, setSearchType]=useState('');
     const [searchDetail, setSearchDetail]=useState('');
+    const [userId, setUserId]=useState('');
+
+    useEffect(()=>{
+        getItemAsyncStorage('userId').then(res=>{
+            setUserId(res);
+        })
+    },[])
 
     const handleOutsideClick=()=>{
         setShowModal(false);
@@ -73,7 +80,7 @@ const FilterModal = ({ showModal, setShowModal, setSendObj}) => {
 
     const handleApply=()=>{
         const sendObj={
-            'userId':27,
+            userId,
             'startYmd':getYmd(searchLen),
             'endYmd':yyyymmdd,
             'historyType':getHistoryType(),

@@ -60,7 +60,7 @@ export const AsyncStorageClear=()=>{
 
 
 //파일 업로드 수정 필요
-export const uploadFile = async (_method, _url, _file, _userId, _saleYm) => {
+export const uploadFile = (_method, _url, _file, _userId, _saleYm) => {
   if(_file==null) return null;
 
   const fileUri = _file.uri;
@@ -91,7 +91,7 @@ export const uploadFile = async (_method, _url, _file, _userId, _saleYm) => {
   data.append('saleYm',_saleYm);
   data.append('parserType', 'CT001');
   data.append('multipartFile', { uri: fileUri, name: fileName, type });
-  console.log(data);
+  //console.log(data);
 
   return fetch(url+_url,{
     method:_method,

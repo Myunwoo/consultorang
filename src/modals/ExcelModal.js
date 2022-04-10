@@ -43,7 +43,7 @@ const findExcel=async()=>{
 const ExcelModal = ({ showModal, setShowModal,}) => {
     const [excel, setExcel]=useState(null);
     const {year, month, date, dateString, yyyymmdd}=dateObject();
-    let USER_ID='';
+    const [userId, setUserId]=useState('');
 
     let txtFilename={
         color:theme.placeholderColor,
@@ -53,7 +53,9 @@ const ExcelModal = ({ showModal, setShowModal,}) => {
     //USER_ID를 Excel Modal로 정홛ㄱ히! 보내주기
     useEffect(()=>{
         getItemAsyncStorage('userId').then(res=>{
-            USER_ID=res;
+            if(!isNaN(res)){
+                setUserId(res);    
+            }
         })
     },[]);
 
@@ -72,10 +74,11 @@ const ExcelModal = ({ showModal, setShowModal,}) => {
     };
 
     const handleSend=()=>{
-        uploadFile('POST','/account/insertExcel',excel, USER_ID, `${year}${month<10 ? '0'+month : month}`).then(responseJson=>{
-            console.log('responseJson');
-            console.log(responseJson);
+        uploadFile('POST','/account/insertExcel',excel, userId, `${year}${month<10 ? '0'+month : month}`).then(responseJson=>{
+            // console.log('responseJson');
+            // console.log(responseJson);
             if(responseJson.retCode==='0'){
+                alert('엑셀 전송을 성곡하였습니다.');
                 setShowModal(false);
             }else{
                 alert(responseJson.errMsg);

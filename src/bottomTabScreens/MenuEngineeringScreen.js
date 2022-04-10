@@ -18,36 +18,12 @@ import commonStyles from '../variables/commonStyles';
 
 let circleIndex=0;
 
-//페이지 로드 시 카테고리 리스트를 불러옴, 추후에 하드코딩된 아이디와 날짜를 수정해 주어야 함.
-const initCategory = async(cateSetter) => {
-    const dataToSend={
-        'userId': 27,
-        'saleYm': '202109',
-    }
-    try{
-        fetchServer('POST', '/engine/getCatList', dataToSend).then((responseJson) => {
-            if(responseJson.data!==null){
-                cateSetter(responseJson.data);
-            }else{
-                cateSetter([]);
-            }
-        }).catch((error) => {
-            cateSetter([-1]);
-            console.log(error);
-        });
-    }catch(err){
-        alert(err);
-    }finally{
-        
-    }
-}
-
 //피커에 의해 카테고리에 속한 아이템들을 불러옴, userId와 saleYm를 수정해 주어야 함.
-const handleSetCategory = (targetId, setter) => {
+const handleSetCategory = (targetId, setter, userId, saleYm) => {
     const dataToSend={
         'catId': targetId,
-        'userId': 27,
-        'saleYm': '202112',
+        userId,
+        saleYm,
     };
     fetchServer('POST', '/engine/getCatEngine', dataToSend).then((responseJson) => {
         if(responseJson.data!==null){
@@ -59,6 +35,8 @@ const handleSetCategory = (targetId, setter) => {
 }
 
 const MenuEngineeringScreen = ({navigation}) => {
+    const {year, month, date, dateString, yyyymmdd}=dateObject();
+    const [userId, setUserId]=useState('');
     const [categories, setCategories] = useState([]);
     const [categoryId, setCategoryId]=useState(-1);
     const [categoryTxt, setCategoryTxt]=useState('');
@@ -84,7 +62,27 @@ const MenuEngineeringScreen = ({navigation}) => {
 
     //마운트 시 카테고리를 서버로부터 불러옴
     useEffect(()=>{
-        initCategory(setCategories);
+        getItemAsyncStorage('userId').then(res=>{
+            setUserId(res);
+        }).catch((error)=>{
+            console.log(error);
+        });
+
+        const dataToSend={
+            userId,
+            saleYm: `${year}${month<10?'0'+month:month}`,
+        }
+
+        fetchServer('POST', '/engine/getCatList', dataToSend).then((responseJson) => {
+            if(responseJson.data!==null){
+                setCategories(responseJson.data);
+            }else{
+                setCategories([]);
+            }
+        }).catch((error) => {
+            setCategories([-1]);
+            console.log(error);
+        });
     },[]);
 
     //카테고리 아이디에 변화가 있을 때 (카테고리 처음 불러올 때, 피커에서 변경될 때) 뷰의 텍스트와 점 렌더링
@@ -92,13 +90,13 @@ const MenuEngineeringScreen = ({navigation}) => {
         if(categoryId===-1 || categoryId===null) return;
         const result=categories.find(category=>category.catId===categoryId);
         if(result){
-            handleSetCategory(result.catId, setCateData);
+            handleSetCategory(result.catId, setCateData ,userId, `${year}${month<10?'0'+month:month}`);
             setCategoryTxt(result.catNm);
         }
     },[categoryId]);
 
     useEffect(()=>{
-        console.log(cateData);
+        //console.log(cateData);
     },[cateData]);
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>

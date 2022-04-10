@@ -9,13 +9,19 @@ import {dateObject} from '../variables/scales';
 import ModalTitle from '../components/ModalTitle';
 import ModalDatePicker from '../components/ModalDatePicker';
 
-import { fetchServer } from '../abstract/asyncTasks';
+import { fetchServer,getItemAsyncStorage } from '../abstract/asyncTasks';
 
 const MemoModal = ({ showModal, setShowModal,}) => {
     const {year, month, date, dateString}=dateObject();
     const [memo, setMemo]=useState('');
     const [memoLen, setMemoLen]=useState(0);
-    const [dateToSend, setDateToSend]=useState(`${year}.${month}.${date}`);
+    const [dateToSend, setDateToSend]=useState(`${year}.${month<10?'0'+month:month}.${date<10?'0'+date:date}`);
+    const [userId, setUserId]=useState('');
+    useEffect(()=>{
+        getItemAsyncStorage('userId').then(res=>{
+            setUserId(res);
+        })
+    },[]);
 
     useEffect(()=>{
         setMemoLen(memo.length);
@@ -27,8 +33,8 @@ const MemoModal = ({ showModal, setShowModal,}) => {
 
     const handleSend=()=>{
         const dataToSend={
-            userId:27,
-            memoYmd:dateToSend.replaceAll('.',''),
+            userId,
+            memoYmd:dateToSend.replace(/\./g,''),
             memoStr:memo,
         };
         if(memo===''){

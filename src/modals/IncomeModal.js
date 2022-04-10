@@ -1,10 +1,10 @@
 import React, {useState,useEffect,useRef} from 'react';
-import { StyleSheet, Text, View, Pressable, Image } from 'react-native';
+import { StyleSheet, Text, View, Pressable, Image, Platform } from 'react-native';
 import {
     CONTENT_SECTION_BORDER_RADIUS,
 } from '../variables/scales';
 
-import { fetchServer } from '../abstract/asyncTasks';
+import { fetchServer,getItemAsyncStorage } from '../abstract/asyncTasks';
   
 import { theme } from '../variables/color';
 import {dateObject} from '../variables/scales';
@@ -18,21 +18,29 @@ let i=0;
 const IncomeModal = ({ showModal, setShowModal,}) => {
     const {year, month, date, dateString}=dateObject();
 
+    const [userId, setUserId]=useState('');
     const [contentName, setContentName]=useState('');
     const [amount, setAmount]=useState('');
-    const [dateToSend, setDateToSend]=useState(`${year}.${month}.${date}`);
+    const [dateToSend, setDateToSend]=useState(`${year}.${month<10?'0'+month:month}.${date<10?'0'+date:date}`);
     const [commands, setCommands]=useState([]);
 
     const handleOutsideClick=()=>{
         setShowModal(false);
     };
 
+    useEffect(()=>{
+        getItemAsyncStorage('userId').then(res=>{
+            setUserId(res);
+        });
+    },[]);
+
     const handleSend=()=>{
         const dataToSend={
-            userId: 27,
+            userId: userId,
             menuNm:contentName,
             menuSale:amount,
-            saleYmd:dateToSend.replaceAll('.',''),
+            //saleYmd:dateToSend.replaceAll('.',''),
+            saleYmd:dateToSend.replace(/\./g,'')
         };
         
         if(contentName==='' || amount===''){

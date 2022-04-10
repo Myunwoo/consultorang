@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 
 import { theme } from '../variables/color';
-import {dateObject, statusBarHeight,CONTENT_SECTION_BORDER_RADIUS, BASIC_SHADOW, SCREEN_HEIGHT, WEATHER_LIST} from '../variables/scales';
+import {dateObject,CONTENT_SECTION_BORDER_RADIUS, BASIC_SHADOW, } from '../variables/scales';
 import { getItemAsyncStorage, fetchServer } from '../abstract/asyncTasks';
 import commonStyles from '../variables/commonStyles';
 
@@ -37,34 +37,55 @@ const init=(type)=>{
 const MenuEngineeringInfoScreen = (({route, navigation}) => {
     let index=1;
     const {type, array, categoryTxt}=route.params;
+    const [userId, setUserId]=useState('');
     const [medal, setMedal]=useState(type);
     const [menus, setMenus]=useState(array);
     const [category, setCategory]=useState(categoryTxt);
+
     const [sendObj, setSendObj]=useState({
-        'userId':30,
-        'medalType':-1,
+        'medalType':0,
         'hasMenu':false,
+    });
+    const [solutionAll, setSolutionAll]=useState({
+        totalSolution:'',
+        solutionTitle:'',
+        solutionContent:'',
+        solutionTitle2:'',
+        solutionContent2:'',
+        solutionImg:require('../../image/sol_tape_measure.jpg'),
+        solutionImg2:require('../../image/sol_tape_measure.jpg'),
     });
     const {img, medalColor, medalText,}=init(type);
 
-    //구현해야 할 일
-    //3. response가 도착할 탠데, totalSol 내용을 키키에 넣어주세요.
-    //4. solutions의 solTitle은 크크
-    //5. solution의 solContent는 케케
-    //6. imgId에 따라서 ??????된 이미지의 내용을 바꿔 주세요.
+    const imgNum=(number)=>{
+        let imgFound=imgArr.find(element => number==element.code);
+        return imgFound.source;
+    }
+    
+    const imgArr=[
+        {source:require('../../image/sol_tape_measure.jpg'), code:1},
+        {source:require('../../image/sol_money_up.jpg'), code:2},
+        {source:require('../../image/sol_star.jpg'), code:3},
+        {source:require('../../image/sol_percentage.jpg'), code:4},
+        {source:require('../../image/sol_trash_can.jpg'), code:5}
+    ]
 
     useEffect(() => {
-      //서버로부터 키키, 케케, 크크에 넣을 데이터를 받으면 그 데이터를 useState를 이용해서 세팅 해주셔야
-      //화면이 달라질 겁니다.
+        getItemAsyncStorage('userId').then(res=>{
+            setUserId(res);
+        }).catch(error=>{
+            console.log(error);
+        })
+
       if (array.length <= 0) {
         setSendObj({
-          userId: 30,
+          userId,
           medalType: type+1,
           hasMenu: false,
         });
       } else {
         setSendObj({
-          userId: 30,
+          userId,
           medalType: type+1,
           hasMenu: true,
         });
@@ -72,25 +93,30 @@ const MenuEngineeringInfoScreen = (({route, navigation}) => {
     }, []);
   
     useEffect(() => {
-      fetchServer("POST", "/engine/getEngineSolList", sendObj)
-        .then((responseJson) => {
-            console.log('responseJson');
-            console.log(responseJson);
-            console.log('responseJson.data.totalSol');
-            console.log(responseJson.data.totalSol);
-            
-            
+        fetchServer("POST", "/engine/getEngineSolList", sendObj)
+          .then((responseJson) => {
+              const {totalSol, solutions}=responseJson.data;
 
-          if (responseJson.data !== null) {
-            //cateSetter(responseJson.data);
-            //setter(responseJson.data);
-          }
-        })
-        .catch((error) => {
-          //console.log(error);
-        });
-    }, [sendObj]);
+              setSolutionAll({
+                  totalSolution:totalSol,
+                  solutionTitle:solutions[0].solTitle,
+                  solutionContent:solutions[0].solContent,
+                  solutionTitle2:solutions[1].solTitle,
+                  solutionContent2:solutions[1].solContent,
+                  solutionImg:imgNum(solutions[0].imgId),
+                  solutionImg2:imgNum(solutions[1].imgId),
+                });
 
+            if (responseJson.data !== null) {
+              console.log(responseJson.data);
+            }
+          })
+          .catch((error) => {
+            //console.log(error);
+          });
+      }, [sendObj]);
+
+    
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>
             <WeatherHeader></WeatherHeader>
@@ -122,8 +148,9 @@ const MenuEngineeringInfoScreen = (({route, navigation}) => {
                                     <Text style={styles.txtMedal}>{medalText}</Text>
                                 </View>
                             </View>
+
                             <View style={styles.analysisTextWrapper}>
-                                <Text>키키</Text>
+                                <Text>{solutionAll.totalSolution}</Text>
                             </View>
                             <View style={styles.categoryListWrapper}>
                                 {menus.map((menu)=><Text>{`${index++}. ${menu.menuNm}`}</Text>)}
@@ -136,19 +163,19 @@ const MenuEngineeringInfoScreen = (({route, navigation}) => {
                         </View>
                         <View style={styles.solutionOutterWrapper}>
                             <View style={styles.solutionImgWrapper}>
-                                {/* <Image
+                                <Image
                                     resizeMode='contain'
                                     style={{width:30, height:30,}}
-                                    source={??????}
+                                    source={solutionAll.solutionImg}
                                 >
-                                </Image> */}
+                                </Image>
                             </View>
                             <View style={{position:'absolute', top:22, left:18, width:52, height:1, backgroundColor:theme.engineeringCircleNavy, zIndex:3333}}></View>
                             <View style={{position:'absolute', top:19, left:66, width:8, height:8, borderRadius:8, backgroundColor:theme.engineeringCircleNavy, zIndex:3333}}></View>
                             <View style={{width:50}}></View>
                             <View style={styles.solutionContentWrapper}>
-                                <Text>크크</Text>
-                                <Text>케케</Text>
+                                <Text style={styles.solutionTitleWrapper}>{solutionAll.solutionTitle}</Text>
+                                <Text>{solutionAll.solutionContent}</Text>
                             </View>
                         </View>
                         <View style={styles.analysisTitleWrapper}>
@@ -158,19 +185,19 @@ const MenuEngineeringInfoScreen = (({route, navigation}) => {
                         </View>
                         <View style={styles.solutionOutterWrapper}>
                             <View style={styles.solutionImgWrapper}>
-                                {/* <Image
+                                <Image
                                     resizeMode='contain'
                                     style={{width:30, height:30,}}
-                                    source={??????}
+                                    source={solutionAll.solutionImg2}
                                 >
-                                </Image> */}
+                                </Image>
                             </View>
                             <View style={{position:'absolute', top:22, left:18, width:52, height:1, backgroundColor:theme.engineeringCircleNavy, zIndex:3333}}></View>
                             <View style={{position:'absolute', top:19, left:66, width:8, height:8, borderRadius:8, backgroundColor:theme.engineeringCircleNavy, zIndex:3333}}></View>
                             <View style={{width:50}}></View>
                             <View style={styles.solutionContentWrapper}>
-                                <Text>크크</Text>
-                                <Text>케케</Text>
+                                <Text style={styles.solutionTitleWrapper}>{solutionAll.solutionTitle2}</Text>
+                                <Text>{solutionAll.solutionContent2}</Text>
                             </View>
                         </View>
                     </ScrollView>
@@ -266,4 +293,10 @@ const styles=StyleSheet.create({
         zIndex:0,
         
     },
+    solutionTitleWrapper:{
+        fontSize:14,
+        fontWeight:'bold',
+        color:theme.engineeringCircleNavy,
+    },
+
 })
