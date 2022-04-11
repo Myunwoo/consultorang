@@ -8,8 +8,8 @@ const SettingScreen = ({navigation}) => {
     //로그아웃 함수
     const temp=()=>{
         navigation.replace('Auth');
-        AsyncStorage.setItem('autoLogin', 'false');
-        AsyncStorage.setItem('emailSave', 'false');
+        //AsyncStorage.setItem('autoLogin', 'false');
+        //AsyncStorage.setItem('emailSave', 'false');
         AsyncStorage.clear();
     };
 

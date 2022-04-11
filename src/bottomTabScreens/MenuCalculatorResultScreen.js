@@ -40,7 +40,6 @@ const MenuCalculatorResultScreen = (({navigation, route}) => {0
     const handleCompeteOpen=()=>{
         setCompeteVisible(true);
     };
-
     //로컬에 계산된 데이터를 저장해 주어야 합니다
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>

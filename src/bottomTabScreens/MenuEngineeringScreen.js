@@ -96,7 +96,6 @@ const MenuEngineeringScreen = ({navigation}) => {
     },[categoryId]);
 
     useEffect(()=>{
-        //console.log(cateData);
     },[cateData]);
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>

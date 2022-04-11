@@ -58,7 +58,6 @@ const MenuCalculatorScreen = (({navigation}) => {
     const handleNavigate=(type)=>{
         
     };
-
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>
             <ModalComponent showModal={ingreVisible} setShowModal={setIngreVisible}>

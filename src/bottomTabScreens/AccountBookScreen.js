@@ -154,6 +154,7 @@ const AccountBookScreen = (({navigation}) => {
             setCalArr(calendarArr);
             console.log(error);
         });
+
     };
 
     useEffect(()=>{
@@ -183,7 +184,6 @@ const AccountBookScreen = (({navigation}) => {
             setLoading(false);
         });
         initCalArr();
-        
     },[]);
 
     
