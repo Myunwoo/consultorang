@@ -8,7 +8,7 @@ import {dateObject,CONTENT_SECTION_BORDER_RADIUS, BASIC_SHADOW} from '../variabl
 
 import commonStyles from '../variables/commonStyles';
 import WeatherHeader from '../components/WeatherHeader';
-
+import CalcIngreComponent from '../components/CalcIngreComponent';
 import CalcResultCard from '../components/CalcResultCard';
 import ModalComponent from '../modals/ModalComponent';
 import IngreModal from '../modals/IngreModal';
@@ -55,6 +55,10 @@ const MenuCalculatorScreen = (({navigation}) => {
 
     });
 
+    const handleNavigate=(type)=>{
+        
+    };
+
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>
             <ModalComponent showModal={ingreVisible} setShowModal={setIngreVisible}>
@@ -62,9 +66,18 @@ const MenuCalculatorScreen = (({navigation}) => {
             </ModalComponent>
             <WeatherHeader></WeatherHeader>
             <View style={commonStyles.contentSection}>
-                <View style={styles.titleWrapper}>
+                {/* <View style={styles.titleWrapper}>
                     {TYPE.map(g=><GraphType key={i++} source={{prop:type, setter:setType, ...g}}></GraphType>)}
-                </View>       
+                </View>        */}
+                <View style={type===TYPE[0].text? {...styles.titleBackBlock, backgroundColor:theme.inputBackground1} : {...styles.titleBackBlock, backgroundColor:theme.titleWrapperBlue}}></View>
+                <View style={styles.titleWrapper}>
+                    <View style={type===TYPE[0].text?styles.navigateWrapper:{...styles.navigateWrapper, backgroundColor:theme.titleWrapperBlue}}>
+                        <Pressable onPress={()=>setType(TYPE[0].text)} style={{width:'100%', height:'100%', justifyContent:'center', alignItems:'center'}}><Text style={type===TYPE[0].text? {color:theme.checkedBlue} : {color:'white'} }>메뉴 가격 계산기</Text></Pressable>
+                    </View>
+                    <View style={type===TYPE[0].text?{...styles.navigateWrapper, position:'absolute', left:110,backgroundColor:theme.titleWrapperBlue, zIndex:-1}:{...styles.navigateWrapper, position:'absolute', left:110,backgroundColor:theme.inputBackground1}}>
+                        <Pressable onPress={()=>setType(TYPE[1].text)} style={{width:'100%', height:'100%', justifyContent:'center', alignItems:'center'}}><Text style={type===TYPE[0].text? {color:'white'} : {color:theme.checkedBlue} }>가격 히스토리</Text></Pressable>
+                    </View>
+                </View>
                 <View style={commonStyles.contentWrapper}>
                     {type===TYPE[0].text 
                     ? <ScrollView style={{width:'100%',}} contentContainerStyle={styles.scrollview}>
@@ -77,7 +90,10 @@ const MenuCalculatorScreen = (({navigation}) => {
                         </Image>
                     </View>
                     <View style={styles.menuNameWrapper}>
-                        <Text>ddd</Text>
+                        <View style={{flexDirection:'row', height:'100%', width:5, justifyContent:'space-between', alignItems:'center'}}>
+                            <View style={{width:1, height:'20%',backgroundColor:theme.titleWrapperBlue}}></View>
+                            <View style={{width:1, height:'30%',backgroundColor:theme.titleWrapperBlue}}></View>
+                        </View>
                         <TextInput
                             style={styles.inputStyle}
                             onChangeText={(txt) => setMenuName(txt)}
@@ -90,7 +106,10 @@ const MenuCalculatorScreen = (({navigation}) => {
                             maxLength={20}
                             multiline={false}
                         />
-                        <Text>ddd</Text>
+                        <View style={{flexDirection:'row', height:'100%', width:5, justifyContent:'space-between', alignItems:'center'}}>
+                            <View style={{width:1, height:'30%',backgroundColor:theme.titleWrapperBlue}}></View>
+                            <View style={{width:1, height:'20%',backgroundColor:theme.titleWrapperBlue}}></View>
+                        </View>
                     </View>
                     <View style={styles.contentWrapper}>
                         <View style={styles.stepWrapper}>
@@ -127,7 +146,12 @@ const MenuCalculatorScreen = (({navigation}) => {
                             <Text>정확한 원가계산은 가격결정의 핵심입니다.</Text>
                         </View>
                         <ScrollView style={styles.ingreScrollView}>
-
+                            <View style={styles.calcIngreCompWrapper}>
+                                <CalcIngreComponent source={{name:'박력밀가루', totalCost:'19140원', totalWeight:'20Kg', weight:'150g', height:'100%', cost:'144원'}}></CalcIngreComponent>
+                            </View>
+                            <View style={styles.calcIngreCompWrapper}>
+                                <CalcIngreComponent source={{name:'우유', totalCost:'4090원', totalWeight:'1.8L', weight:'300g', height:'100%', cost:'680원'}}></CalcIngreComponent>                                                    
+                            </View>
                         </ScrollView>
                         <View style={styles.btnApplyWrapper}>
                             <Pressable onPress={handleApply} style={{width:'100%', height:'100%', justifyContent:'center',alignItems:'center',}}>
@@ -148,10 +172,26 @@ const MenuCalculatorScreen = (({navigation}) => {
 export default MenuCalculatorScreen;
 
 const styles=StyleSheet.create({
+    titleBackBlock:{
+        width:50,
+        height:50,
+        position:'absolute',
+        top:20, 
+        left:0, 
+        zIndex:0,
+    },
     titleWrapper:{
         width:'100%',
-        height:60,
+        height:30,
         flexDirection:'row',
+    },
+    navigateWrapper:{
+        width:120,
+        height:'100%',
+        borderTopLeftRadius:CONTENT_SECTION_BORDER_RADIUS,
+        borderTopRightRadius:CONTENT_SECTION_BORDER_RADIUS,
+        backgroundColor:theme.inputBackground1,
+        zIndex:1,
     },
     scrollview:{
         alignItems:'center',
@@ -244,4 +284,8 @@ const styles=StyleSheet.create({
         borderRadius:CONTENT_SECTION_BORDER_RADIUS,
         ...BASIC_SHADOW,
     },
+    calcIngreCompWrapper:{
+        width:'100%',
+        height:60,
+    }
 });
