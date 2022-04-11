@@ -5,7 +5,6 @@ import { theme } from '../variables/color';
 
 const CalcResultCard = (arg) => {
     const {img, name, date, navigation}=arg.source;
-    console.log(navigation);
 
     const handleShowHistory=()=>{
         //히스토리를 볼 수 있는 화면으로 넘어가야 합니다.

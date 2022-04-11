@@ -1,14 +1,13 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, Pressable } from 'react-native';
 import {
     CONTENT_SECTION_BORDER_RADIUS,
 } from '../variables/scales';
 import * as DocumentPicker from 'expo-document-picker';
-import AsyncStorage from '@react-native-async-storage/async-storage';
   
 import { theme } from '../variables/color';
-
-import {uploadFile} from '../abstract/asyncTasks';
+import {dateObject} from '../variables/scales';
+import {getItemAsyncStorage, uploadFile} from '../abstract/asyncTasks';
 
 const findExcel=async()=>{
     let res=null;
@@ -42,37 +41,48 @@ const findExcel=async()=>{
 };
 
 const ExcelModal = ({ showModal, setShowModal,}) => {
+    const [excel, setExcel]=useState(null);
+    const {year, month, date, dateString, yyyymmdd}=dateObject();
+    const [userId, setUserId]=useState('');
+
     let txtFilename={
         color:theme.placeholderColor,
         fontSize:16,
     };
 
-    const [excel, setExcel]=useState(null);
+    //USER_ID를 Excel Modal로 정홛ㄱ히! 보내주기
+    useEffect(()=>{
+        getItemAsyncStorage('userId').then(res=>{
+            if(!isNaN(res)){
+                setUserId(res);    
+            }
+        })
+    },[]);
 
     const handleSelect=()=>{
         findExcel().then(res=>{
-            if(res==='success'){
+            if(res.type==='success'){
                 setExcel(res);
-                AsyncStorage.setItem('excelSended', 'true');
             }
             else if(res.type==='cancel'){
-                console.log('취소');
+
             }
             else{
                 console.log('excel err');
             }
         });
     };
-    
 
     const handleSend=()=>{
-        uploadFile('POST','/account/insertExcel',excel).then(responseJson=>{
-            console.log(responseJson);
-            if(responseJson.retCode==='1'){
-                alert(responseJson.errMsg);
-            }else if(responseJson.retCode==='0'){
+        uploadFile('POST','/account/insertExcel',excel, userId, `${year}${month<10 ? '0'+month : month}`).then(responseJson=>{
+            // console.log('responseJson');
+            // console.log(responseJson);
+            if(responseJson.retCode==='0'){
+                alert('엑셀 전송을 성곡하였습니다.');
                 setShowModal(false);
-            }        
+            }else{
+                alert(responseJson.errMsg);
+            }
         });
     };
 

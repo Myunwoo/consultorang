@@ -2,8 +2,8 @@ import React, {useState, useEffect} from 'react';
 import {ActivityIndicator, View, StyleSheet, Image} from 'react-native';
 ``
 import { theme } from '../variables/color';
-import { getItemAsyncStorage,fetchServer } from '../abstract/asyncTasks';
-import { isEmailRight } from '../abstract/commonTasks';
+import { getItemAsyncStorage,fetchServer,saveUserData } from '../abstract/asyncTasks';
+
 
 const SplashScreen = ({navigation}) => {
   const [animating, setAnimating] = useState(true);
@@ -21,29 +21,28 @@ const SplashScreen = ({navigation}) => {
           isEmailSave=retVal[1];
           //자동 로그인
           if(isAutoLogin==='true'){
-            console.log('autoLogin...');
             const dataToSend={
               email:'',
               pw:''
             };
-            Promise.all([getItemAsyncStorage('userEmail'),getItemAsyncStorage('userPassword')]).then(info => {
-              dataToSend.email=info[0];
-              dataToSend.pw=info[1];
-              fetchServer('POST', '/login/signin', dataToSend).then((responseJson) => {
-                if (responseJson.retCode === '0') {
-                    navigation.replace('MainBottomNavigator');
-                } else {
-                  navigation.replace('Auth');
+            Promise.all([getItemAsyncStorage('email'),getItemAsyncStorage('pw')]).then(ret=>{
+              dataToSend.email=ret[0];
+              dataToSend.pw=ret[1];
+            }).then(()=>{
+              fetchServer('POST', '/login/signin', dataToSend).then(responseJson=>{
+                if(responseJson.retCode==='0'){
+                  saveUserData(responseJson.data);
+                  navigation.replace('MainBottomNavigator');
+                }else{
+                  navigation.navigate('Auth');
                 }
-              }).catch((error) => {
-                console.log(error);
-                navigation.replace('Auth');
               });
-            })
+            });
           //아이디 저장
           }else if(isEmailSave==='true'){
+            //로그인에 대한 실패, 성공 분기
             console.log('emailSave...');
-            getItemAsyncStorage('userEmail').then(email => {
+            getItemAsyncStorage('email').then(email => {
               navigation.replace('Auth',{email:email});
             });
           }else{

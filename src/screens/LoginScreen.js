@@ -1,22 +1,25 @@
-import React, {useState, createRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, TextInput, Pressable, Image, Keyboard} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { theme } from '../variables/color';
-import {fetchServer} from '../abstract/asyncTasks';
 import { checkEmailFormat, checkPwdFormat } from '../abstract/commonTasks';
+import { getItemAsyncStorage,fetchServer, saveUserData, AsyncStorageClear } from '../abstract/asyncTasks';
 
 const LoginScreen = (({route,navigation}) => {
+    const [userEmail, setUserEmail] = useState('');
     const [userPassword, setUserPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [autoLogin, setAutoLogin] = useState(false);
     const [emailSave, setEmailSave] = useState(false);
     const [errorText, setErrorText] = useState('');
-    let initialEmail='';
-    if('email' in route.params){
-        initialEmail=route.params.email;
-    }
-    const [userEmail, setUserEmail] = useState(initialEmail);
+
+    useEffect(()=>{
+        if('email' in route.params && route.params.email !== ''){
+            setUserEmail(route.params.email);
+            setEmailSave(true);
+        }
+    },[]);
     
     let autoLoginProps = {
         onPress:() => autoLoginClicked(),
@@ -62,13 +65,17 @@ const LoginScreen = (({route,navigation}) => {
             setLoading(false);
             //로그인 성공
             if (responseJson.retCode === '0') {
-                AsyncStorage.setItem('userEmail', responseJson.data.email);
-                AsyncStorage.setItem('userPassword', responseJson.data.pw);
-                //로그인 성공 시, 자동로그인 혹은 아이디저장 여부를 함께 저장해 주도록.
-                AsyncStorage.setItem('autoLogin', String(autoLogin));
-                AsyncStorage.setItem('emailSave', String(emailSave));
-                //홈 화면 네비게이션으로 전환
-                navigation.replace('MainBottomNavigator');
+                try{
+                    saveUserData(responseJson.data);
+                    //로그인 성공 시, 자동로그인 혹은 아이디저장 여부를 함께 저장해 주도록.
+                    AsyncStorage.setItem('autoLogin', String(autoLogin));
+                    AsyncStorage.setItem('emailSave', String(emailSave));
+                }catch(e){
+                    console.log(e);
+                }finally{
+                    //홈 화면 네비게이션으로 전환
+                    navigation.replace('MainBottomNavigator');
+                }
             } else {
                 setErrorText(responseJson.errMsg);
                 alert(errorText);
@@ -77,6 +84,8 @@ const LoginScreen = (({route,navigation}) => {
             console.log(error);
             setLoading(false);
         });
+
+        //getItemAsyncStorage('userEmail').then(res=>console.log(res));
     };
 
     return (
@@ -105,7 +114,7 @@ const LoginScreen = (({route,navigation}) => {
                                 blurOnSubmit={false}
                                 underlineColorAndroid="#f000"
                                 returnKeyType="next"
-                                defaultValue={initialEmail}
+                                defaultValue={userEmail}
                             />
                         </View>    
                         <View style={styles.inputWrapper}>

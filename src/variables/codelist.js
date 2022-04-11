@@ -30,22 +30,22 @@ export const ING_LIST_ROW2 = [
 ]
 
 export const EMPLOYEE_LIST=[
-    {name:'1명', code:'EMP001'},
-    {name:'2명', code:'EMP002'},
-    {name:'3명', code:'EMP003'},
-    {name:'4명', code:'EMP004'},
-    {name:'5명', code:'EMP005'},
-    {name:'10명', code:'EMP010'},
-    {name:'10명 초과', code:'EMP011'},
+    {name:'1명', code:1},
+    {name:'2명', code:2},
+    {name:'3명', code:3},
+    {name:'4명', code:4},
+    {name:'5명', code:5},
+    {name:'10명', code:10},
+    {name:'10명 초과', code:11},
 ]
 
 export const SIT_LIST=[
-    {name:'9석 이하', code:'SIT001'},
-    {name:'10-19석', code:'SIT002'},
-    {name:'20-29석', code:'SIT003'},
-    {name:'30-39석', code:'SIT004'},
-    {name:'40-49석', code:'SIT005'},
-    {name:'50-59석', code:'SIT006'},
+    {name:'9석 이하', code:'BS001'},
+    {name:'10-19석', code:'BS002'},
+    {name:'20-29석', code:'BS003'},
+    {name:'30-39석', code:'BS004'},
+    {name:'40-49석', code:'BS005'},
+    {name:'50-59석', code:'BS006'},
 ]
 
 

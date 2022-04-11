@@ -2,14 +2,13 @@ import React,{useState, useEffect} from 'react';
 import { StyleSheet, Text, View, Pressable, Image, ScrollView } from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 
-import { fetchServer } from '../abstract/asyncTasks';
+import { fetchServer,getItemAsyncStorage } from '../abstract/asyncTasks';
 
 import { theme } from '../variables/color';
 import {
     SCREEN_HEIGHT, 
 } from '../variables/scales';
 import {dateObject} from '../variables/scales';
-
 import commonStyles from '../variables/commonStyles';
 import ModalComponent from '../modals/ModalComponent';
 import FilterModal from '../modals/FilterModal';
@@ -25,11 +24,10 @@ const getDefaultEndYmd=()=>{
 };
 
 const HistoryScreen = (({navigation}) => {
-    const {year, month, date, dateString, yyyymmdd}=dateObject();
     const [filterVisible, setFilterVisible]=useState(false);
     const [historyArr, setHistoryArr]=useState([]);
     const [sendObj, setSendObj]=useState({
-        'userId':27,
+        userId:'',
         'startYmd':getDefaultEndYmd(),
         'endYmd':yyyymmdd,
         'historyType':'',
@@ -37,6 +35,15 @@ const HistoryScreen = (({navigation}) => {
     });
 
     useEffect(()=>{
+        getItemAsyncStorage('userId').then(res=>{
+            setSendObj((prevState)=>{
+                return {...prevState, userId:res}
+            });
+        })
+    },[]);
+
+    useEffect(()=>{
+        if(sendObj.userId==='') return;
         fetchServer('POST', '/account/getTotalHistoryList', sendObj).then((responseJson) => {
             if(responseJson.data!==null){
                 setHistoryArr(responseJson.data);

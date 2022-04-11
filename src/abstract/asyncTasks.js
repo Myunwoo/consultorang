@@ -31,7 +31,36 @@ export const fetchServer = (_method, _url, data) => {
     .then((response)=>response.json());
 };
 
-export const uploadFile = async (_method, _url, _file) => {
+export const saveUserData=(data)=>{
+  const {businessAlready, businessCookway, businessEnd, businessIngre, businessName, 
+    businessNum, businessSize, businessStaff, businessStart, businessType, email, phone,
+    pw, serviceYn, token, userId,}=data;
+
+  AsyncStorage.setItem('businessAlready', String(businessAlready));
+  AsyncStorage.setItem('businessCookway', businessCookway);
+  AsyncStorage.setItem('businessEnd', String(businessEnd));
+  AsyncStorage.setItem('businessIngre', businessIngre);
+  AsyncStorage.setItem('businessName', businessName);
+  AsyncStorage.setItem('businessNum', businessNum);
+  AsyncStorage.setItem('businessSize', businessSize);
+  AsyncStorage.setItem('businessStaff', String(businessStaff));
+  AsyncStorage.setItem('businessStart', String(businessStart));
+  AsyncStorage.setItem('businessType', businessType);
+  AsyncStorage.setItem('email', email);
+  AsyncStorage.setItem('phone', phone);
+  AsyncStorage.setItem('pw', pw);
+  AsyncStorage.setItem('serviceYn', serviceYn);
+  AsyncStorage.setItem('token', token);
+  AsyncStorage.setItem('userId', String(userId));
+}
+
+export const AsyncStorageClear=()=>{
+  AsyncStorage.clear().then(r=>console.log(r));
+}
+
+
+//파일 업로드 수정 필요
+export const uploadFile = (_method, _url, _file, _userId, _saleYm) => {
   if(_file==null) return null;
 
   const fileUri = _file.uri;
@@ -39,12 +68,30 @@ export const uploadFile = async (_method, _url, _file) => {
   const extArr = /\.(\w+)$/.exec(fileName);
   const type = getMimeType(extArr[1]);
   const fileToUpload = _file;
-  const data = new FormData();
-  data.append("userId", 111);
-  data.append("saleYm","202202");
-  data.append('multipartFile', {
-    uri: fileUri, name: fileName, type 
-  });
+  // const data = new FormData();
+  // data.append("userId", _userId);
+  // data.append("saleYm",_saleYm);
+  // data.append('parsertype','CT001');
+  // data.append('multipartFile', {
+  //   uri: fileUri, name: fileName, type 
+  // });
+
+  // const dataToSend={
+  //   userId:_userId,
+  //   saleYm:_saleYm,
+  //   parserType:'CT001',
+  //   multipartFile:{
+  //     uri: fileUri, name: fileName, type 
+  //   }
+  // }
+  // console.log(dataToSend);
+
+  const data=new FormData();
+  data.append('userId',_userId);
+  data.append('saleYm',_saleYm);
+  data.append('parserType', 'CT001');
+  data.append('multipartFile', { uri: fileUri, name: fileName, type });
+  //console.log(data);
 
   return fetch(url+_url,{
     method:_method,

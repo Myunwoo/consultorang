@@ -17,7 +17,7 @@ const ModalDatePicker = (arg) => {
         const year=pickerDate.getFullYear();
         const month=pickerDate.getMonth()+1;
         const date=pickerDate.getDate();
-        setter(`${year}.${month}.${date}`);
+        setter(`${year}.${month<10?'0'+month:month}.${date<10?'0'+date:date}`);
     },[pickerDate]);
 
     //date picker 문제는 배포 후 시험해 보아야 하겠네요...

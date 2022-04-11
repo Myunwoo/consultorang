@@ -1,12 +1,29 @@
-// Example of Splash, Login and Sign Up in React Native
-// https://aboutreact.com/react-native-login-and-signup/
+import React, {useState, useEffect} from 'react';
+import {StyleSheet, View, Modal, ActivityIndicator, Image} from 'react-native';
 
-// Import React and Component
-import React from 'react';
-import {StyleSheet, View, Modal, ActivityIndicator} from 'react-native';
+const imgList=[
+  require('../../image/ing_meat.png'),
+  require('../../image/ing_oatmeal.png'),
+  require('../../image/ing_seafood.png'),
+  require('../../image/ing_vegi.png'),
+]
 
 const Loader = (props) => {
   const {loading, ...attributes} = props;
+  const [itv, setItv]=useState(0);
+
+
+  useEffect(()=>{
+    const count=setInterval(()=>{
+      setItv(itv+1);
+    },500);
+  },[]);
+  
+
+  useEffect(()=>{
+    
+    console.log(itv);
+  },[itv]);
 
   return (
     <Modal
@@ -18,12 +35,12 @@ const Loader = (props) => {
       }}>
       <View style={styles.modalBackground}>
         <View style={styles.activityIndicatorWrapper}>
-          <ActivityIndicator
-            animating={true}
-            color="#000000"
-            size="large"
-            style={styles.activityIndicator}
-          />
+          <Image
+              resizeMode='contain'
+              style={{width:'70%', height:'70%', position:'absolute', bottom:-20, right:-4,}}
+              source={require('../../image/account_fork.png')}
+          >
+          </Image>
         </View>
       </View>
     </Modal>
