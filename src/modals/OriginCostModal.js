@@ -9,7 +9,7 @@ import PrimeCostRowComp from '../components/PrimeCostRowComp';
 
 let i=0;
 
-const PrimeCostModal = ({ showModal, setShowModal,}) => {
+const OriginCostModal = ({ showModal, setShowModal,}) => {
     
     const handleOutsideClick=()=>{
         setShowModal(false);
@@ -20,46 +20,27 @@ const PrimeCostModal = ({ showModal, setShowModal,}) => {
             <Pressable onPress={handleOutsideClick} style={{flex:1, width:'100%',}}></Pressable>
             <View style={styles.mainbody}>
                 <View style={styles.headerWrapper}>
-                    <Text style={styles.txtHeader}>프라임</Text>
-                    <Text style={styles.txtHeader}>코스트법 <Text style={{fontSize:16, fontWeight:'normal'}}>이란?</Text></Text>
+                    <Text style={styles.txtHeader}>원가기준</Text>
+                    <Text style={styles.txtHeader}>가격결정법 <Text style={{fontSize:16, fontWeight:'normal'}}>이란?</Text></Text>
                 </View>
                 <ScrollView contentContainerStyle={{alignItems:'center',}} style={styles.contentOutterWrapper}>
                     <View style={styles.upperGuideWrapper}>
-                        <Text style={{marginBottom:8,}}>객관적 가격결정법 (수치화된 기초 자료 활용)으로, 외식업체
-                            비용 중, 가장 많은 비중을 차지하며 핵심적인 프라임코스트를 기준으로 
-                            가격을 책정합니다.
+                        <Text>객관적 가격결정법 (수치화된 기초 자료 활용)으로, 식재료
+                        원가를 기준으로 가격을 책정합니다.
                         </Text>
-                        <View style={styles.upperGuideUnderRow}>
-                            <View style={styles.guideCircle}>
-                                <Text style={{color:'white',}}>Prime</Text>
-                                <Text style={{color:'white',}}>Cost</Text>
-                            </View>
-                            <View style={styles.guideOperator}>
-                                <Text style={styles.txtOperator}>=</Text>
-                            </View>
-                            <View style={{...styles.guideCircle, backgroundColor:'white'}}>
-                                <Text>식재료비</Text>
-                            </View>
-                            <View style={styles.guideOperator}>
-                                <Text style={styles.txtOperator}>+</Text>
-                            </View>
-                            <View style={{...styles.guideCircle, backgroundColor:'white'}}>
-                                <Text>인건비</Text>
-                            </View>
-                        </View>
                     </View>
                     <View style={styles.graphHeader}>
-                        <Text style={{color:theme.primeCostOrange, fontSize:16, fontWeight:'bold', marginRight:8,}}>적정 가격</Text>
+                        <Text style={{color:theme.loginBlue, fontSize:16, fontWeight:'bold', marginRight:8,}}>적정 가격</Text>
                         <Text>(원)</Text>
                     </View>
                     <View style={styles.graphWrapper}>
 
                     </View>
                     <View style={styles.underGuideHeader}>
-                        <Text style={{color:theme.primeCostOrange, fontSize:16, fontWeight:'bold',}}>프라임 코스트 비율</Text>
+                        <Text style={{color:theme.loginBlue, fontSize:16, fontWeight:'bold',}}>프라임 코스트 비율</Text>
                     </View>
                     <View style={styles.underGuiderWrapper}>
-                        <Text style={{fontWeight:'bold', color:theme.primeCostOrange, fontSize:21, marginTop:12,}}>상황별 원가 비율 선택 Tip</Text>
+                        <Text style={{fontWeight:'bold', color:theme.loginBlue, fontSize:21, marginTop:12,}}>상황별 원가 비율 선택 Tip</Text>
                         <View style={styles.underGuideImgRow}>
                             
                         </View>
@@ -87,7 +68,7 @@ const PrimeCostModal = ({ showModal, setShowModal,}) => {
     );
 }
 
-export default PrimeCostModal;
+export default OriginCostModal;
 
 const styles = StyleSheet.create({
     outside:{
@@ -106,7 +87,7 @@ const styles = StyleSheet.create({
     headerWrapper:{
         width:'100%',
         height:70,
-        backgroundColor:theme.primeCostOrange,
+        backgroundColor:theme.loginBlue,
         borderTopLeftRadius:CONTENT_SECTION_BORDER_RADIUS,
         borderTopRightRadius:CONTENT_SECTION_BORDER_RADIUS,
         justifyContent:'center',
@@ -126,7 +107,7 @@ const styles = StyleSheet.create({
         marginVertical:16,
         borderRadius:CONTENT_SECTION_BORDER_RADIUS,
         padding:12,
-        backgroundColor:'rgb(255,232,217)',
+        backgroundColor:'rgb(221,239,242)',
     },
     upperGuideUnderRow:{
         flexDirection:'row',

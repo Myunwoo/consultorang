@@ -57,4 +57,13 @@ export const theme = {
 
     //MenuCalculator
     primeCostOrange:'#F88825',
+
+    //CompeteCostModal
+    competeBackGrey:"#e3e3e3",
+    competeFontOrange:"#f68d38",
+    competeFontGrey:"#787878",
+
+    //PrimeCostModal
+    primeCostRed:'rgb(255,109,80)',
+    primeCostBlue:'rgb(68,174,216)',
 };

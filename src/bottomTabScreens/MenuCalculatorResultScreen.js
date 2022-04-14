@@ -11,11 +11,13 @@ import WeatherHeader from '../components/WeatherHeader';
 import ModalComponent from '../modals/ModalComponent';
 import PrimeCostModal from '../modals/PrimeCostModal';
 import CompeteCostModal from '../modals/CompeteCostModal';
+import OriginCostModal from '../modals/OriginCostModal';
 
 const MenuCalculatorResultScreen = (({navigation, route}) => {0
     const {menuName}=route.params;
     const [competeVisible, setCompeteVisible]=useState(false);
     const [primeVisible, setPrimeVisible]=useState(false);
+    const [originVisible, setOriginVisible]=useState(false);
     const [cost, setCost]=useState({
        ingre:1,
        human:2, 
@@ -40,6 +42,17 @@ const MenuCalculatorResultScreen = (({navigation, route}) => {0
     const handleCompeteOpen=()=>{
         setCompeteVisible(true);
     };
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+
+    const handleOriginOpen=()=>{
+        setOriginVisible(true);
+    };
+
+=======
+>>>>>>> 2cbb2afbcfbe39c9cdbce1be4efceeaf86e78b7f
+>>>>>>> Stashed changes
     //로컬에 계산된 데이터를 저장해 주어야 합니다
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>
@@ -48,6 +61,9 @@ const MenuCalculatorResultScreen = (({navigation, route}) => {0
             </ModalComponent>
             <ModalComponent showModal={competeVisible} setShowModal={setCompeteVisible}>
                 <CompeteCostModal showModal={competeVisible} setShowModal={setCompeteVisible}></CompeteCostModal>
+            </ModalComponent>
+            <ModalComponent showModal={originVisible} setShowModal={setOriginVisible}>
+                <OriginCostModal showModal={originVisible} setShowModal={setOriginVisible}></OriginCostModal>
             </ModalComponent>
             <WeatherHeader></WeatherHeader>
             <View style={commonStyles.contentSection}>
@@ -109,7 +125,7 @@ const MenuCalculatorResultScreen = (({navigation, route}) => {0
                                     <View style={{backgroundColor:theme.btnExpenditureBlue ,...styles.cardTitleInnerWrapper}}>
                                         <Text style={styles.txtCardTitle}>원가기준 가격결정법</Text>
                                     </View>
-                                    <Pressable style={styles.btnCardInfo}>
+                                    <Pressable onPress={handleOriginOpen} style={styles.btnCardInfo}>
                                         <Image
                                             resizeMode='contain'
                                             style={{width:'100%', height:'100%',marginLeft:8,}}
