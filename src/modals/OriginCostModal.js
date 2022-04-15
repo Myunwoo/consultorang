@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { StyleSheet, Text, View, Pressable, ScrollView} from 'react-native';
+import { StyleSheet, Text, View, Pressable, ScrollView, Image} from 'react-native';
 import {
     CONTENT_SECTION_BORDER_RADIUS,
 } from '../variables/scales';
@@ -42,7 +42,23 @@ const OriginCostModal = ({ showModal, setShowModal,}) => {
                     <View style={styles.underGuiderWrapper}>
                         <Text style={{fontWeight:'bold', color:theme.loginBlue, fontSize:21, marginTop:12,}}>상황별 원가 비율 선택 Tip</Text>
                         <View style={styles.underGuideImgRow}>
-                            
+                            <View style={styles.imgWrapper}>
+                                <Image
+                                    style={styles.img}
+                                    source={require('../../image/torang1.png')}
+                                >
+                                </Image>
+                            </View>
+                            <View style={{flex:1, height:'100%', alignItems:'center', justifyContent:'center',}}>
+                                <View style={{paddingHorizontal:12, paddingVertical:10, backgroundColor:'white', marginBottom:8, borderRadius:CONTENT_SECTION_BORDER_RADIUS}}>
+                                    <Text>우리 매장은 어떤 가격을 골라야 할까?</Text>
+                                </View>
+                                <View style={{justifyContent:'center', alignItems:'center',}}>
+                                    <Text>매장의 상황, 전략 등에 맞게 결정하여야</Text>
+                                    <Text>보다 합리적인 가격이 됩니다.</Text>
+                                    <Text>(프라임 코스트법과 원리 동일)</Text>
+                                </View>
+                            </View>
                         </View>
                         <View style={styles.underGuideRow}>
                             <View style={{...styles.underGuideTitleWrapper, backgroundColor:theme.primeCostRed}}>
@@ -61,6 +77,11 @@ const OriginCostModal = ({ showModal, setShowModal,}) => {
                                 <Text style={{color:'white'}}>낮은 원가 비율 (40 ~ 45%)</Text>
                             </View>
                         </View>
+                    </View>
+                    <View style={styles.bottomInfoWrapper}>
+                        <Text style={styles.txtBottomInfo}><Text style={{fontSize:22, color:theme.primeCostRed,}}>※ </Text>
+                        사장님의 매장에 대한 객관적인 평가와 방향성과 함께 고려되어야 함으로, 참고 수준으로 사용해주세요!
+                        <Text style={{fontSize:22, color:theme.primeCostRed,}}> ※</Text></Text>
                     </View>
                 </ScrollView>
             </View>
@@ -151,7 +172,18 @@ const styles = StyleSheet.create({
         borderRadius:CONTENT_SECTION_BORDER_RADIUS,
     },
     underGuideImgRow:{
-
+        marginTop:12,
+        flexDirection:'row',
+        width:'90%',
+        height:120,
+    },
+    imgWrapper:{
+        height:100,
+    },
+    img:{
+        resizeMode: 'contain',
+        flex: 1,
+        aspectRatio: 1
     },
     underGuideRow:{
         width:'95%',
@@ -174,4 +206,13 @@ const styles = StyleSheet.create({
         borderWidth:1,
         borderColor:'white',
     },
+    bottomInfoWrapper:{
+        width:'90%',
+        marginTop:20,
+        marginBottom:60,
+    },
+    txtBottomInfo:{
+        fontSize:16,
+        lineHeight:22,
+    }
 });

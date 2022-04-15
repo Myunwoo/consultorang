@@ -1,4 +1,5 @@
 import React from 'react';
+import {Image} from 'react-native';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
@@ -28,11 +29,41 @@ const MainBottomNavigator = (props) => {
             })
         },
     }}>
-            <Tab.Screen name="AccountBook" component={AccountBookNavigator} options={{headerShown:false}}/>
-            <Tab.Screen name="IncomeStatement" component={IncomeStatementScreen} options={{headerShown:false}}/>
-            <Tab.Screen name="MenuCalculator" component={MenuCalculatorNavigator} options={{headerShown:false}}/>
-            <Tab.Screen name="MenuEngineering" component={MenuEngineeringNavigator} options={{headerShown:false}}/>
-            <Tab.Screen name="SettingScreen" component={SettingScreen} options={{headerShown:false}}/>
+            <Tab.Screen name="AccountBook" component={AccountBookNavigator} options={{headerShown:false, 
+                tabBarIcon:({focused})=>{
+                    return (
+                        <Image style={{width:24, height:24,}} source={focused?require('../image/bottomNav_pig_f.png'):require('../image/bottomNav_pig.png')}></Image>
+                    );
+                }
+            }}/>
+            <Tab.Screen name="IncomeStatement" component={IncomeStatementScreen} options={{headerShown:false,
+                tabBarIcon:({focused})=>{
+                    return (
+                        <Image style={{width:24, height:24,}} source={focused?require('../image/bottomNav_income_f.png'):require('../image/bottomNav_income.png')}></Image>
+                    );
+                }
+            }}/>
+            <Tab.Screen name="MenuCalculator" component={MenuCalculatorNavigator} options={{headerShown:false,
+                tabBarIcon:({focused})=>{
+                    return (
+                        <Image style={{width:24, height:24,}} source={focused?require('../image/bottomNav_calc_f.png'):require('../image/bottomNav_calc.png')}></Image>
+                    );
+                }
+            }}/>
+            <Tab.Screen name="MenuEngineering" component={MenuEngineeringNavigator} options={{headerShown:false,
+                tabBarIcon:({focused})=>{
+                    return (
+                        <Image style={{width:24, height:24,}} source={focused?require('../image/bottomNav_menuEng_f.png'):require('../image/bottomNav_menuEng.png')}></Image>
+                    );
+                }
+            }}/>
+            <Tab.Screen name="SettingScreen" component={SettingScreen} options={{headerShown:false,
+                tabBarIcon:({focused})=>{
+                    return (
+                        <Image style={{width:24, height:24,}} source={focused?require('../image/bottomNav_setting_f.png'):require('../image/bottomNav_setting.png')}></Image>
+                    );
+                }
+            }}/>
         </Tab.Navigator>
     );
 }

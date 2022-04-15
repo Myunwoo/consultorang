@@ -1,14 +1,18 @@
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, Pressable, ScrollView, Image} from 'react-native';
 import {
-    CONTENT_SECTION_BORDER_RADIUS,
+    CONTENT_SECTION_BORDER_RADIUS, BASIC_SHADOW
 } from '../variables/scales';
 
 import { theme } from '../variables/color';
 
+import IngreGuideComp from '../components/IngreGuideComp';
+import IngreTitleComp from '../components/IngreTitleComp';
 let i=0;
-
 const IngreModal = ({ showModal, setShowModal,}) => {
+    const [basicVisible, setBasicVisible]=useState(false);
+    const [condimentVisible, setCondimentVisible]=useState(false);
+    const [ingreVisible, setIngreVisible]=useState(false);
     
     const handleOutsideClick=()=>{
         setShowModal(false);
@@ -20,34 +24,22 @@ const IngreModal = ({ showModal, setShowModal,}) => {
             <View style={styles.mainbody}>
                 <View style={styles.headerWrapper}><Text style={styles.txtHeader}>식재료 담기</Text></View>
                 <ScrollView contentContainerStyle={{alignItems:'center'}} style={styles.contentOutterWrapper}>
-                    <View style={styles.guideWrapper}>
-                        <Text>메뉴에 사용되는 재료를 기입하는 단계입니다.</Text>
-                        <Text style={{marginBottom:4,}}>자세히 기입 할 수록 가격의 정확도가 올라갑니다!</Text>
-                        <Text style={{marginBottom:8,}}>매장별 식재료 구매 금액이 다를 수 있기 때문에, 정확도를 위해 구매 용량과 가격을 직접 입력하셔야 합니다.</Text>
-                        <View style={{flexDirection:'row',}}>
-                            <Image
-                                resizeMode='contain'
-                                style={{width:20, height:20, marginRight:8,}}
-                                source={require('../../image/account_cart.png')}
-                            >
-                            </Image>
-                            <Text style={{color:theme.primeCostOrange, fontSize:20}}>Guide</Text>
+                    <IngreGuideComp></IngreGuideComp>
+                    <View style={{width:'100%', height:10,}}></View>
+                    <View style={styles.titleCountWrapper}>
+                        <Image
+                            source={require('../../image/bottomNav_pig.png')}
+                            style={{width:40, height:40}}
+                        >                
+                        </Image>
+                        <View style={{marginLeft:20, flex:1,}}>
+                            <Text style={{fontWeight:'bold', fontSize:20, color:theme.titleWrapperBlue,}}>몇 인분(개) 기준인가요?</Text>
                         </View>
-                        <View style={styles.guideCircleWrapper}>
-                            <View style={styles.guideCircle}>
-                                <View style={styles.guideNumWrapper}><Text style={{color:'white',}}>1</Text></View>
-                                <Text style={{color:'white'}}>재료 선택 or 입력</Text>
-                            </View>
-                            <View style={styles.guideCircle}>
-                            <View style={styles.guideNumWrapper}><Text style={{color:'white',}}>2</Text></View>
-                                <Text style={{color:'white'}}>{`단위 -> 사용량 입력`}</Text>
-                            </View>
-                        </View>
-                        <View style={styles.guideInfoWrapper}>
-                            <View style={styles.infoNumWrapper}><Text style={{color:'white',}}>3</Text></View>
-                            
-                        </View>
+                        
                     </View>
+                    <IngreTitleComp title={'기초 요리'} img={require('../../image/bottomNav_pig.png')} prop={basicVisible} setter={setBasicVisible}></IngreTitleComp>
+                    <IngreTitleComp title={'조미료'} img={require('../../image/bottomNav_pig.png')} prop={condimentVisible} setter={setCondimentVisible}></IngreTitleComp>
+                    <IngreTitleComp title={'주재료 / 재료 추가'} img={require('../../image/bottomNav_pig.png')} prop={ingreVisible} setter={setIngreVisible}></IngreTitleComp>
                 </ScrollView>
             </View>
         </View>
@@ -81,57 +73,20 @@ const styles = StyleSheet.create({
     },
     txtHeader:{
         fontWeight:'bold',
+        fontSize:16,
         color:'white',
+    },
+    titleCountWrapper:{
+        width:'100%',
+        height:60,
+        backgroundColor:'white',
+        flexDirection:'row',
+        alignItems:'center',
+        paddingHorizontal:16,
+        ...BASIC_SHADOW,
     },
     contentOutterWrapper:{
         width:'100%',
         flex:9,
-    },
-    guideWrapper:{
-        marginTop:15,
-        width:'95%',
-        height:270,
-        backgroundColor:theme.backgroundGrey,
-        borderRadius:CONTENT_SECTION_BORDER_RADIUS,
-        padding:10,
-    },
-    guideCircle:{
-        borderRadius:30,
-        backgroundColor:theme.titleWrapperBlue,
-        justifyContent:'center',
-        alignItems:'center',
-        paddingHorizontal:12,
-        marginHorizontal:8,
-    },
-    guideCircleWrapper:{
-        width:'100%',
-        height:40,
-        flexDirection:'row',
-        marginVertical:8,
-    },
-    guideNumWrapper:{
-        position:'absolute',
-        top:-3,
-        left:-3,
-        borderRadius:20, 
-        width:16, 
-        height:16, 
-        backgroundColor:theme.primeCostOrange,
-        justifyContent:'center',
-        alignItems:'center',
-    },
-    guideInfoWrapper:{
-        flexDirection:'row',
-        width:'100%',
-        height:60,
-        backgroundColor:'teal',
-    },
-    infoNumWrapper:{
-        borderRadius:20, 
-        width:16, 
-        height:16, 
-        backgroundColor:theme.primeCostOrange,
-        justifyContent:'center',
-        alignItems:'center',
     },
 });
