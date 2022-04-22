@@ -4,6 +4,7 @@ import {
     CONTENT_SECTION_BORDER_RADIUS,
 } from '../variables/scales';
 
+import {LOW_COST_COMP_LIST, HIGH_COST_COMP_LIST} from '../variables/codelist';
 import { theme } from '../variables/color';
 import PrimeCostRowComp from '../components/PrimeCostRowComp';
 
@@ -37,7 +38,7 @@ const OriginCostModal = ({ showModal, setShowModal,}) => {
 
                     </View>
                     <View style={styles.underGuideHeader}>
-                        <Text style={{color:theme.loginBlue, fontSize:16, fontWeight:'bold',}}>프라임 코스트 비율</Text>
+                        <Text style={{color:theme.loginBlue, fontSize:16, fontWeight:'bold',}}>식재료 원가 비율</Text>
                     </View>
                     <View style={styles.underGuiderWrapper}>
                         <Text style={{fontWeight:'bold', color:theme.loginBlue, fontSize:21, marginTop:12,}}>상황별 원가 비율 선택 Tip</Text>
@@ -67,7 +68,9 @@ const OriginCostModal = ({ showModal, setShowModal,}) => {
                                 </View>
                                 <Text style={{color:'white'}}>높은 원가 비율 (55 ~ 60%)</Text>
                             </View>
-                            {/* 여기에 넣을 계획입니다. */}
+                            {LOW_COST_COMP_LIST.map(comp=>{<View style={{width:'100%', height:60,}}><PrimeCostRowComp source={{...comp, type:0}}></PrimeCostRowComp></View>})}
+                            <View style={{width:'100%',height:60,marginVertical:4,}}><PrimeCostRowComp source={{img:require('../../image/sol_money_down.jpg'), title:'저가 전략 (가격경쟁력)', content:'임대료(상권 특성 등), 시설비 등의 고정비나 투자비(간편한 조리, 연구의 불필요 등)가 적은 경우 야옹야옹', type:'0'}}></PrimeCostRowComp></View>
+                           <View style={{width:'100%', height:60,marginVertical:4,}}><PrimeCostRowComp source={{img:require('../../image/sol_money_up.jpg'), title:'낮은 운영비', content:'임대료(상권 특성 등), 시설비 등의 고정비나 투자비(간편한 조리, 연구의 불필요 등)가 적은 경우', type:'0'}}></PrimeCostRowComp></View>
                         </View>
                         <View style={styles.underGuideRow}>
                             <View style={{...styles.underGuideTitleWrapper, backgroundColor:theme.primeCostBlue}}>

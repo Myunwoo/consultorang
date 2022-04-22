@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
-import { StyleSheet, Text, View, ScrollView, Image, Pressable } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Image, Pressable, ImageBackground } from 'react-native';
+import Slider from '@react-native-community/slider';
 
 import { theme } from '../variables/color';
 import {BASIC_SHADOW, CONTENT_SECTION_BORDER_RADIUS, statusBarHeight} from '../variables/scales';
-import { HOUR_LIST, SIT_LIST, EMPLOYEE_LIST, CODE_LIST_ROW1, CODE_LIST_ROW2, ING_LIST_ROW1, CODE_LIST_ROW3, ING_LIST_ROW2, HOW_LIST, ALCOHOL_LIST } from '../variables/codelist';
+import { HOUR_LIST, SIT_LIST, EMPLOYEE_LIST, CODE_LIST_ROW1, CODE_LIST_ROW2, ING_LIST_ROW1, CODE_LIST_ROW3, ING_LIST_ROW2, HOW_LIST, DAY_LIST_1, DAY_LIST_2 } from '../variables/codelist';
 import { SCREEN_WIDTH } from '../variables/scales';
 import { fetchServer } from '../abstract/asyncTasks';
 import RNPickerSelect, { defaultStyles } from 'react-native-picker-select';
@@ -34,6 +35,7 @@ const FoodInfoRegisterScreen = ({route,navigation}) => {
     const [businessStaff, setBusinessStaff]=useState('');
     const [startHour, setStartHour]=useState(-1);
     const [endHour, setEndHour]=useState(-1);
+    const [businessHoliday,setBusinessHoliday]=useState([]);
 
     let i=0;
     const handleGoNext = () => {
@@ -81,12 +83,12 @@ const FoodInfoRegisterScreen = ({route,navigation}) => {
             businessType,
             businessIngre,
             businessCookway:businessCookway.join(','),
-            //businessAlready,
             businessAlready:30,
             businessSize:businessSit,
             businessStaff,
             businessStart:startHour,
             businessEnd:endHour+12,
+            businessHoliday,
         };
 
         //fetchServer한 후 성공, 실패 여부 분기하기
@@ -158,10 +160,6 @@ const FoodInfoRegisterScreen = ({route,navigation}) => {
                             </View>
                         </View>
                     </View>
-                    {/* <View style={styles.alcholSection}>
-                        <QuestionHeader text={'주류를 판매하시나요?(복수선택 가능)'}></QuestionHeader>
-                        <MultiSelectButtons source={{list:ALCOHOL_LIST, setter:setBusinessAlcohol, prop:businessAlcohol}}/>
-                    </View> */}
                     <View style={styles.halfcookSection}>
                         <QuestionHeader text={'식재료 중, 반조리 식품의 비율은 어느정도 인가요?'}></QuestionHeader>
                         <View style={styles.howcookInfoSection}>
@@ -181,46 +179,49 @@ const FoodInfoRegisterScreen = ({route,navigation}) => {
                                 </View>
                             </View>
                         </View>
+                        <View style={styles.halfcookSelectWrapper}>
+                            <Slider
+                                style={{width: '100%', height: '100%'}}
+                                minimumValue={0}
+                                maximumValue={100}
+                                step={30}
+                                minimumTrackTintColor="#FFFFFF"
+                                maximumTrackTintColor="#000000"
+                            />
+                        </View>
                     </View>
                     <View style={styles.pickerOutterWrapper}>
                         <QuestionHeader text={'좌석 수는 몇 개 인가요?'}></QuestionHeader>
                         <View style={styles.pickerInnerWrapper}>
                             <RNPickerSelect
-                                    onValueChange={(value)=>{
-                                        setBusinessSit(value);
-                                    }}
-                                    selectedValue={businessSit}
-                                    items={SIT_LIST.map(sit=>{
-                                        return {label:sit.name, value:sit.code}
-                                    })}
-                                    style={pickerSelectStyles}
-                                    Icon={() => {
-                                        return (
-                                        <View
-                                            style={{
-                                            backgroundColor: 'transparent',
-                                            borderTopWidth: 8,
-                                            borderTopColor: 'gray',
-                                            borderRightWidth: 10,
-                                            alignItems:'center',
-                                            justifyContent:'center',
-                                            borderRightColor: 'transparent',
-                                            borderLeftWidth: 10,
-                                            borderLeftColor: 'transparent',
-                                            width: 10,
-                                            height:30,
-                                            marginTop:12,
-                                            }}
-                                        />
-                                        );
-                                    }}
-                                />
+                                useNativeAndroidPickerStyle={false}
+                                fixAndroidTouchableBug={true}
+                                placeholder={{
+                                    label: '좌석 수를 선택해주세요',
+                                }}
+                                onValueChange={(value)=>{
+                                    setBusinessSit(value);
+                                }}
+                                selectedValue={businessSit}
+                                items={SIT_LIST.map(sit=>{
+                                    return {label:sit.name, value:sit.code}
+                                })}
+                                style={pickerSelectStyles}
+                                Icon={() => {
+                                    return <Image style={{width:20, height:20,}} source={require('../../image/ingreModal_arrow.png')} resizeMode='contain'/>;
+                                }}
+                            />
                         </View>
                     </View>
                     <View style={styles.pickerOutterWrapper}>
                         <QuestionHeader text={'직원 수는 몇 명 인가요?'}></QuestionHeader>
                         <View style={styles.pickerInnerWrapper}>
                             <RNPickerSelect
+                                useNativeAndroidPickerStyle={false}
+                                fixAndroidTouchableBug={true}
+                                placeholder={{
+                                    label: '직원 수를 선택해주세요',
+                                }}
                                 onValueChange={(value)=>{
                                     setBusinessStaff(value);
                                 }}
@@ -230,24 +231,7 @@ const FoodInfoRegisterScreen = ({route,navigation}) => {
                                 })}
                                 style={pickerSelectStyles}
                                 Icon={() => {
-                                    return (
-                                    <View
-                                        style={{
-                                        backgroundColor: 'transparent',
-                                        borderTopWidth: 8,
-                                        borderTopColor: 'gray',
-                                        borderRightWidth: 10,
-                                        alignItems:'center',
-                                        justifyContent:'center',
-                                        borderRightColor: 'transparent',
-                                        borderLeftWidth: 10,
-                                        borderLeftColor: 'transparent',
-                                        width: 10,
-                                        height:30,
-                                        marginTop:12,
-                                        }}
-                                    />
-                                    );
+                                    return <Image style={{width:20, height:20,}} source={require('../../image/ingreModal_arrow.png')} resizeMode='contain'/>;
                                 }}
                             />
                         </View>
@@ -260,8 +244,12 @@ const FoodInfoRegisterScreen = ({route,navigation}) => {
                             </View>
                             <View style={styles.timePickerWrapper}>
                                     <RNPickerSelect
+                                        useNativeAndroidPickerStyle={false}
                                         onValueChange={(value)=>{
                                             setStartHour(value);
+                                        }}
+                                        placeholder={{
+                                            label: '시간',
                                         }}
                                         selectedValue={startHour}
                                         items={HOUR_LIST.map(h=>{
@@ -276,8 +264,12 @@ const FoodInfoRegisterScreen = ({route,navigation}) => {
                             </View>
                             <View style={styles.timePickerWrapper}>
                                 <RNPickerSelect
+                                    useNativeAndroidPickerStyle={false}
                                     onValueChange={(value)=>{
                                         setEndHour(value);
+                                    }}
+                                    placeholder={{
+                                        label: '시간',
                                     }}
                                     selectedValue={endHour}
                                     items={HOUR_LIST.map(h=>{
@@ -288,17 +280,27 @@ const FoodInfoRegisterScreen = ({route,navigation}) => {
                             </View>
                         </View>
                     </View>
-                    <View style={styles.goNextOutterWrapper}>
-                        <Image
-                            style={styles.imgTorang}
-                            source={require('../../image/torang2.png')}
-                            resizeMode='contain'
-                        />
-                        <View style={styles.goNextTextSection}>
-                            <Text style={{color:theme.selectedOrange, fontWeight:'bold',}}>거의 다 왔습니다!</Text>
-                            <Text>포스기기의 엑셀파일 혹은 메뉴판을 업로드 해 주세요!</Text>
+                    <View style={styles.holidayOutterWrapper}>
+                        <QuestionHeader text={'휴무일을 알려주세요.'}></QuestionHeader>
+                        <View style={styles.holidayRow}>
+                            <View style={styles.holidayRowTxtWrapper}>
+                                <Text style={styles.txtHoliday}>매주</Text>
+                            </View>
+                            <MultiSelectButtons source={{list:DAY_LIST_1, setter:setBusinessHoliday, prop:businessHoliday}}/>
+                        </View>
+                        <View style={{...styles.holidayRow, justifyContent:'flex-end'}}>
+                            <MultiSelectButtons source={{list:DAY_LIST_2, setter:setBusinessHoliday, prop:businessHoliday}}/>
+                            <View style={styles.holidayRowTxtWrapper}>
+                                <Text style={styles.txtHoliday}>에 쉽니다.</Text>
+                            </View>
                         </View>
                     </View>
+                    <ImageBackground
+                        style={styles.imgTorang}
+                        source={require('../../image/torang2.png')}
+                        resizeMode={'contain'}
+                    >
+                    </ImageBackground>
                     <View style={styles.btnUnploadWrapper}>
                         <Pressable style={styles.btnUnpload} onPress={handleGoNext}>
                             <Text style={styles.txtUpload}>회원가입 {'>'}</Text>
@@ -361,7 +363,6 @@ const styles = StyleSheet.create({
         paddingHorizontal:15,
         paddingVertical:10,
         width:'100%',
-        height:120,
         backgroundColor:theme.darkGrey,
         borderRadius:30,
       
@@ -371,6 +372,7 @@ const styles = StyleSheet.create({
         flexWrap:'wrap',
         flex:1,
         alignItems:'center',
+        marginVertical:4,
     },
     howcookTitle:{
         marginRight:5,
@@ -381,19 +383,18 @@ const styles = StyleSheet.create({
     howcookHText:{
         fontWeight:'700',
     },
-    goNextOutterWrapper:{
-        width:'100%',
-        height:200,
-    },
     imgTorang:{
+        //추후에 새로운 이미지가 들어오면 스타일 변경하는걸로
         width:'100%',
-        height:200,
+        height:240,
+        backgroundColor:'teal',
     },
     goNextTextSection:{
         zIndex:9999,
         position:'absolute',
         bottom:30,
         left:10,
+        backgroundColor:'teal',
     },
     btnUnploadWrapper:{
         width:100,
@@ -439,8 +440,8 @@ const styles = StyleSheet.create({
         marginVertical:4,
     },
     pickerInnerWrapper:{
-        flex:1,
         width:'100%',
+        height:50,
     },
     timeOutterWrapper:{
         marginVertical:8,
@@ -448,8 +449,8 @@ const styles = StyleSheet.create({
         height:80,
     },
     timeInnerWrapper:{
-        flex:1,
         width:'100%',
+        flex:1,
         flexDirection:'row',
         alignItems:'center',
     },
@@ -458,34 +459,56 @@ const styles = StyleSheet.create({
         height:'80%',
         maxHeight:40,
         marginHorizontal:4,
+    },
+    holidayOutterWrapper:{
+        width:'100%',
+        height:130,
+    },
+    holidayRow:{
+        flex:1,
+        width:'100%',
+        flexDirection:'row',
+        alignItems:'center',
+    },
+    txtHoliday:{
+        color:theme.checkedBlue,
+        fontSize:16,
+    },
+    halfcookSelectWrapper:{
+        width:'100%',
+        height:60,
+        marginTop:12,
     }
 });
 
 const pickerSelectStyles = StyleSheet.create({
     inputIOS: {
         fontSize: 16,
-        height: '100%', 
+        height: '100%',
         width:'100%',
         color: '#000000',
         padding: 10,
         textAlign:'center',
-        borderColor:'black',
+        borderColor:theme.checkedBlue,
         borderWidth:1,
-        borderRadius:20,
+        borderRadius:32,
     },
     inputAndroid: {
         fontSize: 16,
-        height: '100%', 
-        width: '100%', 
+        height:'100%',
+        width: '100%',
         color: '#000000',
-        padding: 10,
         textAlign:'center',
-        borderColor:'black',
+        borderColor:theme.checkedBlue,
         borderWidth:1,
-        borderRadius:20,
+        borderRadius:32,
     },
     iconContainer: {
         right: 10,
+        height:'100%',
+        width:32,
+        justifyContent:'center',
+        alignItems:'center',
     },
 });
 

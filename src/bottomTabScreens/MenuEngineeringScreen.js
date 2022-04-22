@@ -103,6 +103,7 @@ const MenuEngineeringScreen = ({navigation}) => {
             <View style={styles.selectSection}>
                 <View style={styles.selectSection__selectRow}>
                     <RNPickerSelect
+                        useNativeAndroidPickerStyle={false}
                         onValueChange={(value)=>{
                             setCategoryId(value);
                         }}

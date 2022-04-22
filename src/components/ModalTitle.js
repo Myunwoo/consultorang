@@ -10,7 +10,7 @@ const ModalTitle = (arg) => {
         <View style={styles.titleWrapper}>
             <View style={{width:20, height:2, backgroundColor:'#E5E5E5'}}></View>
             <View style={{width:10, height:10, borderRadius:20, backgroundColor:'#E5E5E5', marginRight:8,}}></View>
-            <Text>{text}</Text>
+            <Text style={styles.txt}>{text}</Text>
         </View>
     );
 }
@@ -24,4 +24,8 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         alignItems:'center',
     },
+    txt:{
+        fontSize:16,
+        fontWeight:'bold',
+    }
 });

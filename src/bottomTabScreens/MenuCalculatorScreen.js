@@ -9,22 +9,16 @@ import {dateObject,CONTENT_SECTION_BORDER_RADIUS, BASIC_SHADOW} from '../variabl
 import commonStyles from '../variables/commonStyles';
 import WeatherHeader from '../components/WeatherHeader';
 import CalcIngreComponent from '../components/CalcIngreComponent';
-import CalcResultCard from '../components/CalcResultCard';
 import ModalComponent from '../modals/ModalComponent';
 import IngreModal from '../modals/IngreModal';
 import GraphType from '../components/GraphType';
+import MenuCalculatorHistoryScreen from './MenuCalculatorHistoryScreen';
 
 const TYPE=[
     {text:'메뉴 가격 계산기'},
     {text:'목록'}
 ]
 let i=0;
-
-const tempHistory=[
-    {name:'레몬 마들렌', date:'2022/03/18'},
-    {name:'바닐라 까눌레', date:'2022/02/11'},
-    {name:'아', date:'2022/01/01'},
-]
 
 const MenuCalculatorScreen = (({navigation}) => {
     const [menuImg, setMenuImg]=useState(require('../../image/calc_placeholder.png'));
@@ -159,9 +153,9 @@ const MenuCalculatorScreen = (({navigation}) => {
                         </View>
                     </View>
                 </ScrollView>
-                : <ScrollView style={{width:'100%',}} contentContainerStyle={styles.scrollview}>
-                    {tempHistory.map(history=><View style={{width:'100%', height:130, margin:15, paddingHorizontal:10,}}><CalcResultCard ket={i++} source={{...history, navigation}}></CalcResultCard></View>)}
-                </ScrollView>}
+                : <View style={styles.historyScreenWrapper}>
+                    <MenuCalculatorHistoryScreen navigation={navigation}></MenuCalculatorHistoryScreen>
+                </View>}
                 </View>
             </View>
         </LinearGradient>
@@ -286,5 +280,9 @@ const styles=StyleSheet.create({
     calcIngreCompWrapper:{
         width:'100%',
         height:60,
+    },
+    historyScreenWrapper:{
+        flex:1,
+        width:'100%',
     }
 });

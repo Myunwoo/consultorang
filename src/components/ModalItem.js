@@ -1,5 +1,25 @@
 import React from 'react';
 import { StyleSheet, Text, View, Pressable } from 'react-native';
+import {EXPEND_TYPE_LIST} from '../variables/codelist';
+
+const convertToName=(code)=>{
+    let ret='기타';
+    switch(code){
+        case EXPEND_TYPE_LIST.food:
+            ret='식재료비';
+            break;
+        case EXPEND_TYPE_LIST.human:
+            ret='인건비';
+            break;
+        case EXPEND_TYPE_LIST.fixed:
+            ret='고정비';
+            break;
+        default:
+            ret='기타';
+            break;
+    }
+    return ret;
+}
 
 const ModalItem = (arg) => {
     const {name, amount, date, setter, prop}=arg;
@@ -23,7 +43,7 @@ const ModalItem = (arg) => {
     return (
         <View style={styles.mainbody}>
             <View style={styles.header}>
-                <Text>{name}</Text>
+                <Text>{convertToName(name)}</Text>
                 <Text>{date}</Text>
             </View>
             <View style={styles.content}>

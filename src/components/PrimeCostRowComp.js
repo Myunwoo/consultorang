@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
 
 import { theme } from '../variables/color';
 
@@ -13,12 +13,24 @@ const PrimeCostRowComp = (arg) => {
     //content는 두줄을 넘어가지 않게 크기를 조정해 주세요.
     //React Native Text 요소의 옵션을 사용.
 
-    const {img, title, content, type}=arg;
+    const {img, title, content, type}=arg.source;
+
+    let titleWrapper = {
+        fontSize: 15,
+        fontWeight:'bold',
+        color: type==='0' ? theme.primeCostRed : theme.primeCostBlue,
+      };
+    
+
 
     return (
         <View style={styles.caseRowWrapper}>
             <View style={styles.caseImgWrapper}>
-
+                <Image style={{position:'absolute', width:50, height:50, borderRadius:50,}} source={img}></Image>
+            </View>
+            <View style={styles.caseRightWrapper}>
+                <Text style={titleWrapper}>{title}</Text>
+                <Text minimumFontScale={0.8} numberOfLines={2} adjustsFontSizeToFit>{content}</Text>
             </View>
         </View>
     );
@@ -31,12 +43,16 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         width:'100%',
         height:'100%',
-        marginVertical:12,
+        alignItems:'center',
     },
     caseImgWrapper:{
         width:50,
         height:50,
-        borderRadius:50,
-        backgroundColor:'white',
+    },
+    caseRightWrapper:{
+        marginTop:4,
+        flex:1,
+        height:'100%',
+        marginLeft:10,
     },
 });

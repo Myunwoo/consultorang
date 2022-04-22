@@ -1,22 +1,22 @@
 export const CODE_LIST_ROW1 =[
-    {image:require('../../image/type_korea.png'), name:'한식', code:'ST001'},
-    {image:require('../../image/type_china.png'), name:'중식', code:'ST002'},
-    {image:require('../../image/type_japan.png'), name:'일식', code:'ST003'},
-    {image:require('../../image/type_west.png'), name:'양식', code:'ST004'},
+    {image:require('../../image/type_korea.png'), image_f:require('../../image/type_korea_f.png'), name:'한식', code:'ST001'},
+    {image:require('../../image/type_china.png'), image_f:require('../../image/type_china_f.png'),name:'중식', code:'ST002'},
+    {image:require('../../image/type_japan.png'), image_f:require('../../image/type_japan_f.png'),name:'일식', code:'ST003'},
+    {image:require('../../image/type_west.png'), image_f:require('../../image/type_west_f.png'),name:'양식', code:'ST004'},
 ];
 
 export const CODE_LIST_ROW2 =[
-    {image:require('../../image/type_ethnic.png'), name:'에스닉', code:'ST005'},
-    {image:require('../../image/type_drink.png'), name:'피자, 햄버거, 샌드위치', code:'ST006'},
-    {image:require('../../image/type_coffee.png'), name:'치킨', code:'ST007'},
-    {image:require('../../image/type_dessert.png'), name:'분식', code:'ST008'},
+    {image:require('../../image/type_ethnic.png'), image_f:require('../../image/type_ethnic_f.png'),name:'에스닉', code:'ST005'},
+    {image:require('../../image/type_pizza.png'), image_f:require('../../image/type_pizza_f.png'), name:'피자,햄버거,샌드위치', code:'ST006'},
+    {image:require('../../image/type_chicken.png'), image_f:require('../../image/type_chicken_f.png'), name:'치킨', code:'ST007'},
+    {image:require('../../image/type_powder.png'), image_f:require('../../image/type_powder_f.png'), name:'분식', code:'ST008'},
 ];
 
 export const CODE_LIST_ROW3 =[
-    {image:require('../../image/type_ethnic.png'), name:'카페', code:'ST009'},
-    {image:require('../../image/type_coffee.png'), name:'음료', code:'ST010'},
-    {image:require('../../image/type_dessert.png'), name:'제과', code:'ST011'},
-    {image:require('../../image/type_drink.png'), name:'주점', code:'ST012'},
+    {image:require('../../image/type_cafe.png'), image_f:require('../../image/type_cafe_f.png'), name:'카페', code:'ST009'},
+    {image:require('../../image/type_drink.png'), image_f:require('../../image/type_drink_f.png'), name:'음료', code:'ST010'},
+    {image:require('../../image/type_dessert.png'), image_f:require('../../image/type_dessert_f.png'), name:'제과(디저트)', code:'ST011'},
+    {image:require('../../image/type_alcohol.png'), image_f:require('../../image/type_alcohol_f.png'), name:'주점', code:'ST012'},
 ];
 
 export const ING_LIST_ROW1 = [
@@ -107,3 +107,29 @@ export const EXPEND_TYPE_LIST={
     fixed:'ET003',
     etc:'ET004',
 };
+
+export const DAY_LIST_1=[
+    {text:'월',code:'HD001'},
+    {text:'화',code:'HD002'},
+    {text:'수',code:'HD003'},
+    {text:'목',code:'HD004'},
+    {text:'금',code:'HD005'},
+];
+
+export const DAY_LIST_2=[
+    {text:'토',code:'HD006'},
+    {text:'일',code:'HD007'},
+    {text:'공휴일',code:'HD008'},
+];
+
+export const LOW_COST_COMP_LIST=[
+    {img:require('../../image/cost_lowPrice.png'), title:'저가 전략 (가격 경쟁력)', content:'경쟁자보다 낮은 가격으로 경쟁력을 확보하는 경우'},
+    {img:require('../../image/cost_lowOperate.png'), title:'낮은 운영비', content:'임대료(상권 특성 등), 시설비 등의 고정비나 투자비(간편한 조리, 연구의 불필요 등)가 적은 경우'},
+    {img:require('../../image/cost_lowService.png'), title:'좁은 서비스 범위', content:'셀프서비스, 키오스크 등, 직접적으로 제공하는 서비스의 범위가 좁은 경우'},
+];
+
+export const HIGH_COST_COMP_LIST=[
+    {img:require('../../image/cost_highPrice.png'), title:'고가 전략 (차별화된 서비스, 품질)', content:'경쟁자보다 높은 가격으로 경쟁력을 확보하는 경우'},
+    {img:require('../../image/cost_highOperate.png'), title:'높은 운영비', content:'임대료(상권 특성 등), 시설비 등의 고정비나 투자비(차별화된 서비스, 품질 등)가 적은 경우'},
+    {img:require('../../image/cost_highService.png'), title:'넓은 서비스 범위', content:'직접적으로 제공하는 서비스의 범위가 넓은 경우'},
+];

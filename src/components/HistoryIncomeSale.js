@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { theme } from "../variables/color";
+import {parsingDate} from '../abstract/commonTasks';
 
-const IncomeAndSales = (arg) => {
+const HistoryIncomeSale = (arg) => {
   const { historyType, typeNm, ymd, val, specificType } = arg.source;
 
   let sign;
@@ -14,8 +15,6 @@ const IncomeAndSales = (arg) => {
     color: historyType==='SALE' ? theme.incomeRed : theme.outgoingBlue,
   };
 
-  //for(let i=0; i<money.length; i++)
-
   return (
     <View style={styles.mainBody}>
       <View style={styles.rangeLeft}>
@@ -23,7 +22,7 @@ const IncomeAndSales = (arg) => {
           <Text style={styles.titleText}>{typeNm}</Text>
         </View>
         <View style={styles.dateWrapper}>
-          <Text style={styles.dateText}>{ymd}</Text>
+          <Text style={styles.dateText}>{parsingDate(ymd)}</Text>
         </View>
       </View>
       <View style={styles.rangeRight}>
@@ -38,7 +37,7 @@ const IncomeAndSales = (arg) => {
   );
 };
 
-export default IncomeAndSales;
+export default HistoryIncomeSale;
 
 const styles = StyleSheet.create({
   mainBody: {

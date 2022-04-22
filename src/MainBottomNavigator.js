@@ -3,7 +3,7 @@ import {Image} from 'react-native';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import AccountBookNavigator from './bottomTabScreens/AccountBookNavigator';
+import AccountBookScreen from './bottomTabScreens/AccountBookScreen';
 import MenuEngineeringNavigator from './bottomTabScreens/MenuEngineeringNavigator';
 import IncomeStatementScreen from './bottomTabScreens/IncomeStatementScreen';
 import MenuCalculatorNavigator from './bottomTabScreens/MenuCalculatorNavigator';
@@ -29,7 +29,7 @@ const MainBottomNavigator = (props) => {
             })
         },
     }}>
-            <Tab.Screen name="AccountBook" component={AccountBookNavigator} options={{headerShown:false, 
+            <Tab.Screen name="AccountBook" component={AccountBookScreen} options={{headerShown:false, 
                 tabBarIcon:({focused})=>{
                     return (
                         <Image style={{width:24, height:24,}} source={focused?require('../image/bottomNav_pig_f.png'):require('../image/bottomNav_pig.png')}></Image>

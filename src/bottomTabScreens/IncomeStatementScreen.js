@@ -13,7 +13,7 @@ import {LineChart} from 'react-native-chart-kit';
 import {GT_LIST, EMPLOYEE_LIST, HOW_LIST} from '../variables/codelist';
 
 const calcDiff=(mine, target)=>{
-    return saleDiff=(Math.abs(target-mine)/target*100).toFixed(1);
+    return (Math.abs(target-mine)/target*100).toFixed(1);
 }
 
 const getTriangle=(mine, target)=>{
@@ -250,12 +250,12 @@ const IncomeStatementScreen = (({navigation}) => {
                 </View>
                 <View style={{width:'90%', height:1, backgroundColor:'white', marginTop:8,}}></View>
                 <View style={styles.graphSection}>
-                    <LineChart
+                    {/* <LineChart
                         data={chartData}
                         width={100}
                         height={100}
                         //chartConfig={chartConfig}
-                    />
+                    /> */}
                 </View>
                 <View style={styles.percentSection}>
                     <View style={styles.percentOutterWrapper}>

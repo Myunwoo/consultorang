@@ -41,16 +41,19 @@ const WeeklyCalendar = (arg) => {
     height: height,
     borderRadius: 13,
     margin: 2,
-    backgroundColor: checked ? theme.dateCheckedGrey : theme.inputBackground2,
+    //backgroundColor: checked ? theme.dateCheckedGrey : theme.inputBackground2,
+    //backgroundColor:
   };
 
   let numChecked = {
     fontSize: 20,
-    color: checked ? theme.dateUnCheckedWhite : theme.dateCheckedGrey,
+    //color: checked ? theme.dateUnCheckedWhite : theme.dateCheckedGrey,
+    color:theme.dateCheckedGrey,
   };
 
   let textChecked = {
-    color: checked ? theme.dateUnCheckedWhite : theme.dateCheckedGrey,
+    //color: checked ? theme.dateUnCheckedWhite : theme.dateCheckedGrey,
+    color:theme.dateCheckedGrey,
   };
 
   const onClicked = () => {

@@ -46,6 +46,7 @@ const MemoModal = ({ showModal, setShowModal,}) => {
             if(responseJson.retCode==='0'){
                 alert('메모가 추가되었습니다');
                 setMemo('');
+                setShowModal(false);
             }else{
                 alert('memo insertion error');
             }
@@ -99,6 +100,12 @@ const MemoModal = ({ showModal, setShowModal,}) => {
 export default MemoModal;
 
 const styles = StyleSheet.create({
+    inputStyle:{
+        backgroundColor:'white',
+        flex:1,
+        borderRadius:CONTENT_SECTION_BORDER_RADIUS,
+        paddingHorizontal:12,
+    },
     outside:{
         flex:1,
         width:'100%',

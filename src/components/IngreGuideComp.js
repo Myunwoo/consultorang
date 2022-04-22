@@ -14,11 +14,11 @@ const IngreGuideComp = (arg) => {
                         <Text>메뉴에 사용되는 재료를 기입하는 단계입니다.</Text>
                         <Text style={{marginBottom:4,}}>자세히 기입 할 수록 가격의 정확도가 올라갑니다!</Text>
                         <Text style={{marginBottom:8,}}>매장별 식재료 구매 금액이 다를 수 있기 때문에, 정확도를 위해 구매 용량과 가격을 직접 입력하셔야 합니다.</Text>
-                        <View style={{flexDirection:'row',}}>
+                        <View style={{flexDirection:'row', alignItems:'center',}}>
                             <Image
                                 resizeMode='contain'
-                                style={{width:20, height:20, marginRight:8,}}
-                                source={require('../../image/account_cart.png')}
+                                style={{width:18, height:18, marginRight:4,}}
+                                source={require('../../image/ingreModal_guide.png')}
                             >
                             </Image>
                             <Text style={{color:theme.primeCostOrange, fontSize:20}}>Guide</Text>
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     guideWrapper:{
         marginTop:15,
         width:'95%',
-        backgroundColor:theme.backgroundGrey,
+        backgroundColor:theme.ingreBackDarkGrey,
         borderRadius:CONTENT_SECTION_BORDER_RADIUS,
         padding:10,
     },

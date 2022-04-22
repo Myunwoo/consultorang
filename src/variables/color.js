@@ -66,4 +66,7 @@ export const theme = {
     //PrimeCostModal
     primeCostRed:'rgb(255,109,80)',
     primeCostBlue:'rgb(68,174,216)',
+
+    //IngreModal
+    ingreBackDarkGrey:'rgb(223,223,223)',
 };

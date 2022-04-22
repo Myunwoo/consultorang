@@ -1,19 +1,21 @@
 import React,{useState, useEffect} from 'react';
 import { StyleSheet, Text, View, Pressable, Image, ScrollView } from 'react-native';
-import {LinearGradient} from 'expo-linear-gradient';
 
 import { fetchServer,getItemAsyncStorage } from '../abstract/asyncTasks';
+import {parsingDate} from '../abstract/commonTasks';
 
 import { theme } from '../variables/color';
 import {
+    BASIC_SHADOW,
+    CONTENT_SECTION_BORDER_RADIUS,
     SCREEN_HEIGHT, 
 } from '../variables/scales';
 import {dateObject} from '../variables/scales';
 import commonStyles from '../variables/commonStyles';
 import ModalComponent from '../modals/ModalComponent';
 import FilterModal from '../modals/FilterModal';
-import IncomeAndSales from '../components/IncomeAndSales';
-import WeatherHeader from '../components/WeatherHeader';
+import HistoryIncomeSale from '../components/HistoryIncomeSale';
+import HistoryMemo from '../components/HistoryMemo';
 
 const getDefaultEndYmd=()=>{
     const d=new Date();
@@ -23,7 +25,8 @@ const getDefaultEndYmd=()=>{
     return yyyymmdd;
 };
 
-const HistoryScreen = (({navigation}) => {
+const AccountBookHistoryScreen = (({navigation}) => {
+    const {year, month, date, dateString, yyyymmdd}=dateObject();
     const [filterVisible, setFilterVisible]=useState(false);
     const [historyArr, setHistoryArr]=useState([]);
     const [sendObj, setSendObj]=useState({
@@ -57,46 +60,39 @@ const HistoryScreen = (({navigation}) => {
 
     let i=0;
     return (
-        <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>
+        <View style={commonStyles.contentWrapper}>
             <ModalComponent key={i++} showModal={filterVisible} setShowModal={setFilterVisible}>
                 <FilterModal setSendObj={setSendObj} showModal={filterVisible} setShowModal={setFilterVisible}></FilterModal>
             </ModalComponent>
-            <WeatherHeader></WeatherHeader>
-            <View style={commonStyles.contentSection}>
-                <View style={commonStyles.titleWrapper}>
-                    <Text style={commonStyles.txtTitle}>월간 가계부</Text>
-                </View>       
-                <View style={{width:50, height:50, backgroundColor:theme.titleWrapperBlue, position:'absolute', top:30, left:0, zIndex:1}}></View>
-                <View style={commonStyles.contentWrapper}>
-                    <View style={styles.historyHeaderWrapper}>
-                        <View style={styles.dateWrapper}>
-                            <Text style={{fontSize:20,}}>{`${sendObj.startYmd}  ~ ${sendObj.endYmd}`}</Text>
-                        </View>
-                        <Pressable onPress={()=>setFilterVisible(true)} style={{width:52, height:52,justifyContent:'center', alignItems:'center'}}>
-                            <Image
-                                resizeMode='contain'
-                                style={{width:'50%', height:'50%',}}
-                                source={require('../../image/filter_black.png')}
-                            >
-                            </Image>
-                        </Pressable>
-                    </View>
-                    {historyArr.length===0 
-                    ? <View style={{flex:1, width:'100%', justifyContent:'center', alignItems:'center',}}><Text>히스토리가 없습니다.</Text></View>
-                    : <ScrollView style={styles.historyContentWrapper}>
-                            {historyArr.map(history=>
-                                <View style={styles.historyCompWrapper}>
-                                    <IncomeAndSales source={history}></IncomeAndSales>
-                                </View>
-                            )}
-                        </ScrollView>}
+            <View style={styles.historyHeaderWrapper}>
+                <View style={styles.dateWrapper}>
+                    <Text style={{fontWeight:'bold', fontSize:24, marginRight:8,}}>{`${month}월`}</Text>
+                    <Text style={{fontSize:18, color:theme.dateCheckedGrey, opacity:0.8, alignSelf:'flex-end'}}>{`(${parsingDate(sendObj.startYmd)} - ${parsingDate(sendObj.endYmd)})`}</Text>
                 </View>
+                <Pressable onPress={()=>setFilterVisible(true)} style={{width:52, height:52,justifyContent:'center', alignItems:'center'}}>
+                    <Image
+                        resizeMode='contain'
+                        style={{width:'50%', height:'50%',}}
+                        source={require('../../image/filter_black.png')}
+                    >
+                    </Image>
+                </Pressable>
             </View>
-        </LinearGradient>
+            {historyArr.length===0 
+            ? <View style={{flex:1, width:'100%', justifyContent:'center', alignItems:'center',}}><Text>히스토리가 없습니다.</Text></View>
+            : <ScrollView style={styles.historyContentWrapper}>
+                    {historyArr.map(history=>{
+                            const {historyType}=history;
+                            if(historyType==='MEMO') return <View style={styles.memoHistoryCompWrapper}><HistoryMemo source={history}></HistoryMemo></View>
+                            else return (<View style={styles.historyCompWrapper}><HistoryIncomeSale source={history}></HistoryIncomeSale></View>);
+                        }
+                    )}
+                </ScrollView>}
+        </View>
     );
 });
 
-export default HistoryScreen;
+export default AccountBookHistoryScreen;
 
 const styles=StyleSheet.create({
     historyHeaderWrapper:{
@@ -109,12 +105,24 @@ const styles=StyleSheet.create({
         marginTop:15,
     },
     historyContentWrapper:{
+        backgroundColor:'white',
         flex:1,
-        width:'100%',
+        width:'95%',
+        borderTopLeftRadius:CONTENT_SECTION_BORDER_RADIUS,
+        borderTopRightRadius:CONTENT_SECTION_BORDER_RADIUS,
+        ...BASIC_SHADOW,
     },
     historyCompWrapper:{
         width:'100%',
         height:55,
         marginVertical:4,
     },
+    memoHistoryCompWrapper:{
+        width:'100%',
+        marginVertical:4,
+    },
+    dateWrapper:{
+        flexDirection:'row',
+        alignItems:'center',
+    }
 });

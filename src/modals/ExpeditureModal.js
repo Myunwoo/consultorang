@@ -13,7 +13,28 @@ import ModalTitle from '../components/ModalTitle';
 import ModalDatePicker from '../components/ModalDatePicker';
 import ModalItem from '../components/ModalItem';
 
+import {EXPEND_TYPE_LIST} from '../variables/codelist';
+
 let i=0;
+
+const convertToCode=(name)=>{
+    let ret=EXPEND_TYPE_LIST.etc;
+    switch(name){
+        case '식재료비':
+            ret=EXPEND_TYPE_LIST.food;
+            break;
+        case '인건비':
+            ret=EXPEND_TYPE_LIST.human;
+            break;
+        case '고정비':
+            ret=EXPEND_TYPE_LIST.fixed;
+            break;
+        default:
+            ret=EXPEND_TYPE_LIST.etc;
+            break;
+    }
+    return ret;
+}
 
 const ExpeditureModal = ({ showModal, setShowModal,}) => {
     const {year, month, date, dateString}=dateObject();
@@ -40,7 +61,7 @@ const ExpeditureModal = ({ showModal, setShowModal,}) => {
     const handleFixedSend=()=>{
         const dataToSend={
             userId,
-            expendType:fixedContentName,
+            expendType:convertToCode(fixedContentName),
             expendCost:fixedAmount,
             expendYmd:fixedDate.replace(/\./g,''),
         };
@@ -63,7 +84,7 @@ const ExpeditureModal = ({ showModal, setShowModal,}) => {
     const handleEtcSend=()=>{
         const dataToSend={
             userId,
-            expendType:etcContentName,
+            expendType:convertToCode(etcContentName),
             expendCost:etcAmount,
             expendYmd:etcDate.replace(/\./g,''),
         };
@@ -86,7 +107,6 @@ const ExpeditureModal = ({ showModal, setShowModal,}) => {
     const handleApply=()=>{
         console.log(commands);
         fetchServer('POST', '/account/insertExpend', commands).then((responseJson) => {
-            console.log(responseJson);
             if(responseJson.retCode){
                 if(responseJson.retCode==='0'){
                     alert('지출을 추가하였습니다');

@@ -1,5 +1,6 @@
 export const checkEmailFormat = (email) => {
     //이메일 확인 정규식
+    if(email=='') return false;
     const regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
     if(regExp.test(email)){
         return true
@@ -34,3 +35,7 @@ export const checkPhoneFormat=(num)=>{
     }
     return false;
 };
+
+export const parsingDate=(date)=>{
+    return `${date[2]}${date[3]}.${date[4]}${date[5]}.${date[6]}${date[7]}`;
+}

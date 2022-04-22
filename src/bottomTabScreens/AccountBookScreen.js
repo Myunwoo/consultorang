@@ -3,7 +3,7 @@ import { Platform, StyleSheet, Text, View, Pressable, Image, Modal } from 'react
 import {LinearGradient} from 'expo-linear-gradient';
 
 import { theme } from '../variables/color';
-import { SCREEN_WIDTH, } from '../variables/scales';
+import { SCREEN_WIDTH, CONTENT_SECTION_BORDER_RADIUS} from '../variables/scales';
 
 import { fetchServer, getItemAsyncStorage,AsyncStorageClear } from '../abstract/asyncTasks';
 
@@ -17,8 +17,15 @@ import ExcelModal from '../modals/ExcelModal';
 import IncomeModal from '../modals/IncomeModal';
 import ExpenditureModal from '../modals/ExpeditureModal';
 import MemoModal from '../modals/MemoModal';
+import AccountBookHistoryScreen from '../bottomTabScreens/AccountBookHistoryScreen';
+
+const TYPE=[
+    {text:'가계부 입력'},
+    {text:'내역 보기'}
+]
 
 const AccountBookScreen = (({navigation}) => {
+    const [type, setType]=useState(TYPE[0].text);
     const [inModalVisible, setInModalVisible]=useState(false);
     const [expModalVisible, setExpModalVisible]=useState(false);
     const [excelModalVisible, setExcelModalVisible]=useState(false);
@@ -71,39 +78,51 @@ const AccountBookScreen = (({navigation}) => {
                 marginBottom:-1,
                 alignSelf:'center',
             };
+
+            let saleColor='black';
+            let expendColor='black';
             
             if(prevSale>curSale){
                 saleTriangle={...saleTriangle, borderBottomColor: theme.btnExpenditureBlue, transform: [{ rotate: "180deg" }],};
+                saleColor=theme.btnExpenditureBlue;
             } else if(prevSale<curSale){
                 saleTriangle={...saleTriangle, borderBottomColor: theme.btnIncomeRed,};
+                saleColor=theme.btnIncomeRed;
             }
             if(prevExpend>curExpend){
                 expendTriangle={...expendTriangle, borderBottomColor: theme.btnExpenditureBlue, transform: [{ rotate: "180deg" }],}
+                expendColor=theme.btnExpenditureBlue;
             } else if(prevExpend<curSale){
                 saleTriangle={...saleTriangle, borderBottomColor: theme.btnIncomeRed,};
+                expendColor=theme.btnIncomeRed;
             }
 
             const saleDiff=(Math.abs(prevSale-curSale)/prevSale*100).toFixed(1);
             const expendDiff=(Math.abs(prevExpend-curExpend)/prevExpend*100).toFixed(1);
 
             return(
-                <View style={{flex:1, width:'100%', flexDirection:'row',}}>
-                <View style={styles.percentWrapper}>
-                    <View style={styles.percentTitlerWrapper}><Text style={styles.txtPercentTitle}>수익</Text></View>
-                    <View style={styles.percentContentWrapper}>
-                        <Text style={styles.txtPercentContent}>{`${saleDiff}%`}</Text>
-                        <View style={saleTriangle}></View>
+                <View style={{flex:1, width:'100%', backgroundColor:'white'}}>
+                    <View style={{width:'100%', height:40, justifyContent:'center'}}>
+                        <Text style={{fontSize:15,}}>전 월 대비 수익/지출 한눈에 보기</Text>
+                    </View>
+                    <View style={{flex:1, width:'100%', flexDirection:'row',}}>
+                        <View style={styles.percentWrapper}>
+                            <View style={styles.percentTitlerWrapper}><Text style={styles.txtPercentTitle}>수익</Text></View>
+                            <View style={styles.percentContentWrapper}>
+                                <Text style={{...styles.txtPercentContent, color:saleColor}}>{`${saleDiff}%`}</Text>
+                                <View style={saleTriangle}></View>
+                            </View>
+                        </View>
+                        <View style={{width:2, height:'100%', backgroundColor:theme.torangGrey, opacity:0.2}}></View>
+                        <View style={styles.percentWrapper}>
+                            <View style={styles.percentTitlerWrapper}><Text style={styles.txtPercentTitle}>지출</Text></View>
+                            <View style={styles.percentContentWrapper}>
+                                <Text style={{...styles.txtPercentContent, color:expendColor }}>{`${expendDiff}%`}</Text>
+                                <View style={expendTriangle}></View>
+                            </View>
+                        </View>
                     </View>
                 </View>
-                <View style={{width:2, height:'100%', backgroundColor:theme.placeholderColor, opacity:0.2}}></View>
-                <View style={styles.percentWrapper}>
-                    <View style={styles.percentTitlerWrapper}><Text style={styles.txtPercentTitle}>지출</Text></View>
-                    <View style={styles.percentContentWrapper}>
-                        <Text style={styles.txtPercentContent}>{`${expendDiff}%`}</Text>
-                        <View style={expendTriangle}></View>
-                    </View>
-                </View>
-            </View>
             );
         }else{
             return(<View><Text style={{color:theme.placeholderColor}}>이번 달과 지난 달의 데이터를 불러오지 못했습니다.</Text></View>);
@@ -186,7 +205,7 @@ const AccountBookScreen = (({navigation}) => {
         initCalArr();
     },[]);
 
-    
+    // onPress={()=>navigation.navigate('HistoryScreen')} 
 
     let i=0;
     return (
@@ -206,73 +225,78 @@ const AccountBookScreen = (({navigation}) => {
             </ModalComponent>
             <WeatherHeader></WeatherHeader>
             <View style={commonStyles.contentSection}>
-                <View style={commonStyles.titleWrapper}>
-                    <Text style={commonStyles.txtTitle}>월간 가계부</Text>
-                </View>       
-                <View style={{width:50, height:50, backgroundColor:theme.titleWrapperBlue, position:'absolute', top:30, left:0, zIndex:1}}></View>
+                <View style={type===TYPE[0].text? {...styles.titleBackBlock, backgroundColor:theme.darkGrey} : {...styles.titleBackBlock, backgroundColor:theme.titleWrapperBlue}}></View>
+                <View style={styles.titleWrapper}>
+                    <View style={type===TYPE[0].text?styles.navigateWrapper:{...styles.navigateWrapper, backgroundColor:theme.titleWrapperBlue}}>
+                        <Pressable onPress={()=>setType(TYPE[0].text)} style={{width:'100%', height:'100%', justifyContent:'center', alignItems:'center'}}><Text style={type===TYPE[0].text? {color:theme.checkedBlue} : {color:'white'} }>가계부 입력</Text></Pressable>
+                    </View>
+                    <View style={type===TYPE[0].text?{...styles.navigateWrapper, position:'absolute', left:110,backgroundColor:theme.titleWrapperBlue, zIndex:-1}:{...styles.navigateWrapper, position:'absolute', left:110,backgroundColor:theme.darkGrey}}>
+                        <Pressable onPress={()=>setType(TYPE[1].text)} style={{width:'100%', height:'100%', justifyContent:'center', alignItems:'center'}}><Text style={type===TYPE[0].text? {color:'white'} : {color:theme.checkedBlue} }>내역 보기</Text></Pressable>
+                    </View>
+                </View>      
+                {type===TYPE[0].text?
                 <View style={commonStyles.contentWrapper}>
-                  <View style={styles.calendarWrapper}>
-                      {calArr.map(cal=><WeeklyCalendar key={i++} source={cal}></WeeklyCalendar>)}
-                      <View style={styles.dotWrapper}>
-                          <Pressable onPress={()=>navigation.navigate('HistoryScreen')} style={{width:'100%', height:'100%', flexDirection:'row', alignItems:'center', justifyContent:'space-evenly'}}>
-                              <View style={{width:6, height:6, borderRadius:6, backgroundColor:theme.torangGrey}}></View>
-                              <View style={{width:6, height:6, borderRadius:6, backgroundColor:theme.torangGrey}}></View>
-                              <View style={{width:6, height:6, borderRadius:6, backgroundColor:theme.torangGrey}}></View>
-                          </Pressable>
-                      </View>
-                  </View>
-                    <View style={styles.commonTitleWrapper}>
-                        <Text style={styles.txtCommonTitle}>이번 달 수입/지출 내역을 손쉽게 입력해보세요!</Text>
+                <View style={styles.calendarWrapper}>
+                    <View style={styles.dotWrapper}>
+                        <Text style={{marginBottom:4, color:theme.dateCheckedGrey}}>주간</Text>
+                        <Text style={{color:theme.dateCheckedGrey}}>입출금</Text>
                     </View>
-                    <View style={styles.accountWrapper}>
-                        <View style={styles.btnIncomeWrapper}>
-                            <Pressable style={styles.btnIncome} onPress={() => setInModalVisible(true)}>
-                                <View style={styles.pmWrapper}><Text style={styles.txtPm}>+</Text></View>
-                                <View style={styles.ieWrapper}><Text style={styles.txtIe}>수익</Text></View>
-                                <Image
-                                    resizeMode='contain'
-                                    style={{width:'70%', height:'70%', position:'absolute', bottom:-20, right:-4,}}
-                                    source={require('../../image/account_fork.png')}
-                                >
-                                </Image>
-                            </Pressable>
-                        </View>
-                        <View style={{width:12, height:'100%',}}></View>
-                        <View style={styles.btnExpenditureWrapper}>
-                            <Pressable style={styles.btnExpenditure} onPress={() => setExpModalVisible(true)}>
-                                <View style={styles.pmWrapper}><Text style={styles.txtPm}>-</Text></View>
-                                <View style={styles.ieWrapper}><Text style={styles.txtIe}>지출</Text></View>
-                                <Image
-                                    resizeMode='contain'
-                                    style={{width:'70%', height:'70%', position:'absolute', bottom:-20, right:-4,}}
-                                    source={require('../../image/account_cart.png')}
-                                >
-                                </Image>
-                            </Pressable>
-                        </View>
+                    <View style={{width:1, height:'80%', backgroundColor:theme.torangGrey, opacity:0.2}}></View>
+                   {calArr.map(cal=><WeeklyCalendar key={i++} source={cal}></WeeklyCalendar>)} 
+                </View>
+                <View style={styles.commonTitleWrapper}>
+                    <Text style={styles.txtCommonTitle}>이번 달 수입/지출 내역을 손쉽게 입력해보세요!</Text>
+                </View>
+                <View style={styles.accountWrapper}>
+                    <View style={styles.btnIncomeWrapper}>
+                        <Pressable style={styles.btnIncome} onPress={() => setInModalVisible(true)}>
+                            <View style={styles.pmWrapper}><Text style={styles.txtPm}>+</Text></View>
+                            <View style={styles.ieWrapper}><Text style={styles.txtIe}>수익</Text></View>
+                            <Image
+                                resizeMode='contain'
+                                style={{width:'70%', height:'70%', position:'absolute', bottom:-20, right:-4,}}
+                                source={require('../../image/account_fork.png')}
+                            >
+                            </Image>
+                        </Pressable>
                     </View>
-                    <View style={styles.excelMemoWrapper}>
-                        <View style={styles.btnExcelWrapper}>
-                            <Pressable style={styles.btnExcel} onPress={() => setExcelModalVisible(true)}>
-                                <Text style={styles.txtExcel}>이번 달 엑셀 추가</Text>
-                            </Pressable>
-                        </View>
-                        <View style={{width:12, height:'100%',}}></View>
-                        <View style={styles.btnMemoWrapper}>
-                            <Pressable style={styles.btnExcel} onPress={() => setMemoModalVisible(true)}>
-                                <Text style={styles.txtExcel}>메모 추가</Text>
-                            </Pressable>
-                        </View>
-                    </View>
-                    <View style={styles.commonTitleWrapper}>
-                        <Text style={styles.txtCommonTitle}>엑셀을 업로드 할 경우 수입은 자동으로 입력됩니다</Text>
-                    </View>
-                    <View style={styles.memoWrapper}>
-                        <View style={styles.memoInnerWrapper}>
-                            { SaleAndExpend() }
-                        </View>
+                    <View style={{width:12, height:'100%',}}></View>
+                    <View style={styles.btnExpenditureWrapper}>
+                        <Pressable style={styles.btnExpenditure} onPress={() => setExpModalVisible(true)}>
+                            <View style={styles.pmWrapper}><Text style={styles.txtPm}>-</Text></View>
+                            <View style={styles.ieWrapper}><Text style={styles.txtIe}>지출</Text></View>
+                            <Image
+                                resizeMode='contain'
+                                style={{width:'70%', height:'70%', position:'absolute', bottom:-20, right:-4,}}
+                                source={require('../../image/account_cart.png')}
+                            >
+                            </Image>
+                        </Pressable>
                     </View>
                 </View>
+                <View style={styles.excelMemoWrapper}>
+                    <View style={styles.btnExcelWrapper}>
+                        <Pressable style={styles.btnExcel} onPress={() => setExcelModalVisible(true)}>
+                            <Text style={styles.txtExcel}>이번 달 엑셀 추가</Text>
+                        </Pressable>
+                    </View>
+                    <View style={{width:12, height:'100%',}}></View>
+                    <View style={styles.btnMemoWrapper}>
+                        <Pressable style={styles.btnExcel} onPress={() => setMemoModalVisible(true)}>
+                            <Text style={styles.txtExcel}>메모 추가</Text>
+                        </Pressable>
+                    </View>
+                </View>
+                <View style={styles.commonTitleWrapper}>
+                    <Text style={styles.txtCommonTitle}>엑셀을 업로드 할 경우 수입은 자동으로 입력됩니다</Text>
+                </View>
+                <View style={styles.memoWrapper}>
+                    <View style={styles.memoInnerWrapper}>
+                        { SaleAndExpend() }
+                    </View>
+                </View>
+            </View>
+            : <AccountBookHistoryScreen></AccountBookHistoryScreen>}
             </View>
         </LinearGradient>
     );
@@ -281,16 +305,40 @@ const AccountBookScreen = (({navigation}) => {
 export default AccountBookScreen;
 
 const styles=StyleSheet.create({
+    titleWrapper:{
+        width:'100%',
+        height:30,
+        flexDirection:'row',
+    },
+    titleBackBlock:{
+        width:50,
+        height:50,
+        position:'absolute',
+        top:20, 
+        left:0, 
+        zIndex:0,
+    },
+    navigateWrapper:{
+        width:120,
+        height:'100%',
+        borderTopLeftRadius:CONTENT_SECTION_BORDER_RADIUS,
+        borderTopRightRadius:CONTENT_SECTION_BORDER_RADIUS,
+        backgroundColor:theme.darkGrey,
+        zIndex:1,
+    },
     calendarWrapper:{
         width:'90%',
         height:64,
         flexDirection: "row",
         justifyContent:'space-between',
+        alignItems:'center',
         marginTop:15,
     },
     dotWrapper:{
         width:52,
         height:'100%',
+        justifyContent:'center',
+        alignItems:'center',
     },
     commonTitleWrapper:{
         marginTop:4,
@@ -399,27 +447,28 @@ const styles=StyleSheet.create({
     },
     percentWrapper:{
         flex:1,
-        height:'100%',
         alignItems:'center',
         justifyContent:'center',
     },
     percentTitlerWrapper:{
         height:40,
+        width:'80%',
         justifyContent:'center',
-        alignItems:'center',
+        alignItems:'flex-start',
     },
     txtPercentTitle:{
         fontSize:20,
     },
     percentContentWrapper:{
+        width:'80%',
         height:40,
-        marginTop:'5%',
-        justifyContent:'center',
+        justifyContent:'flex-start',
         alignItems:'center',
         flexDirection:'row',
     },
     txtPercentContent:{
         fontSize:24,
         fontWeight:'bold',
+        marginRight:8,
     },
 });

@@ -58,7 +58,7 @@ export const commonStyles = StyleSheet.create({
         borderTopRightRadius:CONTENT_SECTION_BORDER_RADIUS,
         width:'100%',
         flex:1,
-        backgroundColor:theme.inputBackground2,
+        backgroundColor:theme.darkGrey,
         alignItems:'center',
     },
 });

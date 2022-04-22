@@ -12,14 +12,14 @@ const FilterItem = (arg) => {
 
     let mainbody={
         flex:1,
-        backgroundColor:theme.inputBackground2,
+        backgroundColor:name==title?theme.torangGrey : theme.inputBackground2,
         margin:10,
         borderRadius:15,
-        borderColor:name==title?theme.btnExpenditureBlue : theme.darkGrey,
+        borderColor:name==title?theme.torangGrey : theme.darkGrey,
         borderWidth:2,
     }
     let txt={
-        color:name==title?theme.btnExpenditureBlue : 'black',
+        color:name==title?theme.inputBackground2 : 'black',
     }
 
     return (

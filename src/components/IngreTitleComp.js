@@ -17,12 +17,17 @@ const IngreTitleComp = (arg) => {
             <Pressable onPress={handlePress} style={styles.pressable}>
                 <Image
                     source={img}
-                    style={{width:40, height:40}}
+                    style={{width:24, height:24}}
                 >                
                 </Image>
-                <View style={{marginLeft:20, flex:1,}}>
+                <View style={{marginLeft:10, flex:1,}}>
                     <Text style={{fontWeight:'bold', fontSize:20, color:theme.titleWrapperBlue,}}>{title}</Text>
                 </View>
+                <Image
+                    source={require('../../image/ingreModal_arrow.png')}
+                    style={{width:22, height:22}}
+                >                
+                </Image>
             </Pressable>
         </View>
     );

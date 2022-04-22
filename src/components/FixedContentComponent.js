@@ -25,11 +25,16 @@ const FixedContentComponent = (arg) => {
 
     let mainbody={
         flex:1,
-        backgroundColor:theme.inputBackground2,
         margin:10,
         borderRadius:15,
-        borderColor:name==title?theme.btnExpenditureBlue : theme.darkGrey,
-        borderWidth:4,
+        backgroundColor:name===title?theme.btnExpenditureBlue : theme.inputBackground2,
+        borderWidth:3,
+        borderColor:name===title?theme.btnExpenditureBlue : theme.darkGrey,
+    }
+
+    let txt={
+        marginVertical:8,
+        color:name===title?'white' : theme.torangGrey,
     }
 
     return (
@@ -41,7 +46,7 @@ const FixedContentComponent = (arg) => {
                 source={img}
             >
             </Image>
-            <Text style={{marginBottom:'15%',}}>{title}</Text>
+            <Text style={txt}>{title}</Text>
             </Pressable>
         </View>
     );
