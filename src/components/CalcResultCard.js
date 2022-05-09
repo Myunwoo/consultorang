@@ -1,7 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, Pressable } from 'react-native';
-
+import { BASIC_SHADOW} from '../variables/scales';
 import { theme } from '../variables/color';
+import commonStyles from '../variables/commonStyles';
 
 const CalcResultCard = (arg) => {
     const {img, name, date, navigation}=arg.source;
@@ -38,6 +39,7 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         backgroundColor:'white',
         borderRadius:15,
+        ...BASIC_SHADOW,
     },
     contentWrapper:{
         flex:7,
@@ -48,8 +50,10 @@ const styles = StyleSheet.create({
     title:{
         fontSize:20,
         fontWeight:'bold',
+        ...commonStyles.commonTextShadow,
     },
     date:{
         fontSize:16,
+        ...commonStyles.commonTextShadow,
     }
 });

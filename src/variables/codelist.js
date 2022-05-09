@@ -133,3 +133,16 @@ export const HIGH_COST_COMP_LIST=[
     {img:require('../../image/cost_highOperate.png'), title:'높은 운영비', content:'임대료(상권 특성 등), 시설비 등의 고정비나 투자비(차별화된 서비스, 품질 등)가 적은 경우'},
     {img:require('../../image/cost_highService.png'), title:'넓은 서비스 범위', content:'직접적으로 제공하는 서비스의 범위가 넓은 경우'},
 ];
+
+export const HOLIDAY_LIST=[
+    {value:0, label:'사용안함'},
+    {value:30, label:'30%'},
+    {value:50, label:'50%'},
+    {value:70, label:'70%'},
+    {value:100, label:'100%'},
+];
+
+export const EXWHO_LIST=[
+    {text:'대표자', code:'EL001'},
+    {text:'고용인(직원)', code:'EL002'},
+]

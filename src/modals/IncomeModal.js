@@ -81,7 +81,7 @@ const IncomeModal = ({ showModal, setShowModal,}) => {
 
     return (
         <View style={styles.outside}>
-            <Pressable onPress={handleOutsideClick} style={{flex:2, width:'100%',}}></Pressable>
+            <Pressable onPress={handleOutsideClick} style={{flex:1, width:'100%',}}></Pressable>
             <View style={styles.mainbody}>
                 <View style={styles.headerWrapper}><Text style={styles.txtHeader}>+</Text></View>
                 <View style={styles.contentOutterWrapper}>
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     },
     mainbody:{
         width:'100%',
-        flex:8,
+        flex:9,
         alignItems:'center',
         backgroundColor:theme.inputBackground2,
         borderRadius:CONTENT_SECTION_BORDER_RADIUS,

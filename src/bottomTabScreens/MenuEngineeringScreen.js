@@ -1,11 +1,10 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Text, View, Pressable, Image, Picker } from 'react-native';
+import { StyleSheet, Text, View, Pressable, Image, Picker, Platform } from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 import RNPickerSelect, { defaultStyles } from 'react-native-picker-select';
 
 import { theme } from '../variables/color';
-
 import {dateObject, statusBarHeight,CONTENT_SECTION_BORDER_RADIUS, BASIC_SHADOW, SCREEN_HEIGHT, WEATHER_LIST} from '../variables/scales';
 import { getItemAsyncStorage, fetchServer } from '../abstract/asyncTasks';
 
@@ -17,6 +16,10 @@ import MenuYellowCircle from '../components/MenuYellowCircle';
 import commonStyles from '../variables/commonStyles';
 
 let circleIndex=0;
+
+//1. 메뉴가 안불러와지고있음
+//2. 하트, 원 마진이 너무작거나 없음
+//3. 메세지 추가해줘야함
 
 //피커에 의해 카테고리에 속한 아이템들을 불러옴, userId와 saleYm를 수정해 주어야 함.
 const handleSetCategory = (targetId, setter, userId, saleYm) => {
@@ -52,6 +55,24 @@ const MenuEngineeringScreen = ({navigation}) => {
 
     const pickerRef = useRef();
 
+    const handleClickMedal=(arg)=>{
+        if(!categoryId){
+            alert('카테고리를 먼저 선택해주세요.');
+            return;
+        }
+        switch(arg){
+            case 0:
+                navigation.navigate('MenuEngineeringInfoScreen',{type:0,array:cateData.first, categoryTxt});
+                break;
+            case 1:
+                navigation.navigate('MenuEngineeringInfoScreen',{type:1,array:cateData.second, categoryTxt});
+                break;
+            case 2:
+                navigation.navigate('MenuEngineeringInfoScreen',{type:2,array:cateData.third, categoryTxt});
+                break;
+        }
+    }
+
     function openCategoryPicker() {
         //pickerRef.current.focus();
     }
@@ -60,19 +81,19 @@ const MenuEngineeringScreen = ({navigation}) => {
         pickerRef.current.blur();
     }
 
-    //마운트 시 카테고리를 서버로부터 불러옴
     useEffect(()=>{
         getItemAsyncStorage('userId').then(res=>{
             setUserId(res);
         }).catch((error)=>{
             console.log(error);
         });
+    },[]);
 
+    useEffect(()=>{
         const dataToSend={
             userId,
             saleYm: `${year}${month<10?'0'+month:month}`,
-        }
-
+        };
         fetchServer('POST', '/engine/getCatList', dataToSend).then((responseJson) => {
             if(responseJson.data!==null){
                 setCategories(responseJson.data);
@@ -83,7 +104,7 @@ const MenuEngineeringScreen = ({navigation}) => {
             setCategories([-1]);
             console.log(error);
         });
-    },[]);
+    },[userId])
 
     //카테고리 아이디에 변화가 있을 때 (카테고리 처음 불러올 때, 피커에서 변경될 때) 뷰의 텍스트와 점 렌더링
     useEffect(()=>{
@@ -97,13 +118,15 @@ const MenuEngineeringScreen = ({navigation}) => {
 
     useEffect(()=>{
     },[cateData]);
+
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>
             <WeatherHeader></WeatherHeader>
             <View style={styles.selectSection}>
-                <View style={styles.selectSection__selectRow}>
+                <View style={styles.pickerInnerWrapper}>
                     <RNPickerSelect
                         useNativeAndroidPickerStyle={false}
+                        fixAndroidTouchableBug={true}
                         onValueChange={(value)=>{
                             setCategoryId(value);
                         }}
@@ -113,25 +136,8 @@ const MenuEngineeringScreen = ({navigation}) => {
                         })}
                         style={pickerSelectStyles}
                         Icon={() => {
-                            return (
-                              <View
-                                style={{
-                                  backgroundColor: 'transparent',
-                                  borderTopWidth: 8,
-                                  borderTopColor: 'gray',
-                                  borderRightWidth: 10,
-                                  alignItems:'center',
-                                  justifyContent:'center',
-                                  borderRightColor: 'transparent',
-                                  borderLeftWidth: 10,
-                                  borderLeftColor: 'transparent',
-                                  width: 10,
-                                  height:30,
-                                  marginTop:12,
-                                }}
-                              />
-                            );
-                          }}
+                            return <Image style={{width:20, height:20,}} source={require('../../image/ingreModal_arrow.png')} resizeMode='contain'/>;
+                        }}
                     />
                 </View>
                 <View style={styles.selectSection__showRow}>
@@ -202,23 +208,28 @@ const MenuEngineeringScreen = ({navigation}) => {
             </View>
             <View style={styles.resultSection}>
                 <View style={styles.resultSection__headerWrapper}>
-                    <Text style={styles.resultSection__header}>메뉴 엔지니어링</Text>
+                    <Text style={styles.txtResultSection__header}>메뉴 엔지니어링</Text>
                 </View>
                 <View style={styles.resultContentSection}>
                     <View style={styles.resultContent__header}>
                         <Text style={styles.resultTitle}>분석 결과</Text>
-                        <Text numberOfLines={1} adjustsFontSizeToFit style={styles.resultContent}>등급별 솔루션이 궁금하다면 메달을 클릭해 보세요!</Text>
+                        <Text numberOfLines={1} minimumFontScale={0.5} adjustsFontSizeToFit={true} style={styles.resultContent}>메달을 클릭해 등급별 솔루션을 확인하세요!</Text>
                     </View>
                     <View style={styles.medalSection}>
-                        <Pressable onPress={() => navigation.navigate('MenuEngineeringInfoScreen',{type:0,array:cateData.first, categoryTxt})}>
+                        <Pressable onPress={()=>handleClickMedal(0)}>
                             <MedalComponent key={0} source={{type: 'gold', num:cateData.first.length}}></MedalComponent>
                         </Pressable>
-                        <Pressable onPress={() => navigation.navigate('MenuEngineeringInfoScreen',{type:1,array:cateData.second, categoryTxt})}>
+                        <Pressable onPress={() => handleClickMedal(1)}>
                             <MedalComponent key={1} source={{type: 'silver', num:cateData.second.length}}></MedalComponent>
                         </Pressable>
-                        <Pressable onPress={() => navigation.navigate('MenuEngineeringInfoScreen',{type:2,array:cateData.third, categoryTxt})}>
+                        <Pressable onPress={() => handleClickMedal(2)}>
                             <MedalComponent key={2} source={{type: 'bronze', num:cateData.third.length}}></MedalComponent>    
                         </Pressable>                        
+                    </View>
+                    <View style={styles.resultGuideWrapper}>
+                        <View style={styles.resultGuideInnerWrapper}>
+                            <Text style={styles.txtResultGuide}>* 기준값의 하향평준화를 대비해 하위 20% 항목은 포함하고 있지 않습니다. 참고에 유의하시기 바랍니다. *</Text>
+                        </View>
                     </View>
                 </View>
             </View>
@@ -257,19 +268,13 @@ const styles = StyleSheet.create({
 
     },
     selectSection:{
-        height:'10%',
-        maxHeight:64,
+        height:64,
         alignItems:'center',
     },
-    selectSection__selectRow:{
-        borderRadius:15,
+    pickerInnerWrapper:{
         width:'90%',
         maxWidth:700,
         flex:1,
-        backgroundColor:theme.inputBackground2,
-        justifyContent:'center',
-        alignItems:'center',
-        ...BASIC_SHADOW,
     },
     selectSection__showRow:{
         flexDirection:'row',
@@ -287,11 +292,13 @@ const styles = StyleSheet.create({
     selectSection__title:{
         color:'white',
         marginRight:5,
+        ...commonStyles.commonTextShadow,
     },
     selectSection__content:{
         color:'white',
         fontWeight:'bold',
         fontSize:20,
+        ...commonStyles.commonTextShadow,
     },
     divider:{
         height:1,
@@ -321,11 +328,13 @@ const styles = StyleSheet.create({
         flex:1,
         height:'100%',
         alignItems:'center',
+        marginTop:6,
     },
     heartImgWrapper:{
         width:30,
         height:'100%',
         justifyContent:'center',
+        marginRight:6,
     },
     graphLeftWrapper:{
         flex:1,
@@ -364,28 +373,29 @@ const styles = StyleSheet.create({
         alignItems:'center',
     },
     resultSection:{
-        height:'40%',
-        maxHeight:220,
+        height:260,
     },
     resultSection__headerWrapper:{
         marginLeft:'5%',
     },
-    resultSection__header:{
+    txtResultSection__header:{
         color:'white',
         fontSize:15,
         fontWeight:'bold',
         marginBottom:5,
+        ...commonStyles.commonTextShadow
     },
     resultContentSection:{
         flex:1,
         borderTopRightRadius:CONTENT_SECTION_BORDER_RADIUS,
         borderTopLeftRadius:CONTENT_SECTION_BORDER_RADIUS,
         backgroundColor:theme.inputBackground2,
+        ...BASIC_SHADOW,
     },
     resultContent__header:{
         flexDirection:'row',
         marginHorizontal:'5%',
-        marginTop:10,
+        marginVertical:10,
         justifyContent:'center',
         alignItems:'center',
     },
@@ -393,37 +403,67 @@ const styles = StyleSheet.create({
         marginRight:10,
         fontSize:24,
         fontWeight:'bold',
+        ...commonStyles.commonTextShadow,
     },
     resultContent:{
         flex:1,
+        ...commonStyles.commonTextShadow,
+        ...Platform.select({
+            ios:{
+                fontSize:20,
+            },
+            android:{
+                fontSize:20,
+            }
+        })
     },
     medalSection:{
         width:'100%',
-        flex:1,
+        height:120,
         flexDirection:'row',
         justifyContent:'center',
         alignItems:'center',
+    },
+    resultGuideWrapper:{
+        marginTop:12,
+        width:'100%',
+        justifyContent:'center',
+        alignItems:'center',
+    },
+    resultGuideInnerWrapper:{
+        width:'90%',
+    },
+    txtResultGuide:{
+        color:theme.uncheckedGrey
     },
 });
 
 const pickerSelectStyles = StyleSheet.create({
     inputIOS: {
         fontSize: 16,
-        height: '100%', 
+        height: '100%',
         width:'100%',
         color: '#000000',
         padding: 10,
         textAlign:'center',
+        borderRadius:32,
+        backgroundColor:theme.inputBackground2,
+        ...BASIC_SHADOW,
     },
     inputAndroid: {
-        fontSize: 16,
-        height: '100%', 
-        width: '100%', 
+        fontSize: 14,
+        height:'100%',
+        width: '100%',
         color: '#000000',
-        padding: 10,
         textAlign:'center',
+        borderRadius:32,
+        backgroundColor:theme.inputBackground2,
     },
     iconContainer: {
         right: 10,
+        height:'100%',
+        width:32,
+        justifyContent:'center',
+        alignItems:'center',
     },
 });

@@ -1,9 +1,9 @@
 import React, {useState,useEffect} from 'react';
-import { Platform, StyleSheet, Text, View, Pressable, Image, Modal } from 'react-native';
+import { Platform, StyleSheet, Text, View, Pressable, Image, } from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 
 import { theme } from '../variables/color';
-import { SCREEN_WIDTH, CONTENT_SECTION_BORDER_RADIUS} from '../variables/scales';
+import { SCREEN_WIDTH, CONTENT_SECTION_BORDER_RADIUS, BASIC_SHADOW} from '../variables/scales';
 
 import { fetchServer, getItemAsyncStorage,AsyncStorageClear } from '../abstract/asyncTasks';
 
@@ -25,6 +25,7 @@ const TYPE=[
 ]
 
 const AccountBookScreen = (({navigation}) => {
+    const [USER_ID, setUSER_ID]=useState('');
     const [type, setType]=useState(TYPE[0].text);
     const [inModalVisible, setInModalVisible]=useState(false);
     const [expModalVisible, setExpModalVisible]=useState(false);
@@ -39,7 +40,6 @@ const AccountBookScreen = (({navigation}) => {
     });
     const [calArr, setCalArr]=useState([]);
     const [loading, setLoading]=useState(false);
-    let USER_ID='';
 
 
     const SaleAndExpend=()=>{
@@ -101,9 +101,9 @@ const AccountBookScreen = (({navigation}) => {
             const expendDiff=(Math.abs(prevExpend-curExpend)/prevExpend*100).toFixed(1);
 
             return(
-                <View style={{flex:1, width:'100%', backgroundColor:'white'}}>
+                <View style={{flex:1, width:'100%', backgroundColor:'white',}}>
                     <View style={{width:'100%', height:40, justifyContent:'center'}}>
-                        <Text style={{fontSize:15,}}>전 월 대비 수익/지출 한눈에 보기</Text>
+                        <Text style={{...commonStyles.commonTextShadow, fontSize:15,}}>전 월 대비 수익/지출 한눈에 보기</Text>
                     </View>
                     <View style={{flex:1, width:'100%', flexDirection:'row',}}>
                         <View style={styles.percentWrapper}>
@@ -178,34 +178,39 @@ const AccountBookScreen = (({navigation}) => {
 
     useEffect(()=>{
         getItemAsyncStorage('userId').then(res=>{
-            USER_ID=res;
-            const dataToSend={
-                'userId':USER_ID,
-                'ym':'202201',
-            };
-            fetchServer('POST', '/account/getCurPrevSaleExpend', dataToSend).then((responseJson) => {
-                if(responseJson.data!==null){
-                    setPercentVisible(true);
-                    setSaleExpend({
-                        curSale:responseJson.data.cur.totalSale,
-                        curExpend:responseJson.data.cur.totalExpend,
-                        prevSale:responseJson.data.prev.totalSale,
-                        prevExpend:responseJson.data.prev.totalExpend,
-                    });
-                }else{
-                    setPercentVisible(false);
-                }
-            }).catch((error) => {
-                console.log(error);
-            });
-            setLoading(false);
+            setUSER_ID(res);
         }).catch(error=>{
-            setLoading(false);
+
         });
-        initCalArr();
     },[]);
 
-    // onPress={()=>navigation.navigate('HistoryScreen')} 
+    useEffect(()=>{
+        if(USER_ID==='' || isNaN(USER_ID)) return;
+        const dataToSend={
+            'userId':USER_ID,
+            'ym':'202201',
+        };
+        fetchServer('POST', '/account/getCurPrevSaleExpend', dataToSend).then((responseJson) => {
+            if(responseJson.data!==null){
+                setPercentVisible(true);
+                setSaleExpend({
+                    curSale:responseJson.data.cur.totalSale,
+                    curExpend:responseJson.data.cur.totalExpend,
+                    prevSale:responseJson.data.prev.totalSale,
+                    prevExpend:responseJson.data.prev.totalExpend,
+                });
+            }else{
+                setPercentVisible(false);
+            }
+        }).catch((error) => {
+            console.log(error);
+        });
+        initCalArr();
+    },[USER_ID]);
+
+    useEffect(()=>{
+        initCalArr();
+    },[inModalVisible, expModalVisible, excelModalVisible, memoModalVisible]);
 
     let i=0;
     return (
@@ -224,22 +229,28 @@ const AccountBookScreen = (({navigation}) => {
                 <MemoModal showModal={memoModalVisible} setShowModal={setMemoModalVisible}></MemoModal>
             </ModalComponent>
             <WeatherHeader></WeatherHeader>
-            <View style={commonStyles.contentSection}>
-                <View style={type===TYPE[0].text? {...styles.titleBackBlock, backgroundColor:theme.darkGrey} : {...styles.titleBackBlock, backgroundColor:theme.titleWrapperBlue}}></View>
-                <View style={styles.titleWrapper}>
-                    <View style={type===TYPE[0].text?styles.navigateWrapper:{...styles.navigateWrapper, backgroundColor:theme.titleWrapperBlue}}>
-                        <Pressable onPress={()=>setType(TYPE[0].text)} style={{width:'100%', height:'100%', justifyContent:'center', alignItems:'center'}}><Text style={type===TYPE[0].text? {color:theme.checkedBlue} : {color:'white'} }>가계부 입력</Text></Pressable>
+            <View style={commonStyles.nonHeaderWrapper}>
+                <View style={commonStyles.realHeaderWrapper}>
+                    <View style={type===TYPE[0].text?{...commonStyles.navigateWrapper,zIndex:1,}:{...commonStyles.navigateWrapper, backgroundColor:theme.titleWrapperBlue}}>
+                        <View style={commonStyles.navigateInnerWrapper}>
+                            <Pressable onPress={()=>setType(TYPE[0].text)} style={commonStyles.navigatePressable}><Text style={type===TYPE[0].text? {color:theme.checkedBlue} : {color:'white'} }>가계부 입력</Text></Pressable>
+                        </View>
+                        <View style={commonStyles.navigateInnerWrapper}></View>
                     </View>
-                    <View style={type===TYPE[0].text?{...styles.navigateWrapper, position:'absolute', left:110,backgroundColor:theme.titleWrapperBlue, zIndex:-1}:{...styles.navigateWrapper, position:'absolute', left:110,backgroundColor:theme.darkGrey}}>
-                        <Pressable onPress={()=>setType(TYPE[1].text)} style={{width:'100%', height:'100%', justifyContent:'center', alignItems:'center'}}><Text style={type===TYPE[0].text? {color:'white'} : {color:theme.checkedBlue} }>내역 보기</Text></Pressable>
+                    <View style={type===TYPE[0].text?{...commonStyles.navigateWrapper, position:'absolute', left:110,backgroundColor:theme.titleWrapperBlue}:{...commonStyles.navigateWrapper,zIndex:1, position:'absolute', left:110,backgroundColor:theme.inputBackground2}}>
+                        <View style={commonStyles.navigateInnerWrapper}>
+                            <Pressable onPress={()=>setType(TYPE[1].text)} style={commonStyles.navigatePressable}><Text style={type===TYPE[0].text? {color:'white'} : {color:theme.checkedBlue} }>내역 보기</Text></Pressable>
+                        </View>
+                        <View style={commonStyles.navigateInnerWrapper}></View>
                     </View>
-                </View>      
+                </View> 
+            </View>
+            <View style={commonStyles.contentSection}>   
                 {type===TYPE[0].text?
                 <View style={commonStyles.contentWrapper}>
                 <View style={styles.calendarWrapper}>
-                    <View style={styles.dotWrapper}>
-                        <Text style={{marginBottom:4, color:theme.dateCheckedGrey}}>주간</Text>
-                        <Text style={{color:theme.dateCheckedGrey}}>입출금</Text>
+                    <View style={styles.calendarHeaderWrapper}>
+                        <Text style={styles.txtCalendarHeader}>{`주간\n입출금`}</Text>
                     </View>
                     <View style={{width:1, height:'80%', backgroundColor:theme.torangGrey, opacity:0.2}}></View>
                    {calArr.map(cal=><WeeklyCalendar key={i++} source={cal}></WeeklyCalendar>)} 
@@ -304,41 +315,40 @@ const AccountBookScreen = (({navigation}) => {
 
 export default AccountBookScreen;
 
+const accountHighlightBtn=Platform.select({
+    ios: {
+      shadowColor: "rgb(50, 50, 50)",
+      shadowOpacity: 0.4,
+      shadowRadius: 5,
+      shadowOffset: {
+        height: -1,
+        width: 0,
+      },
+    },
+    android: {
+      elevation: 4,
+    },
+});
+
 const styles=StyleSheet.create({
-    titleWrapper:{
-        width:'100%',
-        height:30,
-        flexDirection:'row',
-    },
-    titleBackBlock:{
-        width:50,
-        height:50,
-        position:'absolute',
-        top:20, 
-        left:0, 
-        zIndex:0,
-    },
-    navigateWrapper:{
-        width:120,
-        height:'100%',
-        borderTopLeftRadius:CONTENT_SECTION_BORDER_RADIUS,
-        borderTopRightRadius:CONTENT_SECTION_BORDER_RADIUS,
-        backgroundColor:theme.darkGrey,
-        zIndex:1,
-    },
     calendarWrapper:{
         width:'90%',
-        height:64,
+        height:60,
         flexDirection: "row",
         justifyContent:'space-between',
         alignItems:'center',
         marginTop:15,
     },
-    dotWrapper:{
+    calendarHeaderWrapper:{
         width:52,
         height:'100%',
         justifyContent:'center',
         alignItems:'center',
+    },
+    txtCalendarHeader:{
+        color:theme.dateCheckedGrey,
+        textAlign:'center',
+        ...commonStyles.commonTextShadow,
     },
     commonTitleWrapper:{
         marginTop:4,
@@ -349,6 +359,7 @@ const styles=StyleSheet.create({
     },
     txtCommonTitle:{
         fontWeight:'bold',
+        ...commonStyles.commonTextShadow,
     },
     accountWrapper:{
         width:'90%',
@@ -360,6 +371,7 @@ const styles=StyleSheet.create({
         flex:1,
         backgroundColor:theme.btnIncomeRed,
         borderRadius:15,
+        ...accountHighlightBtn,
     },
     btnIncome:{
         width:'100%',
@@ -369,6 +381,7 @@ const styles=StyleSheet.create({
         flex:1,
         backgroundColor:theme.btnExpenditureBlue,
         borderRadius:15,
+        ...accountHighlightBtn,
     },
     btnExpenditure:{
         width:'100%',
@@ -410,6 +423,7 @@ const styles=StyleSheet.create({
         alignItems:'center',
         backgroundColor:theme.torangYellow,
         borderRadius:15,
+        ...accountHighlightBtn,
     },
     btnExcel:{
         width:'100%',
@@ -430,6 +444,7 @@ const styles=StyleSheet.create({
         alignItems:'center',
         backgroundColor:theme.torangGrey,
         borderRadius:15,
+        ...accountHighlightBtn,
     },
     memoWrapper:{
         width:'90%',
@@ -444,6 +459,7 @@ const styles=StyleSheet.create({
         backgroundColor:'white',
         marginBottom:20,
         padding:15,
+        ...BASIC_SHADOW,
     },
     percentWrapper:{
         flex:1,
@@ -458,6 +474,7 @@ const styles=StyleSheet.create({
     },
     txtPercentTitle:{
         fontSize:20,
+        ...commonStyles.commonTextShadow,
     },
     percentContentWrapper:{
         width:'80%',
@@ -470,5 +487,6 @@ const styles=StyleSheet.create({
         fontSize:24,
         fontWeight:'bold',
         marginRight:8,
+        ...commonStyles.commonTextShadow,
     },
 });

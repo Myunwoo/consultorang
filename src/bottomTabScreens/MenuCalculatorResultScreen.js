@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Pressable, Image, ScrollView, TextInput, Keyboard } from 'react-native';
+import { StyleSheet, Text, View, Pressable, Image, ScrollView, TextInput, Keyboard, Platform } from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 
 import { theme } from '../variables/color';
@@ -12,9 +12,17 @@ import ModalComponent from '../modals/ModalComponent';
 import PrimeCostModal from '../modals/PrimeCostModal';
 import CompeteCostModal from '../modals/CompeteCostModal';
 import OriginCostModal from '../modals/OriginCostModal';
+import MenuCalculatorHistoryScreen from './MenuCalculatorHistoryScreen';
 
-const MenuCalculatorResultScreen = (({navigation, route}) => {0
+const TYPE=[
+    {text:'메뉴 가격 계산기'},
+    {text:'목록'}
+]
+
+const MenuCalculatorResultScreen = (({navigation, route}) => {
+    //추후에 route로부터 초기값을 얻어내게 되면, useState의 초기값 세팅에 활용해 주도록 합시다.
     const {menuName}=route.params;
+    const [type, setType]=useState(TYPE[0].text);
     const [competeVisible, setCompeteVisible]=useState(false);
     const [primeVisible, setPrimeVisible]=useState(false);
     const [originVisible, setOriginVisible]=useState(false);
@@ -59,27 +67,40 @@ const MenuCalculatorResultScreen = (({navigation, route}) => {0
                 <OriginCostModal showModal={originVisible} setShowModal={setOriginVisible}></OriginCostModal>
             </ModalComponent>
             <WeatherHeader></WeatherHeader>
-            <View style={commonStyles.contentSection}>
-                <View style={commonStyles.titleWrapper}>
-                    <Text style={commonStyles.txtTitle}>메뉴 가격 계산기</Text>
-                </View>       
-                <View style={{width:50, height:50, backgroundColor:theme.titleWrapperBlue, position:'absolute', top:30, left:0, zIndex:1}}></View>
+            <View style={commonStyles.nonHeaderWrapper}>
+                <View style={commonStyles.realHeaderWrapper}>
+                    <View style={type===TYPE[0].text?{...commonStyles.navigateWrapper,zIndex:1,}:{...commonStyles.navigateWrapper, backgroundColor:theme.titleWrapperBlue}}>
+                        <View style={commonStyles.navigateInnerWrapper}>
+                            <Pressable onPress={()=>setType(TYPE[0].text)} style={commonStyles.navigatePressable}><Text style={type===TYPE[0].text? {color:theme.checkedBlue} : {color:'white'} }>메뉴 가격 계산기</Text></Pressable>
+                        </View>
+                        <View style={commonStyles.navigateInnerWrapper}></View>
+                    </View>
+                    <View style={type===TYPE[0].text?{...commonStyles.navigateWrapper, position:'absolute', left:110,backgroundColor:theme.titleWrapperBlue}:{...commonStyles.navigateWrapper,zIndex:1, position:'absolute', left:110,backgroundColor:theme.inputBackground2}}>
+                        <View style={commonStyles.navigateInnerWrapper}>
+                            <Pressable onPress={()=>setType(TYPE[1].text)} style={commonStyles.navigatePressable}><Text style={type===TYPE[0].text? {color:'white'} : {color:theme.checkedBlue} }>가격 히스토리</Text></Pressable>
+                        </View>
+                        <View style={commonStyles.navigateInnerWrapper}></View>
+                    </View>
+                </View> 
+            </View>
+            <View style={commonStyles.contentSection}>     
                 <View style={commonStyles.contentWrapper}>
-                    <ScrollView style={{width:'100%',}} contentContainerStyle={styles.scrollview}>
+                    {type===TYPE[0].text
+                    ? <ScrollView style={{width:'100%',}} contentContainerStyle={styles.scrollview}>
                         <View style={styles.infoOutterWrapper}>
                             <View style={styles.infoTitleWrapper}>
-                                <Text style={{fontSize:20,}}>{menuName}</Text>
-                                <Text style={{fontSize:22,}}>Prime Cost</Text>
+                                <Text style={styles.txtInfoTitle}>{menuName}</Text>
+                                <Text style={styles.txtInfoSubTitle}>Prime Cost</Text>
                             </View>
                             <View style={styles.infoInnerWrapper}>
                                 <View style={styles.infoCostWrapper}>
-                                    <Text style={{fontSize:24,}}>{`${cost.ingre}원`}</Text>
-                                    <Text style={{fontSize:20,}}>식재료 원가</Text>
+                                    <Text style={styles.txtInfoCost}>{`${cost.ingre}원`}</Text>
+                                    <Text style={styles.txtInfoSubCost}>식재료 원가</Text>
                                 </View>
                                 <View style={{width:1, hegiht:'90%', backgroundColor:theme.backgroundGrey}}></View>
                                 <View style={styles.infoCostWrapper}>
-                                    <Text style={{fontSize:24,}}>{`${cost.human}원`}</Text>
-                                    <Text style={{fontSize:20,}}>인건비</Text>
+                                    <Text style={styles.txtInfoCost}>{`${cost.human}원`}</Text>
+                                    <Text style={styles.txtInfoSubCost}>인건비</Text>
                                 </View>
                             </View>
                         </View>
@@ -93,22 +114,15 @@ const MenuCalculatorResultScreen = (({navigation, route}) => {0
                                     <View style={{backgroundColor:theme.primeCostOrange ,...styles.cardTitleInnerWrapper}}>
                                         <Text style={styles.txtCardTitle}>프라임 코스트법</Text>
                                     </View>
-                                    <Pressable onPress={handlePrimeOpen} style={styles.btnCardInfo}>
-                                        <Image
-                                            resizeMode='contain'
-                                            style={{width:'100%', height:'100%',marginLeft:8,}}
-                                            source={require('../../image/calc_human.png')}
-                                        >
-                                        </Image>
-                                    </Pressable>
                                 </View>
-                                <View style={styles.cardCostWrapper}>
-                                    <Text style={styles.txtMinCost}>{`${primeCost.min}`}</Text>
-                                    <Text style={styles.txtMaxCost}>{`~ ${primeCost.max}원`}</Text>
+                                <View style={styles.cardTxtWrapper}>
+                                    <Text style={styles.txtMinCost}>{`${primeCost.min} ~ ${primeCost.max}원`}</Text>
+                                    <View style={{...styles.cardInfoWrapper, backgroundColor:theme.primeCostOrange}}>
+                                        <Pressable onPress={handlePrimeOpen} style={styles.btnCardInfo}>
+                                            <View style={styles.companyTriangle}></View>
+                                        </Pressable>
+                                    </View>
                                 </View>
-                            </View>
-                            <View style={styles.cardGraphWrapper}>
-
                             </View>
                         </View>
                         <View style={styles.costCardWrapper}>
@@ -118,56 +132,51 @@ const MenuCalculatorResultScreen = (({navigation, route}) => {0
                                     <View style={{backgroundColor:theme.btnExpenditureBlue ,...styles.cardTitleInnerWrapper}}>
                                         <Text style={styles.txtCardTitle}>원가기준 가격결정법</Text>
                                     </View>
-                                    <Pressable onPress={handleOriginOpen} style={styles.btnCardInfo}>
-                                        <Image
-                                            resizeMode='contain'
-                                            style={{width:'100%', height:'100%',marginLeft:8,}}
-                                            source={require('../../image/calc_human.png')}
-                                        >
-                                        </Image>
-                                    </Pressable>
                                 </View>
-                                <View style={styles.cardCostWrapper}>
-                                    <Text style={styles.txtMinCost}>{`${rawCost.min}`}</Text>
-                                    <Text style={styles.txtMaxCost}>{`~ ${rawCost.max}원`}</Text>
+                                <View style={styles.cardTxtWrapper}>
+                                    <Text style={styles.txtMinCost}>{`${rawCost.min} ~ ${rawCost.max}원`}</Text>
+                                    <View style={{...styles.cardInfoWrapper, backgroundColor:theme.btnExpenditureBlue}}>
+                                        <Pressable onPress={handleOriginOpen} style={styles.btnCardInfo}>
+                                            <View style={styles.companyTriangle}></View>
+                                        </Pressable>
+                                    </View>
                                 </View>
-                            </View>
-                            <View style={styles.cardGraphWrapper}>
-
                             </View>
                         </View>
-                        <View style={styles.costCardWrapper}>
+                        <View style={{width:'100%', height:20, marginBottom:16, justifyContent:'center', alignItems:'center',}}>
+                            <Text style={styles.txtGuide}>※ 위의 가격은 부가세가 포함된 가격입니다. ※</Text>
+                        </View>
+                        <View style={{...styles.costCardWrapper, height:170,}}>
                             <View style={{backgroundColor:theme.torangGrey, width:16, height:'100%', borderTopLeftRadius:CONTENT_SECTION_BORDER_RADIUS, borderBottomLeftRadius:CONTENT_SECTION_BORDER_RADIUS}}></View>
                             <View style={styles.cardContentWrapper}>
                                 <View style={styles.cardTitleOutterWrapper}>
                                     <View style={{backgroundColor:theme.torangGrey ,...styles.cardTitleInnerWrapper}}>
                                         <Text style={styles.txtCardTitle}>경쟁자 가격결정법</Text>
                                     </View>
-                                    <Pressable onPress={handleCompeteOpen} style={styles.btnCardInfo}>
-                                        <Image
-                                            resizeMode='contain'
-                                            style={{width:'100%', height:'100%',marginLeft:8,}}
-                                            source={require('../../image/calc_human.png')}
-                                        >
-                                        </Image>
-                                    </Pressable>
                                 </View>
-                                <View style={styles.companyCardCostWrapper}>
-                                    <Text>주변상권, 혹은 동종업계 경쟁자의 가격과 비슷하게 책정하는 방법입니다.</Text>
-                                </View>
-                                <View style={styles.companyBtnOutterWrapper}>
-                                    <View style={styles.btnCompanyWrapper}>
-                                        <Pressable style={{width:'100%', height:'100%', justifyContent:'center', alignItems:'center',}}>
-                                            <View style={styles.companyTriangle}></View>   
-                                        </Pressable>
+                                <View style={styles.competeTxtOutterWrapper}>
+                                    <View style={{...styles.competeTxtInnerWrapper, alignItems:'flex-end'}}>
+                                        <Text style={styles.txtCompete}>주변상권, 혹은 동종업계 경쟁자의 가격과 비슷하게 책정하는 방법입니다.</Text>
+                                    </View>
+                                    <View style={{width:'100%', height:8,}}></View>
+                                    <View style={{...styles.competeTxtInnerWrapper, justifyContent:'space-between',}}>
+                                        <View style={{maxWidth:'80%',}}>
+                                            <Text style={styles.txtCompete}>맹목적 반영보다는 <Text style={{color:theme.primeCostOrange}}>비교 용도</Text>로 사용하는 것이 바랍직합니다.</Text>
+                                        </View>
+                                        
+                                        <View style={{...styles.cardInfoWrapper, backgroundColor:theme.torangGrey}}>
+                                            <Pressable onPress={handleCompeteOpen} style={styles.btnCardInfo}>
+                                                <View style={styles.companyTriangle}></View>
+                                            </Pressable>
+                                        </View>
                                     </View>
                                 </View>
                             </View>
                         </View>
-                        <View style={styles.bottomInfoWrapper}>
-                            <Text>위의 모든 가격은 부가세가 포함된 가격입니다.</Text>
-                        </View>
                     </ScrollView>
+                    :   <View style={commonStyles.historyScreenWrapper}>
+                        <MenuCalculatorHistoryScreen navigation={navigation}></MenuCalculatorHistoryScreen>
+                    </View>}
                 </View>
             </View>
         </LinearGradient>
@@ -183,8 +192,8 @@ const styles=StyleSheet.create({
     },
     infoOutterWrapper:{
         width:'100%',
-        height:280,
-        backgroundColor:theme.backgroundGrey,
+        height:220,
+        backgroundColor:theme.ingreBackDarkGrey,
         marginTop:15,
         borderRadius:CONTENT_SECTION_BORDER_RADIUS,
         alignItems:'center',
@@ -194,6 +203,24 @@ const styles=StyleSheet.create({
         height:100,
         justifyContent:'center',
         alignItems:'center',
+    },
+    txtInfoTitle:{
+        fontSize:20,
+        ...commonStyles.commonTextShadow,
+    },
+    txtInfoSubTitle:{
+        fontSize:22,
+        fontWeight:'bold',
+        ...commonStyles.commonTextShadow,
+    },
+    txtInfoCost:{
+        fontSize:24,
+        fontWeight:'bold',
+        ...commonStyles.commonTextShadow,
+    },
+    txtInfoSubCost:{
+        fontSize:20,
+        ...commonStyles.commonTextShadow,
     },
     infoInnerWrapper:{
         width:'90%',
@@ -228,11 +255,10 @@ const styles=StyleSheet.create({
         borderBottomColor: theme.torangYellow,
         transform: [{ rotate: "180deg" }],
         alignSelf:'center',
-        ...BASIC_SHADOW,
     },
     costCardWrapper:{
         width:'100%',
-        height:160,
+        height:140,
         borderRadius:CONTENT_SECTION_BORDER_RADIUS,
         backgroundColor:'white',
         flexDirection:'row',
@@ -242,47 +268,53 @@ const styles=StyleSheet.create({
     cardContentWrapper:{
         flex:3
     },
-    cardGraphWrapper:{
-        flex:2,
-    },
     cardTitleOutterWrapper:{
         flexDirection:'row',
-        height:36,
-        marginTop:8,
+        height:24,
+        marginTop:12,
         marginLeft:8,
     },
     cardTitleInnerWrapper:{
         height:'100%',
         borderRadius:CONTENT_SECTION_BORDER_RADIUS,
-        paddingHorizontal:20,
+        paddingHorizontal:32,
         justifyContent:'center',
         alignItems:'center',
     },
     txtCardTitle:{
         color:'white',
+        fontSize:16,
+        ...commonStyles.commonTextShadow,
+    },
+    cardInfoWrapper:{
+        width:50,
+        height:50,
+        borderRadius:50,
     },
     btnCardInfo:{
         width:36,
         height:36,
-    },
-    cardCostWrapper:{
-        flex:1,
         justifyContent:'center',
-        marginLeft:12,
+        alignItems:'center',
+    },
+    cardTxtWrapper:{
+        flex:1,
+        justifyContent:'space-between',
+        alignItems:'center',
+        flexDirection:'row',
+        marginTop:8,
+        marginLeft:32,
+        marginRight:20,
     },
     txtMinCost:{
-        fontSize:24,
+        fontSize:30,
         fontWeight:'bold',
         marginBottom:8,
     },
     txtMaxCost:{
         fontSize:24,
         fontWeight:'bold',
-    },
-    companyCardCostWrapper:{
-        flex:1,
-        marginLeft:12,
-        marginTop:12,
+        ...commonStyles.commonTextShadow,
     },
     companyBtnOutterWrapper:{
         flex:1,
@@ -310,6 +342,8 @@ const styles=StyleSheet.create({
         borderBottomColor: 'white',
         transform: [{ rotate: "90deg", }],
         alignSelf:'center',
+        marginLeft:20,
+        marginTop:14,
     },
     bottomInfoWrapper:{
         width:'100%',
@@ -317,5 +351,38 @@ const styles=StyleSheet.create({
         marginBottom:16,
         justifyContent:'center',
         alignItems:'center',
+    },
+    txtGuide:{
+        color:theme.torangGrey,
+        ...commonStyles.commonTextShadow,
+        ...Platform.select({
+            ios:{
+                fontSize:17,
+            },
+            android:{
+                fontSize:14,
+            }
+        })
+    },
+    competeTxtOutterWrapper:{
+        marginBottom:14,
+        flex:1,
+        width:'100%',
+        alignItems:'center',
+    },
+    competeTxtInnerWrapper:{
+        flex:1,
+        width:'90%',
+        flexDirection:'row',
+    },
+    txtCompete:{
+        ...Platform.select({
+            ios:{
+                fontSize:17,
+            },
+            android:{
+                fontSize:14,
+            }
+        })
     },
 });

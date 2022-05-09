@@ -110,7 +110,20 @@ const styles=StyleSheet.create({
         width:'95%',
         borderTopLeftRadius:CONTENT_SECTION_BORDER_RADIUS,
         borderTopRightRadius:CONTENT_SECTION_BORDER_RADIUS,
-        ...BASIC_SHADOW,
+        ...Platform.select({
+            ios: {
+              shadowColor: "rgb(50, 50, 50)",
+              shadowOpacity: 0.5,
+              shadowRadius: 10,
+              shadowOffset: {
+                height: -10,
+                width: 0,
+              },
+            },
+            android: {
+              elevation: 4,
+            },
+        })
     },
     historyCompWrapper:{
         width:'100%',

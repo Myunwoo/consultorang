@@ -1,9 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, View,  } from 'react-native';
+import { StyleSheet, Text, View, Platform } from 'react-native';
 
 import { SCREEN_HEIGHT, } from '../variables/scales';
 import { theme } from '../variables/color';
 import {dateObject} from '../variables/scales';
+import commonStyles from '../variables/commonStyles';
 
 import WeatherComponent from './WeatherComponent';
 
@@ -13,21 +14,21 @@ const WeatherHeader = (arg) => {
     let i=0;
     return (
         <View style={styles.headerSection}>
-                <View style={styles.dateSection}>
-                    <View style={styles.dateWrapper}>
-                        <Text style={{fontSize:12,color:'white',}}>Today</Text>
-                        <Text style={{fontSize:16,color:'white',}}>{`${month}/${date}`}</Text>
-                    </View>
-                    <View style={styles.dayWrapper}>
-                        <Text style={{fontWeight:'bold',fontSize:20,color:theme.engineeringYellow,}}>{dateString}</Text>
-                    </View>
+            <View style={styles.dateSection}>
+                <View style={styles.dateWrapper}>
+                    <Text style={styles.txtToday}>Today</Text>
                 </View>
-                <View style={styles.weatherImgWrapper}>
-                    <WeatherComponent 
-                        key={i++} source={{size:(SCREEN_HEIGHT*0.06) > 60 ? 60 : (SCREEN_HEIGHT*0.06)}}>    
-                    </WeatherComponent>
+                <View style={styles.dayWrapper}>
+                    <Text style={styles.txtDay}>{`${month} / ${date}`}</Text>
+                    <Text style={styles.txtDate}>{dateString}</Text>
                 </View>
             </View>
+            <View style={styles.weatherImgWrapper}>
+                <WeatherComponent 
+                    key={i++} source={{size:56}}>    
+                </WeatherComponent>
+            </View>
+        </View>
     );
 }
 
@@ -36,21 +37,72 @@ export default WeatherHeader;
 const styles = StyleSheet.create({
     headerSection:{
         flexDirection:'row',
-        height:'7%',
-        maxHeight:64,
+        height:80,
         marginHorizontal:'5%',
         alignItems:'center',
     },
     dateSection:{
-        flexDirection:'row',
+        height:'100%',
         marginRight:8,
+        ...Platform.select({
+            ios:{
+                width:160,
+            },
+            android:{
+                width:140,
+            }
+        })
     },
     dateWrapper:{
-        alignItems:'center',
-        marginRight:8,
+        flex:1,
+        justifyContent:'flex-end',
     },
     dayWrapper:{
-        justifyContent:'center',
-        marginRight:8,
+        flex:1,
+        flexDirection:'row',
     },
+    txtToday:{
+        color:'white',
+        ...commonStyles.commonTextShadow,
+        ...Platform.select({
+            ios:{
+                fontSize:22,
+            },
+            android:{
+                fontSize:18,
+            }
+        })
+    },
+    txtDay:{
+        marginRight:8,
+        color:'white',
+        letterSpacing:1,
+        fontWeight:'bold',
+        ...commonStyles.commonTextShadow,
+        ...Platform.select({
+            ios:{
+                fontSize:24,
+            },
+            android:{
+                fontSize:20,
+            }
+        })
+    },
+    txtDate:{
+        fontWeight:'bold',
+        color:theme.engineeringYellow,
+        ...commonStyles.commonTextShadow,
+        ...Platform.select({
+            ios:{
+                fontSize:28,
+            },
+            android:{
+                fontSize:22,
+            }
+        })
+    },
+    weatherImgWrapper:{
+        height:'100%',
+        justifyContent:'center',
+    }
 });

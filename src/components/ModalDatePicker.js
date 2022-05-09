@@ -1,16 +1,28 @@
 import React, {useEffect, useState} from 'react';
-import { StyleSheet, Text, View, Pressable, Image } from 'react-native';
+import { StyleSheet, Text, View, Pressable, Image, Platform } from 'react-native';
 import DatePicker from 'react-native-date-picker'
+import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 import { theme } from '../variables/color';
 
 const ModalDatePicker = (arg) => {
     const {setter, date,}=arg;
+    
     const [pickerDate, setPickerDate]=useState(new Date());
     const [pickerOpen, setPickerOpen]=useState(false);
 
     const handleOpenPicker=()=>{
         setPickerOpen(true);
+    };
+
+    const hideDatePicker=()=>{
+        setPickerOpen(false);
+    };
+
+    const handleConfirm=(date)=>{
+        setPickerDate(date);
+        hideDatePicker();
     };
 
     useEffect(()=>{
@@ -23,11 +35,19 @@ const ModalDatePicker = (arg) => {
     //date picker 문제는 배포 후 시험해 보아야 하겠네요...
     return (
         <View style={styles.calendarWrapper}>
-            <DatePicker
+            {Platform.OS==='android'
+            ?<DateTimePickerModal
+                isVisible={pickerOpen}
+                mode="date"
+                onConfirm={handleConfirm}
+                onCancel={hideDatePicker}
+            />
+            :<DatePicker
                 modal
                 open={pickerOpen}
                 date={pickerDate}
                 onConfirm={(pickerDate) => {
+                    console.log(pickerDate);
                     setPickerOpen(false)
                     setPickerDate(pickerDate)
                 }}
@@ -35,7 +55,7 @@ const ModalDatePicker = (arg) => {
                     setPickerOpen(false)
                 }}
                 mode={'date'}
-            />
+            />}
             <Text>날짜 : </Text>
             <Pressable style={styles.btnDate} onPress={handleOpenPicker}>
                 <Text>{date}</Text>

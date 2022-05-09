@@ -29,35 +29,35 @@ const MainBottomNavigator = (props) => {
             })
         },
     }}>
-            <Tab.Screen name="AccountBook" component={AccountBookScreen} options={{headerShown:false, 
+            <Tab.Screen name="AccountBook" component={AccountBookScreen} options={{headerShown:false, title:'가계부', 
                 tabBarIcon:({focused})=>{
                     return (
                         <Image style={{width:24, height:24,}} source={focused?require('../image/bottomNav_pig_f.png'):require('../image/bottomNav_pig.png')}></Image>
                     );
                 }
             }}/>
-            <Tab.Screen name="IncomeStatement" component={IncomeStatementScreen} options={{headerShown:false,
+            <Tab.Screen name="IncomeStatement" component={IncomeStatementScreen} options={{headerShown:false, title:'손익분석', 
                 tabBarIcon:({focused})=>{
                     return (
                         <Image style={{width:24, height:24,}} source={focused?require('../image/bottomNav_income_f.png'):require('../image/bottomNav_income.png')}></Image>
                     );
                 }
             }}/>
-            <Tab.Screen name="MenuCalculator" component={MenuCalculatorNavigator} options={{headerShown:false,
+            <Tab.Screen name="MenuCalculator" component={MenuCalculatorNavigator} options={{headerShown:false, title:'계산기', 
                 tabBarIcon:({focused})=>{
                     return (
                         <Image style={{width:24, height:24,}} source={focused?require('../image/bottomNav_calc_f.png'):require('../image/bottomNav_calc.png')}></Image>
                     );
                 }
             }}/>
-            <Tab.Screen name="MenuEngineering" component={MenuEngineeringNavigator} options={{headerShown:false,
+            <Tab.Screen name="MenuEngineering" component={MenuEngineeringNavigator} options={{headerShown:false, title:'메뉴관리', 
                 tabBarIcon:({focused})=>{
                     return (
                         <Image style={{width:24, height:24,}} source={focused?require('../image/bottomNav_menuEng_f.png'):require('../image/bottomNav_menuEng.png')}></Image>
                     );
                 }
             }}/>
-            <Tab.Screen name="SettingScreen" component={SettingScreen} options={{headerShown:false,
+            <Tab.Screen name="SettingScreen" component={SettingScreen} options={{headerShown:false, title:'설정', 
                 tabBarIcon:({focused})=>{
                     return (
                         <Image style={{width:24, height:24,}} source={focused?require('../image/bottomNav_setting_f.png'):require('../image/bottomNav_setting.png')}></Image>

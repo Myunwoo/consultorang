@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, ScrollView, Image, Pressable, ImageBackground } from 'react-native';
-import Slider from '@react-native-community/slider';
 
+import Slider from '@react-native-community/slider';
 import { theme } from '../variables/color';
 import {BASIC_SHADOW, CONTENT_SECTION_BORDER_RADIUS, statusBarHeight} from '../variables/scales';
 import { HOUR_LIST, SIT_LIST, EMPLOYEE_LIST, CODE_LIST_ROW1, CODE_LIST_ROW2, ING_LIST_ROW1, CODE_LIST_ROW3, ING_LIST_ROW2, HOW_LIST, DAY_LIST_1, DAY_LIST_2 } from '../variables/codelist';
@@ -30,12 +30,16 @@ const FoodInfoRegisterScreen = ({route,navigation}) => {
     const [businessIngre, setBusinessIngre]=useState('');
     const [businessCookway, setBusinessCookway]=useState([]);
     //already는 전송할 때 string이어야 함.
-    const [businessAlready, setBusinessAlready]=useState(-1);
+    const [businessAlready, setBusinessAlready]=useState(0);
     const [businessSit, setBusinessSit]=useState('');
     const [businessStaff, setBusinessStaff]=useState('');
     const [startHour, setStartHour]=useState(-1);
     const [endHour, setEndHour]=useState(-1);
     const [businessHoliday,setBusinessHoliday]=useState([]);
+
+    //slider
+    const [sliderVal, setSliderVal]=useState(0);
+    const [correctedVal, setCorrectedVal]=useState(0);
 
     let i=0;
     const handleGoNext = () => {
@@ -181,13 +185,24 @@ const FoodInfoRegisterScreen = ({route,navigation}) => {
                         </View>
                         <View style={styles.halfcookSelectWrapper}>
                             <Slider
-                                style={{width: '100%', height: '100%'}}
+                                style={{width: '100%', height: 30,}}
                                 minimumValue={0}
                                 maximumValue={100}
-                                step={30}
-                                minimumTrackTintColor="#FFFFFF"
-                                maximumTrackTintColor="#000000"
+                                step={25}
+                                minimumTrackTintColor={theme.torangYellow}
+                                maximumTrackTintColor={theme.uncheckedGrey}
+                                thumbTintColor={theme.torangYellow}
+                                onSlidingComplete={businessAlready}
+                                tapToSeek={true}
+                                value={businessAlready}
                             />
+                            <View style={{width:'100%', height:20, flexDirection:'row', justifyContent:'space-between'}}>
+                                <Text style={styles.txtSlider}>사용 안함</Text>
+                                <Text style={styles.txtSlider}>30%</Text>
+                                <Text style={styles.txtSlider}>50%</Text>
+                                <Text style={styles.txtSlider}>70%</Text>
+                                <Text style={styles.txtSlider}>100%</Text>
+                            </View>
                         </View>
                     </View>
                     <View style={styles.pickerOutterWrapper}>
@@ -476,8 +491,10 @@ const styles = StyleSheet.create({
     },
     halfcookSelectWrapper:{
         width:'100%',
-        height:60,
         marginTop:12,
+    },
+    txtSlider:{
+        fontSize:12,
     }
 });
 

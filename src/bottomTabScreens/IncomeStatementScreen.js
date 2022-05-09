@@ -12,6 +12,10 @@ import {LineChart} from 'react-native-chart-kit';
 
 import {GT_LIST, EMPLOYEE_LIST, HOW_LIST} from '../variables/codelist';
 
+
+//1. 첫 로드 시 데이터가 존재하지 않는 상황 개선
+//2. 그래프 구현
+
 const calcDiff=(mine, target)=>{
     return (Math.abs(target-mine)/target*100).toFixed(1);
 }
@@ -54,24 +58,12 @@ const getSale=(sale)=>{
 const getSize=(staff)=>{
     let result='';
     switch(staff){
-        case 'BS001':
-            result='9석 이하'
-            break;
-        case 'BS002':
-            result='10-19석'
-            break;
-        case 'BS003':
-            result='20-29석'
-            break;
-        case 'BS004':
-            result='30-39석'
-            break;
-        case 'BS005':
-            result='40-49석'
-            break;
-        case 'BS006':
-            result='50-59석'
-            break;
+        case 'BS001': result='9석 이하'; break;
+        case 'BS002': result='10-19석'; break;
+        case 'BS003': result='20-29석'; break;
+        case 'BS004': result='30-39석'; break;
+        case 'BS005': result='40-49석'; break;
+        case 'BS006': result='50-59석'; break;
     }
     return result;
 }
@@ -79,18 +71,10 @@ const getSize=(staff)=>{
 const getIngre=(ingre)=>{
     let result='';
     switch(ingre){
-        case 'IG001':
-            result='일반';
-            break;
-        case 'IG002':
-            result='면';
-            break;
-        case 'IG003':
-            result='육류';
-            break;
-        case 'IG004':
-            result='수산물';
-            break;
+        case 'IG001': result='일반'; break;
+        case 'IG002': result='면'; break;
+        case 'IG003': result='육류'; break;
+        case 'IG004': result='수산물'; break;
     }
     return result;
 }
@@ -98,42 +82,18 @@ const getIngre=(ingre)=>{
 const getType=(type)=>{
     let result='';
     switch(type){
-        case 'ST001':
-            result='한식';
-            break
-        case 'ST002':
-            result='중식';
-            break
-        case 'ST003':
-            result='일식';
-            break
-        case 'ST004':
-            result='양식';
-            break
-        case 'ST005':
-            result='에스닉';
-            break
-        case 'ST006':
-            result='피자, 햄버거, 샌드위치';
-            break
-        case 'ST007':
-            result='치킨';
-            break
-        case 'ST008':
-            result='분식';
-            break
-        case 'ST009':
-            result='카페';
-            break
-        case 'ST010':
-            result='음료';
-            break
-        case 'ST011':
-            result='제과';
-            break
-        case 'ST012':
-            result='주점';
-            break
+        case 'ST001': result='한식'; break;
+        case 'ST002': result='중식'; break;
+        case 'ST003': result='일식'; break;
+        case 'ST004': result='양식'; break;
+        case 'ST005': result='에스닉'; break;
+        case 'ST006': result='피자, 햄버거, 샌드위치'; break;
+        case 'ST007': result='치킨'; break;
+        case 'ST008': result='분식'; break;
+        case 'ST009': result='카페'; break;
+        case 'ST010': result='음료'; break;
+        case 'ST011': result='제과'; break;
+        case 'ST012': result='주점'; break;
     }
     return result;
 }
@@ -141,6 +101,8 @@ const getType=(type)=>{
 const IncomeStatementScreen = (({navigation}) => {
     const {year, month, date, dateString, yyyymmdd}=dateObject();
     const [graphType, setGraphType]=useState(GT_LIST[0].text);
+    const [userId, setUserId]=useState('');
+    const [graphSize, setGraphSize]=useState({width:0, height:0});
     const [data, setData]=useState({
         sameBusiness: {
             foodCost: 0,
@@ -181,23 +143,32 @@ const IncomeStatementScreen = (({navigation}) => {
 
     useEffect(()=>{
         getItemAsyncStorage('userId').then(res=>{
-            const dataToSend={
-                userId:res,
-                ym:`${year}${month<10?'0'+month:month}`,
-            };
-
-            fetchServer('POST', '/state/getComparison', dataToSend).then((responseJson) => {
-                if(responseJson.retCode==='0'){
-                    if(responseJson.data!==null){
-                        setData(responseJson.data);
-                    }
-                }else{
-                    alert('데이터를 불러오기를 실패하였습니다');
-                }
-            }).catch((error) => {
-                console.log(error);
-            });
+            setUserId(res);
+        }).catch(error=>{
+            console.log(error);
         })
+    },[]);
+
+    useEffect(()=>{
+        if(userId=='') return;
+        const dataToSend={
+            userId,
+            ym:`${year}${month<10?'0'+month:month}`,
+        };
+        fetchServer('POST', '/state/getComparison', dataToSend).then((responseJson) => {
+            if(responseJson.retCode==='0'){
+                if(responseJson.data!==null){
+                    // console.log('responseJson.data');
+                    // console.log(responseJson.data);
+                    setData(responseJson.data);
+                }
+            }else{
+                alert('데이터를 불러오기를 실패하였습니다');
+            }
+        }).catch((error) => {
+            console.log(error);
+        });
+        
         Promise.all([getItemAsyncStorage('businessType'), getItemAsyncStorage('businessIngre'),
             getItemAsyncStorage('businessCookway'), getItemAsyncStorage('businessSize')]).then(res=>{
                 setUserType({
@@ -207,7 +178,7 @@ const IncomeStatementScreen = (({navigation}) => {
                     businessSize:res[3],
                 })
         });
-    },[]);
+    },[userId]);
 
     useEffect(()=>{
         switch(graphType){
@@ -223,39 +194,99 @@ const IncomeStatementScreen = (({navigation}) => {
                 setDataForShow({...data.sameSize, target:getSize(userType.businessSize)});
                 break;
         }
-    },[graphType]);
-
-    const chartData = {
-        labels: ["January", "February", "March", "April", "May", "June"],
-        datasets: [
-          {
-            data: [20, 45, 28, 80, 99, 43],
-            color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
-            strokeWidth: 2 // optional
-          }
-        ],
-        //legend: ["Rainy Days"] // optional
-      };
+    },[graphType,userType, data]);
 
     let i=0;
+    //
+    //1. 차트의 기준값을 어떻게 해야 할지 감이 잘 안잡힘.
+    //
+
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>
             <WeatherHeader></WeatherHeader>
             <View style={styles.contentSection}>
                 <View style={styles.dateSelectWrapper}>
-                    <Text style={{color:'white', fontSize:18,}}>{`${year}년 ${month}월`}</Text>
+                    <Text style={styles.txtDate}>{`${year}년 ${month}월`}</Text>
                 </View>
                 <View style={styles.selectButtonsWrapper}>
                     {GT_LIST.map(g=><GraphType key={i++} source={{prop:graphType, setter:setGraphType, ...g}}></GraphType>)}
                 </View>
                 <View style={{width:'90%', height:1, backgroundColor:'white', marginTop:8,}}></View>
-                <View style={styles.graphSection}>
-                    {/* <LineChart
-                        data={chartData}
-                        width={100}
-                        height={100}
-                        //chartConfig={chartConfig}
-                    /> */}
+                <View style={styles.graphSection} onLayout={event=>{
+                    const {width, height} = event.nativeEvent.layout;
+                    setGraphSize({width,height});
+                }}>
+                    <LineChart
+                        data={{
+                            //labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+                            datasets: [
+                                { 
+                                    data: [data.userModel.totalSale, data.userModel.foodCost, data.userModel.humanCost],
+                                    color: () => 'white',
+                                    strokeWidth: 2,
+                                },
+                                { 
+                                    data: [dataForShow.totalSale, dataForShow.foodCost, dataForShow.humanCost], 
+                                    color: () => '#ED7C33',
+                                    strokeWidth: 2,
+                                }, 
+                            ]
+                        }}
+                        withHorizontalLines={false}
+                        withVerticalLabels={true}
+                        withHorizontalLabels={true}
+                        //withShadow={false}
+                        //withOuterLines={false}
+                        //withInnerLines={false}
+                        //segments={4}
+                        //verticalLabelRotation={10}
+                        //xLabelsOffset={0}
+                        //yLabelsOffset={0}
+                        //verticalLabelRotation={45}
+                        //horizontalLabelRotation={45}
+                        //xAxisInterval={2}
+                        //yAxisInterval={1}
+                        fromZero={true}
+                        //width={graphSize.width}
+                        width={graphSize.width + graphSize.width / 3}
+                        //width={widthW + widthW / (data.length - 1)}
+                        height={graphSize.height}
+                        chartConfig={{
+                            propsForBackgroundLines: {
+                                //strokeDasharray: '', // solid background lines with no dashes
+                                strokeDashoffset: 15,
+                            },
+                            //backgroundGradientFrom:
+                            //backgroundGradientTo:
+                            //barPercentage:1,
+                            //barRadius:30,
+                            //propsForBackgroundLines:
+                            // propsForLabels:{
+                            //     //wi
+                            //     width:0,
+                            //     height:0,
+                            //     fontSize:10,
+                            //     fontWeight:'bold',
+                            //     //x:'10',
+                            // },
+                            //verticalLabelsHeightPercentage:50,
+                            backgroundGradientFromOpacity: 0,
+                            backgroundGradientToOpacity: 0,
+                            decimalPlaces: 0, // optional, defaults to 2dp
+                            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                            style: {
+                                borderRadius: 16,
+                            },
+                            // propsForDots: {
+                            //     r: "6",
+                            //     strokeWidth: "2",
+                            //     stroke: "#ffa726",
+                            // }
+                        }}
+                        style={{
+                            
+                        }}
+                    />
                 </View>
                 <View style={styles.percentSection}>
                     <View style={styles.percentOutterWrapper}>
@@ -352,12 +383,11 @@ const IncomeStatementScreen = (({navigation}) => {
                     </View>
                 </View>
                 <View style={styles.infoSection}>
-                    <Text style={{color:theme.selectedOrange, fontWeight:'bold',}}>※ 주의사항 ※</Text>
-                    <Text style={styles.txtInfo}>·  해당 자료는 정부기관의 연구자료에 입각하여<Text style={styles.txtHighlight}>각색한 평균값</Text>
-                        으로, 매장의 상황에 따라 다소 차이가 있을 수 있습니다. <Text style={styles.txtUnHighlight}>(농촌경제연구원 [외식사업 실태조사])</Text>     
+                    <Text style={{color:theme.selectedOrange, fontWeight:'bold', fontSize:16,}}>※ 주의사항 ※</Text>
+                    <Text style={styles.txtInfo}>· 제시되는 기준값은 정부기관의 연 평균 자료를 12개월로 나눈 값으로, <Text style={styles.txtHighlight}>개별 매장의 상황</Text>
+                        <Text style={styles.txtUnHighlight}>(상권, 성수기 등)</Text>에 따라 다소 차이가 있을 수 있습니다. <Text style={styles.txtHighlight}>단순 참고 수준</Text>으로 사용해주세요!
+                        <Text style={styles.txtUnHighlight}>(농촌경제연구원 [외식사업 실태조사])</Text>     
                     </Text>
-                    <Text style={styles.txtInfo}>· 세 가지 지표는 <Text style={styles.txtHighlight}>참고 수준</Text>으로 사용해주세요.</Text>
-                    <Text style={styles.txtInfo}>· 인건비 : 고용인, 가족 종사자, 대표자 인건비의 총 합</Text>
                 </View>
             </View>
         </LinearGradient>
@@ -378,16 +408,23 @@ const styles=StyleSheet.create({
         flexDirection:'row',
         width:'90%',
     },
+    txtDate:{
+        color:'white',
+        fontSize:18,
+        ...commonStyles.commonTextShadow,
+    },
     graphSection:{
         flex:1,
         width:'90%',
-        backgroundColor:'tomato',
         marginTop:8,
+        // borderBottomWidth:1,
+        // borderLeftWidth:1,
+        // borderColor:'white',
     },
     percentSection:{
         marginTop:8,
         width:'90%',
-        height:80,
+        height:64,
     },
     percentContentWrapper:{
         marginTop:2,
@@ -413,7 +450,7 @@ const styles=StyleSheet.create({
     chartSection:{
         marginTop:8,
         width:'90%',
-        height:180,
+        height:164,
         borderRadius:15,
     },
     chartHeader:{
@@ -475,16 +512,23 @@ const styles=StyleSheet.create({
     infoSection:{
         marginTop:12,
         width:'90%',
-        height:140,
         backgroundColor:'rgba(0,0,0,0.1)',
         borderRadius:15,
         marginBottom:8,
         justifyContent:'center',
-        paddingHorizontal:'5%',
-        paddingVertical:'5%',
+        paddingHorizontal:10,
+        paddingVertical:10,
     },
     txtInfo:{
         color:'white',
+        ...Platform.select({
+            ios:{
+                fontSize:13,
+            },
+            android:{
+                fontSize:12,
+            }
+        })
     },
     txtHighlight:{
         backgroundColor:theme.selectedOrange,

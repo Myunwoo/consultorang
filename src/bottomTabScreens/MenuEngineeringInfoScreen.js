@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Image, Platform } from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 
 import { theme } from '../variables/color';
@@ -41,11 +41,6 @@ const MenuEngineeringInfoScreen = (({route, navigation}) => {
     const [medal, setMedal]=useState(type);
     const [menus, setMenus]=useState(array);
     const [category, setCategory]=useState(categoryTxt);
-
-    const [sendObj, setSendObj]=useState({
-        'medalType':0,
-        'hasMenu':false,
-    });
     const [solutionAll, setSolutionAll]=useState({
         totalSolution:'',
         solutionTitle:'',
@@ -63,12 +58,13 @@ const MenuEngineeringInfoScreen = (({route, navigation}) => {
     }
     
     const imgArr=[
+        {source:require('../../image/sol_tape_measure.jpg'), code:0},
         {source:require('../../image/sol_tape_measure.jpg'), code:1},
         {source:require('../../image/sol_money_up.jpg'), code:2},
         {source:require('../../image/sol_star.jpg'), code:3},
         {source:require('../../image/sol_percentage.jpg'), code:4},
         {source:require('../../image/sol_trash_can.jpg'), code:5}
-    ]
+    ];
 
     useEffect(() => {
         getItemAsyncStorage('userId').then(res=>{
@@ -76,45 +72,46 @@ const MenuEngineeringInfoScreen = (({route, navigation}) => {
         }).catch(error=>{
             console.log(error);
         })
+    },[]);
 
-      if (array.length <= 0) {
-        setSendObj({
-          userId,
-          medalType: type+1,
-          hasMenu: false,
-        });
-      } else {
-        setSendObj({
-          userId,
-          medalType: type+1,
-          hasMenu: true,
-        });
-      }
-    }, []);
-  
-    useEffect(() => {
-        fetchServer("POST", "/engine/getEngineSolList", sendObj)
-          .then((responseJson) => {
-              const {totalSol, solutions}=responseJson.data;
+    useEffect(()=>{
+        const dataToSend={
+            userId,
+            medalType:type+1,
+            hasMenu: true,
+        };
+        // if(array.length>0) dataToSend.hasMenu=true;
 
-              setSolutionAll({
-                  totalSolution:totalSol,
-                  solutionTitle:solutions[0].solTitle,
-                  solutionContent:solutions[0].solContent,
-                  solutionTitle2:solutions[1].solTitle,
-                  solutionContent2:solutions[1].solContent,
-                  solutionImg:imgNum(solutions[0].imgId),
-                  solutionImg2:imgNum(solutions[1].imgId),
+        fetchServer("POST", "/engine/getEngineSolList", dataToSend)
+        .then((responseJson) => {
+            const {totalSol, solutions}=responseJson.data;
+
+            if(dataToSend.hasMenu){
+                setSolutionAll({
+                    totalSolution:totalSol,
+                    solutionTitle:solutions[0].solTitle,
+                    solutionContent:solutions[0].solContent,
+                    solutionImg:imgNum(solutions[0].imgId),
+                    solutionTitle2:solutions[1].solTitle,
+                    solutionContent2:solutions[1].solContent,
+                    solutionImg2:imgNum(solutions[1].imgId),
                 });
-
-            if (responseJson.data !== null) {
-              console.log(responseJson.data);
+            }else{
+                setSolutionAll({
+                    totalSolution:totalSol,
+                    solutionTitle:solutions[0].solTitle,
+                    solutionContent:solutions[0].solContent,
+                    solutionImg:imgNum(solutions[0].imgId),
+                });
             }
-          })
-          .catch((error) => {
-            //console.log(error);
-          });
-      }, [sendObj]);
+          if (responseJson.data !== null) {
+            console.log(responseJson.data);
+          }
+        })
+        .catch((error) => {
+          //console.log(error);
+        });
+    },[userId]);
 
     
     return (
@@ -122,7 +119,7 @@ const MenuEngineeringInfoScreen = (({route, navigation}) => {
             <WeatherHeader></WeatherHeader>
             <View style={commonStyles.contentSection}>
             <View style={commonStyles.titleWrapper}>
-                <Text style={commonStyles.txtTitle}>메뉴 엔지니어링</Text>
+                <Text style={commonStyles.txtTitle}>등급별 솔루션</Text>
             </View>
             <View style={{width:50, height:50, backgroundColor:theme.titleWrapperBlue, position:'absolute', top:30, left:0, zIndex:1}}></View>
                 <View style={commonStyles.contentWrapper}>
@@ -148,12 +145,14 @@ const MenuEngineeringInfoScreen = (({route, navigation}) => {
                                     <Text style={styles.txtMedal}>{medalText}</Text>
                                 </View>
                             </View>
-
                             <View style={styles.analysisTextWrapper}>
-                                <Text>{solutionAll.totalSolution}</Text>
+                                <Text style={styles.txtAnalysisText} adjustsFontSizeToFit={true} numberOfLines={2} minimumFontScale={0.9}>{solutionAll.totalSolution}</Text>
                             </View>
                             <View style={styles.categoryListWrapper}>
-                                {menus.map((menu)=><Text>{`${index++}. ${menu.menuNm}`}</Text>)}
+                                {menus.length>0
+                                ?menus.map((menu)=><Text>{`${index++}. ${menu.menuNm}`}</Text>)
+                                :<View style={{width:'100%', alignItems:'center',}}><Text>카테고리에 해당하는 금메달 메뉴가 없습니다</Text></View>
+                                }
                             </View>
                         </View>
                         <View style={styles.analysisTitleWrapper}>
@@ -165,25 +164,30 @@ const MenuEngineeringInfoScreen = (({route, navigation}) => {
                             <View style={styles.solutionImgWrapper}>
                                 <Image
                                     resizeMode='contain'
-                                    style={{width:30, height:30,}}
+                                    style={{width:24, height:24,}}
                                     source={solutionAll.solutionImg}
                                 >
                                 </Image>
                             </View>
-                            <View style={{position:'absolute', top:22, left:18, width:52, height:1, backgroundColor:theme.engineeringCircleNavy, zIndex:3333}}></View>
-                            <View style={{position:'absolute', top:19, left:66, width:8, height:8, borderRadius:8, backgroundColor:theme.engineeringCircleNavy, zIndex:3333}}></View>
-                            <View style={{width:50}}></View>
+                            <View style={{position:'absolute', top:22, left:18, width:52, height:1, backgroundColor:theme.engineeringCircleNavy, zIndex:10}}></View>
+                            <View style={{position:'absolute', top:19, left:66, width:8, height:8, borderRadius:8, backgroundColor:theme.engineeringCircleNavy, zIndex:10}}></View>
+                            <View style={{width:50, height:10,}}></View>
                             <View style={styles.solutionContentWrapper}>
-                                <Text style={styles.solutionTitleWrapper}>{solutionAll.solutionTitle}</Text>
-                                <Text>{solutionAll.solutionContent}</Text>
+                                <View style={styles.solutionTitleWrapper}>
+                                    <Text style={styles.txtSolutionTitle}>{solutionAll.solutionTitle}</Text>
+                                </View>
+                                <Text style={styles.txtSolutionContent}>{solutionAll.solutionContent}</Text>
                             </View>
                         </View>
-                        <View style={styles.analysisTitleWrapper}>
+                        {array.length>0
+                        ?<View style={styles.analysisTitleWrapper}>
                             <View style={{width:20, height:4, backgroundColor:'#E5E5E5'}}></View>
                             <View style={{width:10, height:10, borderRadius:20, backgroundColor:'#E5E5E5', marginRight:8,}}></View>
                             <Text style={styles.txtTitle}>Solution</Text>
                         </View>
-                        <View style={styles.solutionOutterWrapper}>
+                        :<View></View>}
+                        {array.length>0
+                        ?<View style={styles.solutionOutterWrapper}>
                             <View style={styles.solutionImgWrapper}>
                                 <Image
                                     resizeMode='contain'
@@ -200,6 +204,7 @@ const MenuEngineeringInfoScreen = (({route, navigation}) => {
                                 <Text>{solutionAll.solutionContent2}</Text>
                             </View>
                         </View>
+                        :<View></View>}
                     </ScrollView>
                 </View>
             </View>
@@ -234,9 +239,10 @@ const styles=StyleSheet.create({
         marginBottom:12,
     },
     txtTitle:{
-        fontSize:16,
+        fontSize:18,
         fontWeight:'bold',
         color:theme.engineeringNavy,
+        ...commonStyles.commonTextShadow,
     },
     analysisWrapper:{
         width:'90%',
@@ -256,6 +262,7 @@ const styles=StyleSheet.create({
     },
     analysisTextWrapper:{
         width:'90%',
+        flex:1,
         marginBottom:16,
     },
     categoryListWrapper:{
@@ -265,10 +272,10 @@ const styles=StyleSheet.create({
         paddingVertical:15,
         paddingLeft:12,
         marginBottom:16,
+        borderRadius:6,
     },
     solutionOutterWrapper:{
         width:'90%',
-        height:200,
         flexDirection:'row',
     },
     solutionImgWrapper:{
@@ -287,16 +294,47 @@ const styles=StyleSheet.create({
         flex:1,
         borderRadius:CONTENT_SECTION_BORDER_RADIUS,
         marginBottom:20,
-        paddingVertical:20,
-        paddingHorizontal:16,
+        paddingVertical:16,
+        paddingHorizontal:20,
         ...BASIC_SHADOW,
-        zIndex:0,
-        
+        zIndex:1,
     },
     solutionTitleWrapper:{
-        fontSize:14,
+        marginLeft:14,
+        marginBottom:4,
+    },
+    txtAnalysisText:{
+        ...Platform.select({
+            ios:{
+                lineHeight:18,        
+            },
+            android:{
+                lineHeight:17,
+            }
+        })
+    },
+    txtSolutionTitle:{
         fontWeight:'bold',
         color:theme.engineeringCircleNavy,
+        ...Platform.select({
+            ios:{
+                fontSize:17,        
+            },
+            android:{
+                fontSize:15,
+            }
+        })
     },
-
+    txtSolutionContent:{
+        ...Platform.select({
+            ios:{
+                fontSize:14,   
+                lineHeight:18,     
+            },
+            android:{
+                fontSize:13,
+                lineHeight:17,
+            }
+        })
+    }
 })

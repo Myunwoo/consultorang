@@ -27,7 +27,7 @@ const MyButton = (arg) => {
         }
         arr.sort();
         setter(arr);
-    }
+    };
 
     let btnStyle={
         justifyContent:'center',

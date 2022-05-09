@@ -8,6 +8,12 @@ import {CONTENT_SECTION_BORDER_RADIUS, BASIC_SHADOW} from '../variables/scales';
 import commonStyles from '../variables/commonStyles';
 import WeatherHeader from '../components/WeatherHeader';
 import CalcSelectBtn from '../components/CalcSelectBtn';
+import MenuCalculatorHistoryScreen from './MenuCalculatorHistoryScreen';
+
+const TYPE=[
+    {text:'메뉴 가격 계산기'},
+    {text:'목록'}
+];
 
 const MenuCalculatorCalcScreen = (({navigation, route}) => {
     const {menuImg, menuName}=route.params;
@@ -17,6 +23,7 @@ const MenuCalculatorCalcScreen = (({navigation, route}) => {
     const [numTime, setNumTime]=useState('');
     const [count, setCount]=useState('인분');
     const [numCount, setNumCount]=useState('');
+    const [type, setType]=useState(TYPE[0].text);
 
     const handleCalc=()=>{
         if(isNaN(numHuman) || numHuman==='0' || numHuman===''){
@@ -37,13 +44,26 @@ const MenuCalculatorCalcScreen = (({navigation, route}) => {
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>
             <WeatherHeader></WeatherHeader>
+            <View style={commonStyles.nonHeaderWrapper}>
+                <View style={commonStyles.realHeaderWrapper}>
+                    <View style={type===TYPE[0].text?{...commonStyles.navigateWrapper,zIndex:1,}:{...commonStyles.navigateWrapper, backgroundColor:theme.titleWrapperBlue}}>
+                        <View style={commonStyles.navigateInnerWrapper}>
+                            <Pressable onPress={()=>setType(TYPE[0].text)} style={commonStyles.navigatePressable}><Text style={type===TYPE[0].text? {color:theme.checkedBlue} : {color:'white'} }>메뉴 가격 계산기</Text></Pressable>
+                        </View>
+                        <View style={commonStyles.navigateInnerWrapper}></View>
+                    </View>
+                    <View style={type===TYPE[0].text?{...commonStyles.navigateWrapper, position:'absolute', left:110,backgroundColor:theme.titleWrapperBlue}:{...commonStyles.navigateWrapper,zIndex:1, position:'absolute', left:110,backgroundColor:theme.inputBackground2}}>
+                        <View style={commonStyles.navigateInnerWrapper}>
+                            <Pressable onPress={()=>setType(TYPE[1].text)} style={commonStyles.navigatePressable}><Text style={type===TYPE[0].text? {color:'white'} : {color:theme.checkedBlue} }>가격 히스토리</Text></Pressable>
+                        </View>
+                        <View style={commonStyles.navigateInnerWrapper}></View>
+                    </View>
+                </View> 
+            </View>
             <View style={commonStyles.contentSection}>
-                <View style={commonStyles.titleWrapper}>
-                    <Text style={commonStyles.txtTitle}>메뉴 가격 계산기</Text>
-                </View>       
-                <View style={{width:50, height:50, backgroundColor:theme.titleWrapperBlue, position:'absolute', top:30, left:0, zIndex:1}}></View>
                 <View style={commonStyles.contentWrapper}>
-                    <ScrollView style={{width:'100%',}} contentContainerStyle={styles.scrollview}>
+                    {type===TYPE[0].text 
+                    ? <ScrollView style={{width:'100%',}} contentContainerStyle={styles.scrollview}>
                         <View style={styles.imgWrapper}>
                             <Image
                                 resizeMode='contain'
@@ -53,16 +73,22 @@ const MenuCalculatorCalcScreen = (({navigation, route}) => {
                             </Image>
                         </View>
                         <View style={styles.menuNameWrapper}>
+                            <View style={{flexDirection:'row', height:'100%', width:5, justifyContent:'space-between', alignItems:'center'}}>
+                                <View style={{width:1, height:'20%',backgroundColor:theme.titleWrapperBlue}}></View>
+                                <View style={{width:1, height:'30%',backgroundColor:theme.titleWrapperBlue}}></View>
+                            </View>
                             <Text>ddd</Text>
-                            <Text>{menuName}</Text>
-                            <Text>ddd</Text>
+                            <View style={{flexDirection:'row', height:'100%', width:5, justifyContent:'space-between', alignItems:'center'}}>
+                                <View style={{width:1, height:'30%',backgroundColor:theme.titleWrapperBlue}}></View>
+                                <View style={{width:1, height:'20%',backgroundColor:theme.titleWrapperBlue}}></View>
+                            </View>
                         </View>
                         <View style={styles.contentWrapper}>
                         <View style={styles.stepWrapper}>
                                 <Text style={{color:theme.loginBlue}}>STEP 3</Text>
                             </View>
                             <View style={styles.stepTitleWrapper}>
-                                <Text style={{color:theme.loginBlue, fontWeight:'bold', fontSize:24,}}>메뉴 인건비 구하기</Text>
+                                <Text style={{color:theme.loginBlue, fontWeight:'bold', fontSize:24,}}>직접 인건비 구하기</Text>
                             </View>
                             <View style={styles.smallTitleWrapper}>
                                 <Image
@@ -71,7 +97,10 @@ const MenuCalculatorCalcScreen = (({navigation, route}) => {
                                     source={require('../../image/calc_human.png')}
                                 >
                                 </Image>
-                                <Text style={styles.smallTitle}>참여인력</Text>
+                                <Text style={styles.smallTitle}>직접 인건비</Text>
+                            </View>
+                            <View style={styles.infoWrapper}>
+                                <Text>메뉴 생산에 참여하는 인원(근무하는 모든 인원수 아님)</Text>
                             </View>
                             <View style={styles.smallContentWrapper}>
                                 <View style={styles.calcCompWrapper}><CalcSelectBtn source={{prop:human,setter:setHuman,title:'시급',}}></CalcSelectBtn></View>
@@ -91,7 +120,29 @@ const MenuCalculatorCalcScreen = (({navigation, route}) => {
                                     textAlign={'center'}
                                 />
                                 <View style={styles.smallTxtWrapper}>
-                                    <Text numberOfLines={1} adjustsFontSizeToFit={true} style={{fontSize:18}}>원의 직원이</Text>
+                                    <Text numberOfLines={1} adjustsFontSizeToFit={true} style={styles.txtSmall}>원의</Text>
+                                </View>
+                            </View>
+                            <View style={{...styles.smallContentWrapper, justifyContent:'flex-end'}}>
+                                <View style={styles.smallTxtWrapper}>
+                                    <Text numberOfLines={1} adjustsFontSizeToFit={true} style={styles.txtSmall}>직원</Text>
+                                </View>
+                                <TextInput
+                                    style={styles.inputStyle}
+                                    onChangeText={(txt) => setNumHuman(txt)}
+                                    placeholder={'시급을 입력해 주세요'}
+                                    placeholderTextColor={theme.placeholderColor}
+                                    onSubmitEditing={Keyboard.dismiss}
+                                    blurOnSubmit={false}
+                                    underlineColorAndroid="#f000"
+                                    keyboardType={'numeric'}
+                                    returnKeyType="next"
+                                    maxLength={20}
+                                    multiline={false}
+                                    textAlign={'center'}
+                                />
+                                <View style={styles.smallTxtWrapper}>
+                                    <Text numberOfLines={1} adjustsFontSizeToFit={true} style={styles.txtSmall}>명이</Text>
                                 </View>
                             </View>
                             <View style={{width:'100%', height:1, backgroundColor:theme.backgroundGrey,}}></View>
@@ -169,6 +220,9 @@ const MenuCalculatorCalcScreen = (({navigation, route}) => {
                             </View>
                         </View>
                     </ScrollView>
+                    :<View style={commonStyles.historyScreenWrapper}>
+                        <MenuCalculatorHistoryScreen navigation={navigation}></MenuCalculatorHistoryScreen>
+                    </View>}
                 </View>
             </View>
         </LinearGradient>
@@ -239,9 +293,8 @@ const styles=StyleSheet.create({
         ...BASIC_SHADOW,
     },
     smallTitleWrapper:{
-        width:100,
         height:28,
-        justifyContent:'center',
+        justifyContent:'flex-start',
         alignItems:'center',
         marginTop:8,
         flexDirection:'row',
@@ -264,6 +317,7 @@ const styles=StyleSheet.create({
         width:'100%',
         height:80,
         flexDirection:'row',
+        justifyContent:'flex-start',
         alignItems:'center',
         marginVertical:8,
     },
@@ -278,7 +332,6 @@ const styles=StyleSheet.create({
         ...BASIC_SHADOW,
     },
     smallTxtWrapper:{
-        flex:1,
         height:60,
         justifyContent:'flex-end',
         marginLeft:8,
@@ -292,4 +345,11 @@ const styles=StyleSheet.create({
         alignItems:'center',
         marginTop:8,
     },
+    txtSmall:{
+        fontSize:22
+    },
+    historyScreenWrapper:{
+        flex:1,
+        width:'100%',
+    }
 });

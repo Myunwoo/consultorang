@@ -18,10 +18,10 @@ export const CONTENT_SECTION_BORDER_RADIUS=15;
 export const BASIC_SHADOW=Platform.select({
   ios: {
     shadowColor: "rgb(50, 50, 50)",
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.3,
     shadowRadius: 5,
     shadowOffset: {
-      height: -1,
+      height: 2,
       width: 0,
     },
   },

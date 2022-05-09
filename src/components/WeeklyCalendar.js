@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { theme } from "../variables/color";
 import { BASIC_SHADOW } from "../variables/scales";
-
+import commonStyles from '../variables/commonStyles';
 // 특이사항
 // 1. handlePress —> 눌렀을때 저 까만 색이 되도록 한번 뷰를 만들어 보세요.
 // 2. Today —> true이면 까맣도록
@@ -49,11 +49,13 @@ const WeeklyCalendar = (arg) => {
     fontSize: 20,
     //color: checked ? theme.dateUnCheckedWhite : theme.dateCheckedGrey,
     color:theme.dateCheckedGrey,
+    ...commonStyles.commonTextShadow,
   };
 
   let textChecked = {
     //color: checked ? theme.dateUnCheckedWhite : theme.dateCheckedGrey,
     color:theme.dateCheckedGrey,
+    ...commonStyles.commonTextShadow,
   };
 
   const onClicked = () => {
@@ -64,8 +66,8 @@ const WeeklyCalendar = (arg) => {
     <View style={OutWrapper}>
       <Pressable style={styles.pressable} onPress={onClicked}>
         <View style={styles.dotWrapper}>
-          {expend ? <View style={styles.redDot}></View> : <></>}
-          {sale ? <View style={styles.blueDot}></View> : <></>}
+          {expend ? <View style={styles.blueDot}></View> : <></>}
+          {sale ? <View style={styles.redDot}></View> : <></>}
         </View>
         <View style={styles.numWrapper}>
           <Text style={numChecked}>{day}</Text>
@@ -89,29 +91,31 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
-    height: 12,
+    height: 6,
     width: "100%",
     marginTop: 2,
   },
   numWrapper: {
     alignItems: "center",
+    justifyContent:'center',
     flex: 4,
   },
   dateWrapper: {
     alignItems: "center",
-    flex: 3,
+    justifyContent:'flex-start',
+    flex: 4,
   },
   redDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 10,
+    width: 5,
+    height: 5,
+    borderRadius: 5,
     backgroundColor: theme.incomeRed,
     marginHorizontal:4,
   },
   blueDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 10,
+    width: 5,
+    height: 5,
+    borderRadius: 5,
     backgroundColor: theme.btnExpenditureBlue,
     marginHorizontal:4,
   },

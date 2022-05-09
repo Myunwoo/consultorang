@@ -12,8 +12,9 @@ import FixedContentComponent from '../components/FixedContentComponent';
 import ModalTitle from '../components/ModalTitle';
 import ModalDatePicker from '../components/ModalDatePicker';
 import ModalItem from '../components/ModalItem';
+import ExpenditureWhoButton from '../components/ExpenditureWhoButton';
 
-import {EXPEND_TYPE_LIST} from '../variables/codelist';
+import {EXPEND_TYPE_LIST, EXWHO_LIST} from '../variables/codelist';
 
 let i=0;
 
@@ -46,6 +47,7 @@ const ExpeditureModal = ({ showModal, setShowModal,}) => {
     const [etcContentName, setEtcContentName]=useState('');
     const [etcAmount, setEtcAmount]=useState('');
     const [commands, setCommands]=useState([]);
+    const [who, setWho]=useState(EXWHO_LIST[0].code);
     const [userId, setUserId]=useState('');
 
     useEffect(()=>{
@@ -64,6 +66,7 @@ const ExpeditureModal = ({ showModal, setShowModal,}) => {
             expendType:convertToCode(fixedContentName),
             expendCost:fixedAmount,
             expendYmd:fixedDate.replace(/\./g,''),
+            expendWho:who,
         };
         if(fixedContentName==='' || fixedAmount===''){
             alert('지출 타입과 액수를 입력해 주세요');
@@ -71,6 +74,10 @@ const ExpeditureModal = ({ showModal, setShowModal,}) => {
         }
         if(isNaN(fixedAmount)){
             alert('지출 액수에는 숫자를 입력해주세요.');
+            return;
+        }
+        if(!who || who===''){
+            alert('누구에게 지출이 발생했는지 입력해주세요.');
             return;
         }
         setFixedContentName('');
@@ -87,6 +94,7 @@ const ExpeditureModal = ({ showModal, setShowModal,}) => {
             expendType:convertToCode(etcContentName),
             expendCost:etcAmount,
             expendYmd:etcDate.replace(/\./g,''),
+            expendWho:who,
         };
         if(etcContentName==='' || etcAmount===''){
             alert('지출 내용과 액수를 입력해 주세요');
@@ -94,6 +102,10 @@ const ExpeditureModal = ({ showModal, setShowModal,}) => {
         }
         if(isNaN(etcAmount)){
             alert('지출 액수에는 숫자를 입력해 주세요');
+            return;
+        }
+        if(!who || who===''){
+            alert('누구에게 지출이 발생했는지 입력해주세요.');
             return;
         }
         setEtcContentName('');
@@ -126,7 +138,7 @@ const ExpeditureModal = ({ showModal, setShowModal,}) => {
 
     return (
         <View style={styles.outside}>
-            <Pressable onPress={handleOutsideClick} style={{flex:2, width:'100%',}}></Pressable>
+            <Pressable onPress={handleOutsideClick} style={{flex:1, width:'100%',}}></Pressable>
             <View style={styles.mainbody}>
                 <View style={styles.headerWrapper}><Text style={styles.txtHeader}>-</Text></View>
                 <View style={styles.contentOutterWrapper}>
@@ -141,6 +153,15 @@ const ExpeditureModal = ({ showModal, setShowModal,}) => {
                         <FixedContentComponent source={{name:fixedContentName, setter:setFixedContentName,title:'식재료비'}}></FixedContentComponent>
                         <FixedContentComponent source={{name:fixedContentName, setter:setFixedContentName,title:'인건비'}}></FixedContentComponent>
                         <FixedContentComponent source={{name:fixedContentName, setter:setFixedContentName,title:'고정비'}}></FixedContentComponent>
+                    </View>
+                    <View style={styles.whoWrapper}>
+                        {EXWHO_LIST.map(ex=>{
+                            return(
+                                <View style={styles.exWhoBtnWrapper}>
+                                    <ExpenditureWhoButton source={{...ex, setter:setWho, prop:who}}></ExpenditureWhoButton>
+                                </View>
+                            );
+                        })}
                     </View>
                     <View style={styles.inputOutterWrapper}>
                         <View style={{flex:25 ,height:36, marginRight:4,}}>
@@ -197,7 +218,7 @@ const styles = StyleSheet.create({
     },
     mainbody:{
         width:'100%',
-        flex:8,
+        flex:9,
         alignItems:'center',
         backgroundColor:theme.inputBackground2,
         borderRadius:CONTENT_SECTION_BORDER_RADIUS,
@@ -210,6 +231,17 @@ const styles = StyleSheet.create({
         borderTopRightRadius:CONTENT_SECTION_BORDER_RADIUS,
         justifyContent:'center',
         paddingLeft:20,
+    },
+    whoWrapper:{
+        width:'100%',
+        height:60,
+        marginBottom:12,
+        justifyContent:'center',
+        alignItems:'center',
+        flexDirection:'row',
+    },
+    exWhoBtnWrapper:{
+        marginHorizontal:6,
     },
     txtHeader:{
         fontWeight:'bold',
