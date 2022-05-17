@@ -145,4 +145,52 @@ export const HOLIDAY_LIST=[
 export const EXWHO_LIST=[
     {text:'대표자', code:'EL001'},
     {text:'고용인(직원)', code:'EL002'},
-]
+];
+
+export const SPICE_1=[
+    {name:'간장', code:'SP001'},
+    {name:'맛술', code:'SP002'},
+    {name:'된장', code:'SP003'},
+    {name:'고추장', code:'SP004'},
+    {name:'젓갈', code:'SP005'},
+    {name:'고추가루', code:'SP006'},
+    {name:'마늘', code:'SP007'},
+    {name:'파', code:'SP008'},
+];
+
+export const SPICE_2=[
+    {name:'식용유', code:'SP009'},
+    {name:'참기름', code:'SP010'},
+    {name:'들기름', code:'SP011'},
+    {name:'깨', code:'SP012'},
+];
+
+export const SPICE_3=[
+    {name:'소금', code:'SP013'},
+    {name:'설탕', code:'SP014'},
+    {name:'올리고당', code:'SP015'},
+    {name:'후추', code:'SP016'},
+    {name:'월계수잎', code:'SP017'},
+];
+
+export const SPCIE_4=[
+    {name:'식초', code:'SP018'},
+    {name:'레몬즙', code:'SP019'},
+    {name:'케찹', code:'SP020'},
+    {name:'마요네즈', code:'SP021'},
+    {name:'쯔유', code:'SP022'},
+    {name:'굴소스', code:'SP023'},
+    {name:'와사비', code:'SP024'},
+    {name:'머스타드', code:'SP025'},
+];
+
+export const SPICE_5=[
+    {name:'밀가루', code:'SP026'},
+    {name:'전분', code:'SP027'},
+];
+
+export const SPICE_6=[
+    {name:'우유', code:'SP028'},
+    {name:'버터', code:'SP029'},
+    {name:'생크림', code:'SP030'},
+];
