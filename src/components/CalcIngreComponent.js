@@ -2,9 +2,24 @@ import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { theme } from "../variables/color";
+import {calcWeight, calcCost} from '../abstract/commonTasks';
+
+// condimentList.map(condi=>{
+        //     newArr.push({
+        //         name:condi.name,
+        //         totalCost:condi.price,
+        //         totalWeight:condi.amount,
+        //         totalUnit:condi.amountUnit,
+        //         weight:calcWeight(condi),
+        //         weightUnit:condi.unit,
+        //         cost:calcCost(condi),
+        //     })
+        // });
 
 const CalcIngreComponent = (arg) => {
-    const { name, totalCost, totalWeight, weight, cost } = arg.source;
+    const {name, price:totalCost, amount:totalWeight, amountUnit:totalUnit, unit}=arg.source;
+    const weight=calcWeight(arg.source);
+    const cost=calcCost(arg.source);
 
     return(
         <View style={style.mainBody}>
@@ -12,15 +27,15 @@ const CalcIngreComponent = (arg) => {
                 <View style={style.mainLeft}>
                     <Text style={style.mainTxtName}>{name}</Text>
                     <View style={style.totalLeft}>
-                        <Text style={style.totalCostRight}>{totalCost}</Text>
-                        <Text>{`(${totalWeight})`}</Text>
+                        <Text style={style.totalCostRight}>{`${totalCost}원`}</Text>
+                        <Text>{`(${totalWeight}${totalUnit})`}</Text>
                     </View>
                 </View>
                 <View style={style.mainTxtWrapper}>
-                    <Text style={style.mainTxt}>{weight}</Text>
+                    <Text style={style.mainTxt}>{`${weight}`}</Text>
                 </View>
                 <View style={style.mainTxtWrapper}>
-                    <Text style={style.mainTxt}>{cost}</Text>
+                    <Text style={style.mainTxt}>{`${cost}원`}</Text>
                 </View>
                 
             </View>
@@ -56,6 +71,7 @@ const style = StyleSheet.create({
     mainTxtWrapper:{
         flex:1,
         alignItems:'flex-end',
+        paddingRight:12,
     },
     mainTxt:{
         fontSize:17,

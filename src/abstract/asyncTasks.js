@@ -28,14 +28,22 @@ export const fetchServer = (_method, _url, data) => {
         'application/json',
         },
     })
-    .then((response)=>response.json());
+    .then((response)=>response.json())
+    .then((responseJson)=>{
+      if(responseJson.retCode==='3'){
+
+      }else{
+        return responseJson;
+      }
+    })
 };
 
 export const saveUserData=(data)=>{
   const {businessAlready, businessCookway, businessEnd, businessIngre, businessName, 
     businessNum, businessSize, businessStaff, businessStart, businessType, email, phone,
-    pw, serviceYn, token, userId,}=data;
+    pw, serviceYn, token, userId, businessHoliday}=data;
 
+  AsyncStorage.setItem('businessHoliday', JSON.stringify(businessHoliday));
   AsyncStorage.setItem('businessAlready', String(businessAlready));
   AsyncStorage.setItem('businessCookway', businessCookway);
   AsyncStorage.setItem('businessEnd', String(businessEnd));
@@ -101,6 +109,25 @@ export const uploadFile = (_method, _url, _file, _userId, _saleYm) => {
     }
   })
   .then((response)=>response.json());
+};
+
+//{menuName, costOfOne, ingreArr}=arg;
+//이름이 같은 것이 있으면 덮어쓰기
+export const saveMenuCalcResult=(arg)=>{
+  AsyncStorage.getItem('menuCalcResult', (err,result) =>{
+    if(result !== null){
+      let newArr=JSON.parse(result);
+      const index=newArr.findIndex(el=>el.menuName===arg.menuName && el.date===arg.date);
+      if(index===-1){
+        newArr.push(arg);
+      }else{
+        newArr[index]=arg;
+      }
+      AsyncStorage.setItem('menuCalcResult', JSON.stringify(newArr));
+    }else{
+      AsyncStorage.setItem('menuCalcResult', JSON.stringify([arg]));
+    }
+  });
 };
 
 

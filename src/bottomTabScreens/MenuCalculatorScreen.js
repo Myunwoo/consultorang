@@ -25,10 +25,8 @@ const MenuCalculatorScreen = (({navigation}) => {
     const [menuImg, setMenuImg]=useState(require('../../image/calc_placeholder.png'));
     const [menuName, setMenuName]=useState('');
     const [ingreVisible, setIngreVisible]=useState(false);
-    const [ingreArr, setIngreArr]=useState([
-        {name:'박력밀가루', totalCost:'19140원', totalWeight:'20Kg', weight:'150g', height:'100%', cost:'144원'},
-        {name:'우유', totalCost:'4090원', totalWeight:'1.8L', weight:'300g', height:'100%', cost:'680원'}
-    ]);
+    const [condiArr, setCondiArr]=useState([]);
+    const [mainArr, setMainArr]=useState([]);
     const [type, setType]=useState(TYPE[0].text);
 
     const handleIngre=()=>{
@@ -44,12 +42,13 @@ const MenuCalculatorScreen = (({navigation}) => {
             alert('메뉴 이름을 먼저 입력해 주세요.');
             return;
         }
-        if(menuImg) setMenuImg(require('../../image/calc_placeholder.png'));
-        if(ingreArr.length<=0){
+        if(!menuImg) setMenuImg(require('../../image/calc_placeholder.png')); 
+        if(condiArr.length<=0 && mainArr.length<=0){
             alert('재료를 추가하지 않았습니다.');
             return;
         }
-        navigation.navigate('MenuCalculatorCalcScreen', { menuImg, menuName });
+        const newArr=condiArr.concat(mainArr);
+        navigation.navigate('MenuCalculatorCalcScreen', { menuImg, menuName, ingreArr:newArr });
     };
 
     const pickImage = async () => {
@@ -68,23 +67,20 @@ const MenuCalculatorScreen = (({navigation}) => {
           quality: 1,
         });
     
-        console.log(result);
-    
         if (!result.cancelled) {
             setMenuImg({uri:result.uri});
         }
-      };
+    };
 
-    //useEffect가 되었든, 어떤 방식이 되었든 로컬에 저장된 히스토리를 불러와야 합니다.
-    //일단 tempHistory배열을 사용해서 구현합니다.
-    useEffect(()=>{
-
-    });
+    const arrSetter=(condimentList,mainIngreList)=>{
+        setCondiArr(condimentList);
+        setMainArr(mainIngreList);
+    }
 
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>
             <ModalComponent showModal={ingreVisible} setShowModal={setIngreVisible}>
-                <IngreModal setSendObj={setIngreArr} showModal={ingreVisible} setShowModal={setIngreVisible}></IngreModal>
+                <IngreModal condiArr={condiArr} mainArr={mainArr} arrSetter={arrSetter} showModal={ingreVisible} setShowModal={setIngreVisible}></IngreModal>
             </ModalComponent>
             <WeatherHeader></WeatherHeader>
             <View style={commonStyles.nonHeaderWrapper}>
@@ -173,14 +169,16 @@ const MenuCalculatorScreen = (({navigation}) => {
                             <Text style={{...commonStyles.commonTextShadow,}}>정확한 원가계산은 가격결정의 핵심입니다.</Text>
                         </View>
                         <ScrollView style={styles.ingreScrollView}>
-                            {ingreArr.map(ingre=>{
+                            {condiArr.map(ingre=>{
                                 return (<View style={styles.calcIngreCompWrapper}>
-                                    <CalcIngreComponent source={ingre}></CalcIngreComponent>
+                                    <CalcIngreComponent source={ingre} key={i++}></CalcIngreComponent>
                                 </View>);
                             })}
-                            {/* <View style={styles.calcIngreCompWrapper}>
-                                <CalcIngreComponent source={{name:'박력밀가루', totalCost:'19140원', totalWeight:'20Kg', weight:'150g', height:'100%', cost:'144원'}}></CalcIngreComponent>
-                            </View> */}
+                            {mainArr.map(ingre=>{
+                                return (<View style={styles.calcIngreCompWrapper}>
+                                    <CalcIngreComponent source={ingre} key={i++}></CalcIngreComponent>
+                                </View>);
+                            })}
                         </ScrollView>
                         <View style={styles.btnApplyWrapper}>
                             <Pressable onPress={handleApply} style={{width:'100%', height:'100%', justifyContent:'center',alignItems:'center',}}>

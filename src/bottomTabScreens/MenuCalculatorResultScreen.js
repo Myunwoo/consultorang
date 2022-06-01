@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Pressable, Image, ScrollView, TextInput, Keyboard, Platform } from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 
 import { theme } from '../variables/color';
 import {dateObject,CONTENT_SECTION_BORDER_RADIUS, BASIC_SHADOW} from '../variables/scales';
+import {calcCost} from '../abstract/commonTasks';
+import {saveMenuCalcResult} from '../abstract/asyncTasks';
 
 import commonStyles from '../variables/commonStyles';
 import WeatherHeader from '../components/WeatherHeader';
@@ -17,31 +19,58 @@ import MenuCalculatorHistoryScreen from './MenuCalculatorHistoryScreen';
 const TYPE=[
     {text:'메뉴 가격 계산기'},
     {text:'목록'}
-]
+];
 
+const getHistoryDate=()=>{
+    const now=new Date();
+    return `${now.getFullYear()}/${now.getMonth()+1}/${now.getDate()}`;    
+}
+
+//여기까지 왔으면 어싱크 스토리지에 데이터 저장해 주어야 함.
+//현재 날짜와 함께.
 const MenuCalculatorResultScreen = (({navigation, route}) => {
-    //추후에 route로부터 초기값을 얻어내게 되면, useState의 초기값 세팅에 활용해 주도록 합시다.
-    const {menuName}=route.params;
+    const {menuImg, menuName, costOfOne, ingreArr}=route.params;
     const [type, setType]=useState(TYPE[0].text);
     const [competeVisible, setCompeteVisible]=useState(false);
     const [primeVisible, setPrimeVisible]=useState(false);
     const [originVisible, setOriginVisible]=useState(false);
     const [cost, setCost]=useState({
-       ingre:1,
-       human:2, 
+       ingre:0,
+       human:0, 
     });
     const [primeCost, setPrimeCost]=useState({
         min:0,
-        max:100,
+        max:0,
     });
     const [rawCost, setRawCost]=useState({
-        min:2,
-        max:99,
+        min:0,
+        max:0,
     });
     const [companyCost, setCompanyCost]=useState({
-       min:3,
-       max:98, 
+       min:0,
+       max:0, 
     });
+
+    useEffect(()=>{
+        let totalIngreCost=0;
+        ingreArr.map(ingre=>totalIngreCost+=calcCost(ingre));
+        setCost({
+            ingre:totalIngreCost,
+            human:costOfOne,
+        });
+        saveMenuCalcResult({...route.params, date:getHistoryDate()});
+    },[])
+
+    useEffect(()=>{
+        setPrimeCost({
+            min:Math.round((cost.ingre+cost.human)*100/60/10)*10,
+            max:Math.round((cost.ingre+cost.human)*100/40/10)*10
+        });
+        setRawCost({
+            min:Math.round(cost.ingre*100/40/10)*10,
+            max:Math.round(cost.ingre*100/20/10)*10,
+        })
+    },[cost])
 
     const handlePrimeOpen=()=>{
         setPrimeVisible(true);
@@ -58,13 +87,13 @@ const MenuCalculatorResultScreen = (({navigation, route}) => {
     return (
         <LinearGradient colors={[theme.GRAD1, theme.GRAD2, theme.GRAD3]} style={commonStyles.mainbody}>
             <ModalComponent showModal={primeVisible} setShowModal={setPrimeVisible}>
-                <PrimeCostModal showModal={primeVisible} setShowModal={setPrimeVisible}></PrimeCostModal>
+                <PrimeCostModal showModal={primeVisible} setShowModal={setPrimeVisible} cost={cost.ingre+cost.human}></PrimeCostModal>
             </ModalComponent>
             <ModalComponent showModal={competeVisible} setShowModal={setCompeteVisible}>
                 <CompeteCostModal showModal={competeVisible} setShowModal={setCompeteVisible}></CompeteCostModal>
             </ModalComponent>
             <ModalComponent showModal={originVisible} setShowModal={setOriginVisible}>
-                <OriginCostModal showModal={originVisible} setShowModal={setOriginVisible}></OriginCostModal>
+                <OriginCostModal showModal={originVisible} setShowModal={setOriginVisible} cost={cost.ingre}></OriginCostModal>
             </ModalComponent>
             <WeatherHeader></WeatherHeader>
             <View style={commonStyles.nonHeaderWrapper}>

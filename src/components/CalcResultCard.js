@@ -5,23 +5,28 @@ import { theme } from '../variables/color';
 import commonStyles from '../variables/commonStyles';
 
 const CalcResultCard = (arg) => {
-    const {img, name, date, navigation}=arg.source;
+    const {menuImg, menuName, date, costOfOne, ingreArr, navigation}=arg.source;
+    console.log('arg.source');
+    console.log(arg.source);
 
     const handleShowHistory=()=>{
         //히스토리를 볼 수 있는 화면으로 넘어가야 합니다.
-        navigation.navigate('MenuCalculatorHistory',{img, name, date,});
+        //const {menuImg, menuName, costOfOne, ingreArr}=route.params
+        navigation.navigate('MenuCalculatorResultScreen', { menuImg, menuName, costOfOne, ingreArr});
     };
 
     return (
         <View style={styles.mainbody}>
-            <Image
-                resizeMode='contain'
-                style={{flex:3, height:'100%',}}
-                source={require('../../image/filter_black.png')}
-            >
-            </Image>
+            <View style={styles.imgWrapper}>
+                <Image
+                    resizeMode='contain'
+                    style={{width:'90%', height:'90%',}}
+                    source={menuImg}
+                >
+                </Image>
+            </View>
             <Pressable style={styles.contentWrapper} onPress={handleShowHistory}>
-                <Text style={styles.title}>{name}</Text>
+                <Text style={styles.title}>{menuName}</Text>
                 <View style={{flexDirection:'row',}}>
                     <Text style={styles.date}>{`측정일 : ${date}`}</Text>
                 </View>
@@ -40,6 +45,12 @@ const styles = StyleSheet.create({
         backgroundColor:'white',
         borderRadius:15,
         ...BASIC_SHADOW,
+    },
+    imgWrapper:{
+        flex:3,
+        height:'100%',
+        justifyContent:'center',
+        alignItems:'center',
     },
     contentWrapper:{
         flex:7,

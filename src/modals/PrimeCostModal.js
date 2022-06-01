@@ -11,8 +11,15 @@ import ModalGraphComp from '../components/ModalGraphComp';
 
 let i=0;
 
-const PrimeCostModal = ({ showModal, setShowModal,}) => {
-    
+const PrimeCostModal = ({ showModal, setShowModal, cost}) => {
+    const data=[
+        Math.round(cost*100/60/10)*10,
+        Math.round(cost*100/55/10)*10,
+        Math.round(cost*100/50/10)*10,
+        Math.round(cost*100/45/10)*10,
+        Math.round(cost*100/40/10)*10,
+    ];
+
     const handleOutsideClick=()=>{
         setShowModal(false);
     };
@@ -57,7 +64,7 @@ const PrimeCostModal = ({ showModal, setShowModal,}) => {
                     <View style={modalStyles.graphWrapper}>
                         <ModalGraphComp 
                             type={'primeCost'}
-                            data={[1360, 1440, 1600, 1760, 2000]}
+                            data={data}
                             column={['60%', '55%', '50%', '45%', '40%',]}>
                         </ModalGraphComp>
                     </View>

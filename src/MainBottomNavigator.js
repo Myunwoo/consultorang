@@ -7,7 +7,7 @@ import AccountBookScreen from './bottomTabScreens/AccountBookScreen';
 import MenuEngineeringNavigator from './bottomTabScreens/MenuEngineeringNavigator';
 import IncomeStatementScreen from './bottomTabScreens/IncomeStatementScreen';
 import MenuCalculatorNavigator from './bottomTabScreens/MenuCalculatorNavigator';
-import SettingScreen from './bottomTabScreens/SettingScreen';
+import SettingNavigator from './bottomTabScreens/SettingNavigator';
 
 import {BOTTOM_TAP_NAVIGATOR_HEIGHT_IOS, BOTTOM_TAP_NAVIGATOR_HEIGHT_ANDROID} from './variables/scales';
 import { Platform } from 'react-native';
@@ -57,7 +57,7 @@ const MainBottomNavigator = (props) => {
                     );
                 }
             }}/>
-            <Tab.Screen name="SettingScreen" component={SettingScreen} options={{headerShown:false, title:'설정', 
+            <Tab.Screen name="Setting" component={SettingNavigator} options={{headerShown:false, title:'설정', 
                 tabBarIcon:({focused})=>{
                     return (
                         <Image style={{width:24, height:24,}} source={focused?require('../image/bottomNav_setting_f.png'):require('../image/bottomNav_setting.png')}></Image>

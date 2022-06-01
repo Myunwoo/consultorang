@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, Pressable, Image, ScrollView, TextInput, Keyboard } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, Pressable, Image, ScrollView, TextInput, Keyboard, AsyncStorage } from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 
 import { theme } from '../variables/color';
 import {CONTENT_SECTION_BORDER_RADIUS, BASIC_SHADOW} from '../variables/scales';
+import {getItemAsyncStorage} from '../abstract/asyncTasks';
 
 import commonStyles from '../variables/commonStyles';
 import WeatherHeader from '../components/WeatherHeader';
@@ -16,29 +17,114 @@ const TYPE=[
 ];
 
 const MenuCalculatorCalcScreen = (({navigation, route}) => {
-    const {menuImg, menuName}=route.params;
-    const [human, setHuman]=useState('시급');
-    const [numHuman, setNumHuman]=useState('');
-    const [time, setTime]=useState('분');
-    const [numTime, setNumTime]=useState('');
-    const [count, setCount]=useState('인분');
-    const [numCount, setNumCount]=useState('');
+    const {menuImg, menuName, ingreArr}=route.params;
+    // 시급/월급 타입
+    const [wageType, setWageType]=useState('시급');
+    // 시급/월급 액수
+    const [wage, setWage]=useState('');
+    // 직원 수
+    const [numOfEmployee, setNumOfEmployee]=useState('');
+    // 조리 시간
+    const [timeTaken, setTimeTaken]=useState('');
+    // 분/시간 타입
+    const [unitOfTime, setUnitOfTime]=useState('분');
+    // 인분/개 수
+    const [count, setCount]=useState('');
+    // 인분/개 타입
+    const [unitOfCount, setUnitOfCount]=useState('인분');
+
     const [type, setType]=useState(TYPE[0].text);
+    //쉬는날의 수
+    const [holiday, setHoliday]=useState([]);
+    const [businessTime, setBusinessTime]=useState({
+        businessStart:8,
+        businessEnd:18,
+    });
+
+    useEffect(()=>{
+        getItemAsyncStorage('businessHoliday')
+            .then(retVal=>JSON.parse(retVal))
+            .then(retVal=>setHoliday(retVal))
+            .catch(error=> {
+                console.log(error)
+                setHoliday([]);
+            });
+
+        Promise.all([getItemAsyncStorage('businessStart'),getItemAsyncStorage('businessEnd')])
+            .then((values)=>{
+                setBusinessTime({
+                    businessStart:values[0],
+                    businessEnd:values[1]
+                });
+            })
+            .catch(error=>{
+                setBusinessTime({
+                    businessStart:8,
+                    businessEnd:20
+                });
+            });
+    },[]);
+
+    //월급을 시급으로 변환해주는 함수
+    const monthToHourlyWage=(wage)=>{
+        //하루 근무시간
+        let workTime=0;
+        const bsStart=Number(businessTime.businessStart);
+        const bsEnd=Number(businessTime.businessEnd);
+        
+        if(bsStart>=bsEnd){
+            workTime+=(bsEnd+(24-bsStart));
+        }else{
+            workTime+=(bsEnd-bsStart);
+        }
+        //4시간에 30분 휴식 부여
+        workTime-=parseInt(workTime/4)*0.5;
+
+
+        //한달은 30일로 고정했고, 쉬는 날은 각 요일당 4번 존재하는 것으로 통일함
+        //공휴일에 대한 처리는 어떻게 해야하는 건지... 그냥 일요일과 동일하게 취급
+        let workDay=28-(holiday.length*4);
+        if(holiday.includes('공휴일') && holiday.includes('일')) workDay+=4;
+
+        let result=wage;
+        result/=workDay;
+        result/=workTime;
+        result=Math.round(result/10)*10;
+        return result;
+    }
 
     const handleCalc=()=>{
-        if(isNaN(numHuman) || numHuman==='0' || numHuman===''){
+        if(isNaN(wage) || wage==='0' || wage===''){
             alert('시급/월급을 올바르게 입력해주세요.');
             return;
         }
-        if(isNaN(numTime) || numTime==='0' || numTime===''){
+        if(isNaN(numOfEmployee) || numOfEmployee==='0' || numOfEmployee===''){
+            alert('직원수를 올바르게 입력해주세요.');
+            return;
+        }
+        if(isNaN(timeTaken) || timeTaken==='0' || timeTaken===''){
             alert('분/시간을 올바르게 입력해주세요.');
             return;
         }
-        if(isNaN(numCount) || numCount==='0' || numCount===''){
+        if(isNaN(count) || count==='0' || count===''){
             alert('인분/개를 올바르게 입력해주세요.');
             return;
         }
-        navigation.navigate('MenuCalculatorResultScreen', { menuName });
+        //1. 1개 or 1인분을 만드는 데 들어가는 돈을 구합니다.
+        //2. 월급으로 적었을 경우에 시급으로 환산해줍니다.
+        //3. 이곳에서 구한 인건비와, ingreArr에 적힌 원재료 가격을 다음 화면으로 넘겨주면 되겠습니다.
+        let hourlyWage=wage;
+        if(wageType==='월급') hourlyWage=monthToHourlyWage(wage);
+
+        ///////
+        let myTimeTaken=timeTaken;
+        if(unitOfTime==='분') myTimeTaken/=60;
+        //메뉴 하나를 만드는 데 든 비용
+        let costOfOne=hourlyWage*myTimeTaken/count;
+        
+        costOfOne=Math.round(costOfOne/10)*10;
+
+        navigation.navigate('MenuCalculatorResultScreen', { menuImg, menuName, costOfOne, ingreArr});
     };
 
     return (
@@ -103,12 +189,12 @@ const MenuCalculatorCalcScreen = (({navigation, route}) => {
                                 <Text>메뉴 생산에 참여하는 인원(근무하는 모든 인원수 아님)</Text>
                             </View>
                             <View style={styles.smallContentWrapper}>
-                                <View style={styles.calcCompWrapper}><CalcSelectBtn source={{prop:human,setter:setHuman,title:'시급',}}></CalcSelectBtn></View>
-                                <View style={styles.calcCompWrapper}><CalcSelectBtn source={{prop:human,setter:setHuman,title:'월급',}}></CalcSelectBtn></View>
+                                <View style={styles.calcCompWrapper}><CalcSelectBtn source={{prop:wageType,setter:setWageType,title:'시급',}}></CalcSelectBtn></View>
+                                <View style={styles.calcCompWrapper}><CalcSelectBtn source={{prop:wageType,setter:setWageType,title:'월급',}}></CalcSelectBtn></View>
                                 <TextInput
                                     style={styles.inputStyle}
-                                    onChangeText={(txt) => setNumHuman(txt)}
-                                    placeholder={'시급을 입력해 주세요'}
+                                    onChangeText={(txt) => setWage(txt)}
+                                    placeholder={'시급/월급을 입력해 주세요'}
                                     placeholderTextColor={theme.placeholderColor}
                                     onSubmitEditing={Keyboard.dismiss}
                                     blurOnSubmit={false}
@@ -129,8 +215,8 @@ const MenuCalculatorCalcScreen = (({navigation, route}) => {
                                 </View>
                                 <TextInput
                                     style={styles.inputStyle}
-                                    onChangeText={(txt) => setNumHuman(txt)}
-                                    placeholder={'시급을 입력해 주세요'}
+                                    onChangeText={(txt) => setNumOfEmployee(txt)}
+                                    placeholder={'인원수를 입력해 주세요'}
                                     placeholderTextColor={theme.placeholderColor}
                                     onSubmitEditing={Keyboard.dismiss}
                                     blurOnSubmit={false}
@@ -161,7 +247,7 @@ const MenuCalculatorCalcScreen = (({navigation, route}) => {
                             <View style={styles.smallContentWrapper}>
                                 <TextInput
                                     style={styles.inputStyle}
-                                    onChangeText={(txt) => setNumTime(txt)}
+                                    onChangeText={(txt) => setTimeTaken(txt)}
                                     placeholder={'시간을 입력해 주세요.'}
                                     placeholderTextColor={theme.placeholderColor}
                                     onSubmitEditing={Keyboard.dismiss}
@@ -173,8 +259,8 @@ const MenuCalculatorCalcScreen = (({navigation, route}) => {
                                     multiline={false}
                                     textAlign={'center'}
                                 />
-                                <View style={styles.calcCompWrapper}><CalcSelectBtn source={{prop:time,setter:setTime,title:'분',}}></CalcSelectBtn></View>
-                                <View style={styles.calcCompWrapper}><CalcSelectBtn source={{prop:time,setter:setTime,title:'시간',}}></CalcSelectBtn></View>
+                                <View style={styles.calcCompWrapper}><CalcSelectBtn source={{prop:unitOfTime,setter:setUnitOfTime,title:'분',}}></CalcSelectBtn></View>
+                                <View style={styles.calcCompWrapper}><CalcSelectBtn source={{prop:unitOfTime,setter:setUnitOfTime,title:'시간',}}></CalcSelectBtn></View>
                                 <View style={styles.smallTxtWrapper}>
                                     <Text numberOfLines={1} adjustsFontSizeToFit={true} style={{fontSize:18}}>동안</Text>
                                 </View>
@@ -195,7 +281,7 @@ const MenuCalculatorCalcScreen = (({navigation, route}) => {
                             <View style={styles.smallContentWrapper}>
                                 <TextInput
                                     style={styles.inputStyle}
-                                    onChangeText={(txt) => setNumCount(txt)}
+                                    onChangeText={(txt) => setCount(txt)}
                                     placeholder={'인분/개를 입력해 주세요.'}
                                     placeholderTextColor={theme.placeholderColor}
                                     onSubmitEditing={Keyboard.dismiss}
@@ -207,8 +293,8 @@ const MenuCalculatorCalcScreen = (({navigation, route}) => {
                                     multiline={false}
                                     textAlign={'center'}
                                 />
-                                <View style={styles.calcCompWrapper}><CalcSelectBtn source={{prop:count,setter:setCount,title:'인분',}}></CalcSelectBtn></View>
-                                <View style={styles.calcCompWrapper}><CalcSelectBtn source={{prop:count,setter:setCount,title:'개',}}></CalcSelectBtn></View>
+                                <View style={styles.calcCompWrapper}><CalcSelectBtn source={{prop:unitOfCount,setter:setUnitOfCount,title:'인분',}}></CalcSelectBtn></View>
+                                <View style={styles.calcCompWrapper}><CalcSelectBtn source={{prop:unitOfCount,setter:setUnitOfCount,title:'개',}}></CalcSelectBtn></View>
                                 <View style={styles.smallTxtWrapper}>
                                     <Text numberOfLines={1} adjustsFontSizeToFit={true} style={{fontSize:18}}>만듭니다.</Text>
                                 </View>

@@ -16,6 +16,17 @@ import MultiSelectButtons from '../components/MultiSelectButtons';
 
 const typeDiameter=SCREEN_WIDTH*0.8*0.25;
 
+const getAlready=(arg)=>{
+
+    if(arg==25){
+        return '30';
+    }else if(arg==75){
+        return '70';
+    }else{
+        return String(arg);
+    }
+}
+
 const FoodInfoRegisterScreen = ({route,navigation}) => {
     const {
         businessName,
@@ -36,10 +47,6 @@ const FoodInfoRegisterScreen = ({route,navigation}) => {
     const [startHour, setStartHour]=useState(-1);
     const [endHour, setEndHour]=useState(-1);
     const [businessHoliday,setBusinessHoliday]=useState([]);
-
-    //slider
-    const [sliderVal, setSliderVal]=useState(0);
-    const [correctedVal, setCorrectedVal]=useState(0);
 
     let i=0;
     const handleGoNext = () => {
@@ -87,7 +94,7 @@ const FoodInfoRegisterScreen = ({route,navigation}) => {
             businessType,
             businessIngre,
             businessCookway:businessCookway.join(','),
-            businessAlready:30,
+            businessAlready:getAlready(businessAlready),
             businessSize:businessSit,
             businessStaff,
             businessStart:startHour,
@@ -192,7 +199,7 @@ const FoodInfoRegisterScreen = ({route,navigation}) => {
                                 minimumTrackTintColor={theme.torangYellow}
                                 maximumTrackTintColor={theme.uncheckedGrey}
                                 thumbTintColor={theme.torangYellow}
-                                onSlidingComplete={businessAlready}
+                                onSlidingComplete={arg=>setBusinessAlready(arg)}
                                 tapToSeek={true}
                                 value={businessAlready}
                             />

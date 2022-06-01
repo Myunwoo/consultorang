@@ -173,7 +173,6 @@ const AccountBookScreen = (({navigation}) => {
             setCalArr(calendarArr);
             console.log(error);
         });
-
     };
 
     useEffect(()=>{

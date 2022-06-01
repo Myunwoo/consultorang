@@ -1,3 +1,5 @@
+import {INPUT_UNIT_SMALL, INPUT_UNIT_BIG} from '../variables/codelist';
+
 export const checkEmailFormat = (email) => {
     //이메일 확인 정규식
     if(email=='') return false;
@@ -38,4 +40,18 @@ export const checkPhoneFormat=(num)=>{
 
 export const parsingDate=(date)=>{
     return `${date[2]}${date[3]}.${date[4]}${date[5]}.${date[6]}${date[7]}`;
-}
+};
+
+export const calcWeight=(arg)=>{
+    //arg.usage, arg.unit
+    const found=INPUT_UNIT_SMALL.find(el=>el.text===arg.unit);
+    return String(arg.usage*found.amount)+found.unit;
+};
+
+//arg == {name:'식초', price:3600, amount:'20',amountUnit:'L', usage:3, unit:'일반 숟가락(액체)'}
+export const calcCost=(arg)=>{
+    const bFound=INPUT_UNIT_BIG.find(el=>el.text===arg.amountUnit);
+    const sFound=INPUT_UNIT_SMALL.find(el=>el.text===arg.unit);
+    let result=(arg.usage*sFound.amount)*arg.price/(bFound.amount*arg.amount)
+    return Math.floor(result);
+};

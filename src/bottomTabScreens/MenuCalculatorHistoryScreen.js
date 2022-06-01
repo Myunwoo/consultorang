@@ -1,21 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, ScrollView, Pressable } from 'react-native';
 import { BASIC_SHADOW} from '../variables/scales';
 import { theme } from '../variables/color';
+import {getItemAsyncStorage} from '../abstract/asyncTasks';
 
 import CalcResultCard from '../components/CalcResultCard';
 
-const tempHistory=[
-    {name:'레몬 마들렌', date:'2022/03/18'},
-    {name:'바닐라 까눌레', date:'2022/02/11'},
-    {name:'아', date:'2022/01/01'},
-];
-const tempBasicHistory=[
-    {name:'기초요리1', date:'2022/03/18'},
-    {name:'기초요리2', date:'2021/02/11'},
-    {name:'기초요리3', date:'2020/01/01'},
-];
-const historyType=[ '기초 요리', '요리'];
+const historyType=['기초 요리', '요리'];
 
 let i=0;
 
@@ -34,6 +25,7 @@ const HistoryButton=(prop, history, callback)=>{
         fontWeight:'bold',
         color:'white',
     };
+    
 
     return (
         <View style={btnWrapper}>
@@ -45,7 +37,17 @@ const HistoryButton=(prop, history, callback)=>{
 }
 
 const MenuCalculatorHistoryScreen = ({navigation}) => {
-    const [historyMode, setHistoryMode]=useState(historyType[0]);
+    const [historyMode, setHistoryMode]=useState(historyType[1]);
+    const [cook, setCook]=useState([]);
+    //기초 요리 서비스 시작시 활용
+    //const [basicCook, setBasicCook]=useState([]);
+
+    useEffect(()=>{
+        getItemAsyncStorage('menuCalcResult')
+            .then(retVal=>{
+                setCook(JSON.parse(retVal))
+            })
+    },[]);
 
     return (
         <ScrollView style={{width:'100%',}} contentContainerStyle={styles.scrollview}>
@@ -55,13 +57,14 @@ const MenuCalculatorHistoryScreen = ({navigation}) => {
                 })}
             </View>
             {historyMode===historyType[0]
-                ?tempHistory.map(history=>
-                    <View style={{width:'100%', height:150, paddingVertical:8, paddingHorizontal:10,}}>
-                        <CalcResultCard ket={i++} source={{...history, navigation}}></CalcResultCard>
-                    </View>)
-                :tempBasicHistory.map(history=>
-                    <View style={{width:'100%', height:150, paddingVertical:8, paddingHorizontal:10,}}>
-                        <CalcResultCard ket={i++} source={{...history, navigation}}></CalcResultCard>
+                // ?basicCook.map(history=>
+                //     <View style={styles.resultCardWrapper}>
+                //         <CalcResultCard key={i++} source={{...history, navigation}}></CalcResultCard>
+                //     </View>)
+                ?<View style={styles.resultCardWrapper}><Text style={{marginLeft:12, marginTop:12, fontSize:16}}>서비스 준비 중입니다</Text></View>
+                :cook.map(history=>
+                    <View style={styles.resultCardWrapper}>
+                        <CalcResultCard key={i++} source={{...history, navigation}}></CalcResultCard>
                     </View>)
             }
         </ScrollView>
@@ -87,4 +90,10 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
     },
+    resultCardWrapper:{
+        width:'100%',
+        height:150,
+        paddingVertical:8, 
+        paddingHorizontal:10,
+    }
 });

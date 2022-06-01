@@ -93,11 +93,15 @@ const AuthInfoRegisterScreen = ({route,navigation}) => {
     };
 
     const handleAuthorSend=()=>{
+        if(!checkPhoneFormat(userPhoneNumber)){
+            alert('올바른 핸드폰 번호를 입력해주세요.');
+            return;
+        }
         console.log('인증번호 전송');
     };
 
     const handleCheckAuthButton=()=>{
-        if(!checkPhoneFormat){
+        if(!checkPhoneFormat(userPhoneNumber)){
             alert('올바른 핸드폰 번호를 입력해주세요.');
             return;
         }
@@ -142,30 +146,30 @@ const AuthInfoRegisterScreen = ({route,navigation}) => {
     //AuthInfo를 navigate를 통해 FoodInfoRegisterScreen으로 넘기고, FoodInfoRegisterScreen에서 데이터를 서버로 전송하도록 수정합시다.
     //Navigator로부터 세터를 전달 받는 등의 동작은 삭제하도록 하겠습니다.
     const handleGoNext=(arg)=>{
-        // if(!isRightEmail){
-        //     alert('이메일 중복확인을 먼저 해주세요');
-        //     return;
-        // }
-        // if(!checkPwdFormat(userPassword)){
-        //     alert('올바른 비밀번호를 입력해 주세요');
-        //     return;
-        // }
-        // if(userPassword!==confirmPassword){
-        //     alert('비밀번호 확인을 비밀번호와 동일하게 입력해주세요');
-        //     return;
-        // }
-        // if(!isAuthorized){
-        //     alert('핸드폰 인증을 먼저 진행해 주세요');
-        //     return;
-        // }
-        // if(!isRightBusinessNum){
-        //     alert('사업자 번호 확인을 먼저 해주세요');
-        //     return;
-        // }
-        // if(!userAgree){
-        //     alert('이용약관에 동의해 주세요');
-        //     return;
-        // }
+        if(!isRightEmail){
+            alert('이메일 중복확인을 먼저 해주세요');
+            return;
+        }
+        if(!checkPwdFormat(userPassword)){
+            alert('올바른 비밀번호를 입력해 주세요');
+            return;
+        }
+        if(userPassword!==confirmPassword){
+            alert('비밀번호 확인을 비밀번호와 동일하게 입력해주세요');
+            return;
+        }
+        if(!isAuthorized){
+            alert('핸드폰 인증을 먼저 진행해 주세요');
+            return;
+        }
+        if(!isRightBusinessNum){
+            alert('사업자 번호 확인을 먼저 해주세요');
+            return;
+        }
+        if(!userAgree){
+            alert('이용약관에 동의해 주세요');
+            return;
+        }
 
         navigation.navigate('FoodInfoRegisterScreen',{
             businessName, userEmail, userPassword, userPhoneNumber, businessNum, userAgree

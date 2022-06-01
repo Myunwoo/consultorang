@@ -38,7 +38,10 @@ const CompeteCostModal = ({ showModal, setShowModal,}) => {
                 </View>
                 <View style={styles.oneLine}>
                     <View style={styles.bottomArray}><Text style={styles.contentTxtOrangeBold}>한식</Text></View>
-                    <View style={styles.bottomArray}><Text style={styles.contentTxtBold}> 업종별 대표메뉴 가격</Text></View>
+                    <View style={styles.bottomArray}><Text style={styles.contentTxtBold}> 업종별 대표메뉴 가격</Text></View> 
+                </View>
+                <View style={{alignSelf:'flex-start', marginLeft:20, marginTop:20,}}>
+                    <Text>서비스 준비 중입니다.</Text>
                 </View>
             </View>
         </View>

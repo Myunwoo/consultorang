@@ -148,49 +148,72 @@ export const EXWHO_LIST=[
 ];
 
 export const SPICE_1=[
-    {name:'간장', code:'SP001'},
-    {name:'맛술', code:'SP002'},
-    {name:'된장', code:'SP003'},
-    {name:'고추장', code:'SP004'},
-    {name:'젓갈', code:'SP005'},
-    {name:'고추가루', code:'SP006'},
-    {name:'마늘', code:'SP007'},
-    {name:'파', code:'SP008'},
+    {name:'간장', code:'SP001', refNum:0},
+    {name:'맛술', code:'SP002', refNum:1},
+    {name:'된장', code:'SP003', refNum:2},
+    {name:'고추장', code:'SP004', refNum:3},
+    {name:'젓갈', code:'SP005', refNum:4},
+    {name:'고추가루', code:'SP006', refNum:5},
+    {name:'마늘', code:'SP007', refNum:6},
+    {name:'파', code:'SP008', refNum:7},
 ];
 
 export const SPICE_2=[
-    {name:'식용유', code:'SP009'},
-    {name:'참기름', code:'SP010'},
-    {name:'들기름', code:'SP011'},
-    {name:'깨', code:'SP012'},
+    {name:'식용유', code:'SP009', refNum:8},
+    {name:'참기름', code:'SP010', refNum:9},
+    {name:'들기름', code:'SP011', refNum:10},
+    {name:'깨', code:'SP012', refNum:11},
 ];
 
 export const SPICE_3=[
-    {name:'소금', code:'SP013'},
-    {name:'설탕', code:'SP014'},
-    {name:'올리고당', code:'SP015'},
-    {name:'후추', code:'SP016'},
-    {name:'월계수잎', code:'SP017'},
+    {name:'소금', code:'SP013', refNum:12},
+    {name:'설탕', code:'SP014', refNum:13},
+    {name:'올리고당', code:'SP015', refNum:14},
+    {name:'후추', code:'SP016', refNum:15},
+    {name:'월계수잎', code:'SP017', refNum:16},
 ];
 
-export const SPCIE_4=[
-    {name:'식초', code:'SP018'},
-    {name:'레몬즙', code:'SP019'},
-    {name:'케찹', code:'SP020'},
-    {name:'마요네즈', code:'SP021'},
-    {name:'쯔유', code:'SP022'},
-    {name:'굴소스', code:'SP023'},
-    {name:'와사비', code:'SP024'},
-    {name:'머스타드', code:'SP025'},
+export const SPICE_4=[
+    {name:'식초', code:'SP018', refNum:17},
+    {name:'레몬즙', code:'SP019', refNum:18},
+    {name:'케찹', code:'SP020', refNum:19},
+    {name:'마요네즈', code:'SP021', refNum:20},
+    {name:'쯔유', code:'SP022', refNum:21},
+    {name:'굴소스', code:'SP023', refNum:22},
+    {name:'와사비', code:'SP024', refNum:23},
+    {name:'머스타드', code:'SP025', refNum:24},
 ];
 
 export const SPICE_5=[
-    {name:'밀가루', code:'SP026'},
-    {name:'전분', code:'SP027'},
+    {name:'밀가루', code:'SP026', refNum:25},
+    {name:'전분', code:'SP027', refNum:26},
 ];
 
 export const SPICE_6=[
-    {name:'우유', code:'SP028'},
-    {name:'버터', code:'SP029'},
-    {name:'생크림', code:'SP030'},
+    {name:'우유', code:'SP028', refNum:27},
+    {name:'버터', code:'SP029', refNum:28},
+    {name:'생크림', code:'SP030', refNum:29},
 ];
+
+export const INPUT_UNIT_SMALL=[
+    {text:'ml(cc)', amount:1, unit:'g'},
+    {text:'L',amount:1000,unit:'ml'},
+    {text:'g',amount:1,unit:'g'},
+    {text:'kg',amount:1000,unit:'g'},
+    {text:'일반 숟가락(액체)',amount:10,unit:'ml'},
+    {text:'일반 숟가락(고체 소복히)',amount:15,unit:'g'},
+    {text:'계량스푼(T)',amount:15,unit:'g'},
+    {text:'계량스푼(t)',amount:5,unit:'g'},
+    {text:'소주잔',amount:50,unit:'ml'},
+    {text:'종이컵',amount:190,unit:'ml'},
+    {text:'근',amount:600,unit:'g'},
+    {text:'Oz',amount:28.3,unit:'g'},
+];
+
+export const INPUT_UNIT_BIG=[
+    {text:'ml(cc)', amount:1, unit:'g'},
+    {text:'L',amount:1000,unit:'ml'},
+    {text:'g',amount:1,unit:'g'},
+    {text:'kg',amount:1000,unit:'g'},
+    {text:'Oz',amount:28.3,unit:'g'},
+]
