@@ -1,7 +1,7 @@
 import React,{useState, useEffect} from 'react';
 import { StyleSheet, Text, View, Pressable, Image, ScrollView } from 'react-native';
 
-import { fetchServer,getItemAsyncStorage } from '../abstract/asyncTasks';
+import { fetchWithTokenServer,getItemAsyncStorage, checkTokenAuthor } from '../abstract/asyncTasks';
 import {parsingDate} from '../abstract/commonTasks';
 
 import { theme } from '../variables/color';
@@ -45,17 +45,17 @@ const AccountBookHistoryScreen = (({navigation}) => {
         })
     },[]);
 
-    useEffect(()=>{
+    useEffect(()=> {
         if(sendObj.userId==='') return;
-        fetchServer('POST', '/account/getTotalHistoryList', sendObj).then((responseJson) => {
-            if(responseJson.data!==null){
-                setHistoryArr(responseJson.data);
-            }else{
-                setHistoryArr([]);
-            }
-        }).catch((error) => {
-            console.log(error);
-        });
+        fetchWithTokenServer('POST', '/account/getTotalHistoryList', sendObj)
+            .then(responseJson=>{
+                checkTokenAuthor(responseJson);
+                if(responseJson.data!==null){
+                    setHistoryArr(responseJson.data);
+                }else{
+                    setHistoryArr([]);
+                }
+            })
     },[sendObj]);
 
     let i=0;

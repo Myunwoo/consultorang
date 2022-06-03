@@ -15,28 +15,47 @@ export const getItemAsyncStorage = async(key) => {
     }
 };
 
+export const fetchServer = (_method, _url, data) => {
+  return fetch(url+_url,{
+    method: _method,
+    body: (data===null ? null : JSON.stringify(data)),
+    headers: {
+    //Header Defination
+    'Content-Type':
+    'application/json',
+    },
+  })
+  .then((response)=>response.json())
+};
+
 //_method : POST, GET
 //_url : http 통신을 할 url
 // data : body에 javascript object
-export const fetchServer = (_method, _url, data) => {
-    return fetch(url+_url,{
-        method: _method,
-        body: (data===null ? null : JSON.stringify(data)),
-        headers: {
-        //Header Defination
-        'Content-Type':
-        'application/json',
-        },
-    })
-    .then((response)=>response.json())
-    .then((responseJson)=>{
-      if(responseJson.retCode==='3'){
-
-      }else{
-        return responseJson;
-      }
-    })
+export const fetchWithTokenServer = async(_method, _url, data, navigation) => {
+  const token=await getItemAsyncStorage('token');
+  if(!token){
+    alert('토큰을 불러오지 못했거나 세션이 만료되었습니다. 다시 로그인해 주세요');
+    navigation.replace('Auth');
+  }
+  return fetch(url+_url,{
+    method: _method,
+    //현재는 token을 body에 넣은 모습임. 성준이와 논의 후 토큰 위치를 수정해야 함.
+    body: (data===null ? null : JSON.stringify({...data,token})),
+    headers: {
+    //Header Defination
+    'Content-Type':
+    'application/json',
+    },
+  })
+  .then((response)=>response.json())
 };
+
+export const checkTokenAuthor=(responseJson, navigation)=>{
+  if(responseJson.retCode===3){
+    alert('로그인 세션이 만료되었습니다. 다시 로그인해 주세요.');
+    navigation.replace('Auth');
+  }
+}
 
 export const saveUserData=(data)=>{
   const {businessAlready, businessCookway, businessEnd, businessIngre, businessName, 
