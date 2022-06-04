@@ -1,9 +1,11 @@
 import { theme } from '../variables/color';
 import React, {useEffect, useState,forwardRef, useImperativeHandle} from 'react';
-import { StyleSheet, Text, View, Pressable, TextInput, Keyboard, Platform} from 'react-native';
+import { StyleSheet, Text, View, Pressable, TextInput, Keyboard, Image, Platform} from 'react-native';
 import {
     CONTENT_SECTION_BORDER_RADIUS, 
 } from '../variables/scales';
+import {INPUT_UNIT_SMALL, INPUT_UNIT_BIG} from '../variables/codelist';
+import RNPickerSelect, { defaultStyles } from 'react-native-picker-select';
 
 const IngreInput=(prop, ref)=>{
     const {prop:list, setter:setList, visible:myVisible, setVisible:mySetVisible}=prop;
@@ -79,6 +81,7 @@ const IngreInput=(prop, ref)=>{
         alignItems:'center',
         flexDirection:'row',
     };
+    /////////////ㄱRNPickerSelect를 위한 스타일 맞춰주면 끝
     let rightInputWrapper={
         flex:75,
         height:myVisible===false?0:'100%',
@@ -86,6 +89,7 @@ const IngreInput=(prop, ref)=>{
         alignItems:'center',
         flexDirection:'row',
     };
+    //////////
     let txtWrapper={
         width:26,
         height:myVisible===false?0:'100%',
@@ -160,19 +164,20 @@ const IngreInput=(prop, ref)=>{
                         secureTextEntry={false}
                         editable={true}
                     />
-                    <TextInput
+                    <RNPickerSelect
+                        useNativeAndroidPickerStyle={false}
+                        fixAndroidTouchableBug={true}
+                        onValueChange={(value)=>{
+                            setAmountUnit(value);
+                        }}
+                        selectedValue={amountUnit}
+                        items={INPUT_UNIT_BIG.map(unit=>{
+                            return {label:unit.text, value:unit.text}
+                        })}
                         style={inputStyle}
-                        value={amountUnit}
-                        onChangeText={(txt) => setAmountUnit(txt)}
-                        placeholder={'구입 단위'}
-                        placeholderTextColor={theme.placeholderColor}
-                        keyboardType={'default'}
-                        onSubmitEditing={Keyboard.dismiss}
-                        blurOnSubmit={false}
-                        underlineColorAndroid="#f000"
-                        returnKeyType="next"
-                        secureTextEntry={false}
-                        editable={true}
+                        Icon={() => {
+                            return <Image style={{width:20, height:20,}} source={require('../../image/ingreModal_arrow.png')} resizeMode='contain'/>;
+                        }}
                     />
                 </View>
             </View>
@@ -198,19 +203,20 @@ const IngreInput=(prop, ref)=>{
                         secureTextEntry={false}
                         editable={true}
                     />
-                    <TextInput
+                    <RNPickerSelect
+                        useNativeAndroidPickerStyle={false}
+                        fixAndroidTouchableBug={true}
+                        onValueChange={(value)=>{
+                            setUnit(value);
+                        }}
+                        selectedValue={unit}
+                        items={INPUT_UNIT_SMALL.map(unit=>{
+                            return {label:unit.text, value:unit.text}
+                        })}
                         style={inputStyle}
-                        value={unit}
-                        onChangeText={(txt) => setUnit(txt)}
-                        placeholder={'단위'}
-                        placeholderTextColor={theme.placeholderColor}
-                        keyboardType={'default'}
-                        onSubmitEditing={Keyboard.dismiss}
-                        blurOnSubmit={false}
-                        underlineColorAndroid="#f000"
-                        returnKeyType="next"
-                        secureTextEntry={false}
-                        editable={true}
+                        Icon={() => {
+                            return <Image style={{width:20, height:20,}} source={require('../../image/ingreModal_arrow.png')} resizeMode='contain'/>;
+                        }}
                     />
                     <View style={btnPlusWrapper}>
                         <Pressable disabled={!isFilled} onPress={handlePlus} style={btnPlus}>
@@ -224,6 +230,36 @@ const IngreInput=(prop, ref)=>{
 };
 
 export default forwardRef(IngreInput);
+
+// const pickerSelectStyles = StyleSheet.create({
+//     inputIOS: {
+//         fontSize: 16,
+//         height: '100%',
+//         width:'100%',
+//         color: '#000000',
+//         padding: 10,
+//         textAlign:'center',
+//         borderRadius:32,
+//         backgroundColor:theme.inputBackground2,
+//         ...BASIC_SHADOW,
+//     },
+//     inputAndroid: {
+//         fontSize: 14,
+//         height:'100%',
+//         width: '100%',
+//         color: '#000000',
+//         textAlign:'center',
+//         borderRadius:32,
+//         backgroundColor:theme.inputBackground2,
+//     },
+//     iconContainer: {
+//         right: 10,
+//         height:'100%',
+//         width:32,
+//         justifyContent:'center',
+//         alignItems:'center',
+//     },
+// });
 
 const inputStyles=StyleSheet.create({
     txt:{
