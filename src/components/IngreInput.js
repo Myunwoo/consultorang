@@ -7,6 +7,8 @@ import {
 import {INPUT_UNIT_SMALL, INPUT_UNIT_BIG} from '../variables/codelist';
 import RNPickerSelect, { defaultStyles } from 'react-native-picker-select';
 
+const PICKER_PLACEHOLDER='단위';
+
 const IngreInput=(prop, ref)=>{
     const {prop:list, setter:setList, visible:myVisible, setVisible:mySetVisible}=prop;
     const [name, setName]=useState('');
@@ -106,6 +108,34 @@ const IngreInput=(prop, ref)=>{
         flex:1,
         marginHorizontal:myVisible===false?0:4,
     };
+    let pickerStyle={
+        inputIOS: {
+            //fontSize: 16,
+            width:myVisible===false?0:'100%',
+            height:myVisible===false?0:'100%',
+            color: '#000000',
+            textAlign:'center',
+            borderRadius:32,
+            backgroundColor:theme.inputBackground2,
+        },
+        inputAndroid: {
+            //fontSize: 14,
+            width:myVisible===false?0:'100%',
+            height:myVisible===false?0:'100%',
+            color: '#000000',
+            textAlign:'center',
+            borderRadius:32,
+            backgroundColor:theme.inputBackground2,
+        },
+    };
+    let pickerWrapper={
+        justifyContent:'center',
+        alignItems:'center',
+        flex:1,
+        marginHorizontal:myVisible===false?0:4,
+        paddingVertical:myVisible===false?0:8,
+        paddingHorizontal:myVisible===false?0:12,
+    };
     let btnPlus={
         justifyContent:'center',
         alignItems:'center',
@@ -164,21 +194,26 @@ const IngreInput=(prop, ref)=>{
                         secureTextEntry={false}
                         editable={true}
                     />
-                    <RNPickerSelect
-                        useNativeAndroidPickerStyle={false}
-                        fixAndroidTouchableBug={true}
-                        onValueChange={(value)=>{
-                            setAmountUnit(value);
-                        }}
-                        selectedValue={amountUnit}
-                        items={INPUT_UNIT_BIG.map(unit=>{
-                            return {label:unit.text, value:unit.text}
-                        })}
-                        style={inputStyle}
-                        Icon={() => {
-                            return <Image style={{width:20, height:20,}} source={require('../../image/ingreModal_arrow.png')} resizeMode='contain'/>;
-                        }}
-                    />
+                    <View style={pickerWrapper}>
+                        <RNPickerSelect
+                            placeholder={{
+                                label: PICKER_PLACEHOLDER,
+                            }}
+                            useNativeAndroidPickerStyle={false}
+                            fixAndroidTouchableBug={true}
+                            onValueChange={(value)=>{
+                                setAmountUnit(value);
+                            }}
+                            selectedValue={amountUnit}
+                            items={INPUT_UNIT_BIG.map(unit=>{
+                                return {label:unit.text, value:unit.text}
+                            })}
+                            style={pickerStyle}
+                            // Icon={() => {
+                            //     return <Image style={{width:20, height:20,}} source={require('../../image/ingreModal_arrow.png')} resizeMode='contain'/>;
+                            // }}
+                        />
+                    </View>
                 </View>
             </View>
             <View style={inputRow}>
@@ -203,21 +238,26 @@ const IngreInput=(prop, ref)=>{
                         secureTextEntry={false}
                         editable={true}
                     />
-                    <RNPickerSelect
-                        useNativeAndroidPickerStyle={false}
-                        fixAndroidTouchableBug={true}
-                        onValueChange={(value)=>{
-                            setUnit(value);
-                        }}
-                        selectedValue={unit}
-                        items={INPUT_UNIT_SMALL.map(unit=>{
-                            return {label:unit.text, value:unit.text}
-                        })}
-                        style={inputStyle}
-                        Icon={() => {
-                            return <Image style={{width:20, height:20,}} source={require('../../image/ingreModal_arrow.png')} resizeMode='contain'/>;
-                        }}
-                    />
+                    <View style={pickerWrapper}>
+                        <RNPickerSelect
+                            placeholder={{
+                                label: PICKER_PLACEHOLDER,
+                            }}
+                            useNativeAndroidPickerStyle={false}
+                            fixAndroidTouchableBug={true}
+                            onValueChange={(value)=>{
+                                setUnit(value);
+                            }}
+                            selectedValue={unit}
+                            items={INPUT_UNIT_SMALL.map(unit=>{
+                                return {label:unit.text, value:unit.text}
+                            })}
+                            style={pickerStyle}
+                            // Icon={() => {
+                            //     return <Image style={{width:20, height:20,}} source={require('../../image/ingreModal_arrow.png')} resizeMode='contain'/>;
+                            // }}
+                        />
+                    </View>
                     <View style={btnPlusWrapper}>
                         <Pressable disabled={!isFilled} onPress={handlePlus} style={btnPlus}>
                             <Text style={inputStyles.txtBtn}>+</Text>

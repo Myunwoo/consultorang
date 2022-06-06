@@ -87,7 +87,6 @@ const IngreModal = ({ showModal, setShowModal, condiArr, mainArr, arrSetter}) =>
     useEffect(()=>{
         if(isInputting.length>1){
             const shifted=isInputting.shift();
-            console.log('shifted ', shifted);
             for(let i=0;i<condimentBtnRef.current.length;i++){
                 condimentBtnRef.current[i].findAndDisabled(shifted);
             }
@@ -306,6 +305,7 @@ const styles = StyleSheet.create({
     },
     mainIngreWrapper:{
         width:'100%',
+        backgroundColor:'cyan',
     },
     mainIngreDivider:{
         width:'90%',

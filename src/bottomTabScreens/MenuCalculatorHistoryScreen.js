@@ -42,6 +42,7 @@ const MenuCalculatorHistoryScreen = ({navigation}) => {
     //기초 요리 서비스 시작시 활용
     //const [basicCook, setBasicCook]=useState([]);
 
+    //api호출로 변경시 retVal.data로 바뀔듯? 콘솔 출력해서 확인 해볼것.
     useEffect(()=>{
         getItemAsyncStorage('menuCalcResult')
             .then(retVal=>{
