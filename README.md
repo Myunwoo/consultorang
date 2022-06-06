@@ -32,10 +32,8 @@
 
   - [`UI 페이지 기획`](https://www.notion.so/Site-Map-32c2a43e20cb45bd921f564f0560324c)
 
-  - [`API 문서`]([http://15.165.229.191:8080/swagger-ui.html](https://www.notion.so/API-89165782e52a4d83b9004800c4130caf))
+  - [`API 문서`](http://15.165.229.191:8080/swagger-ui.html](https://www.notion.so/API-89165782e52a4d83b9004800c4130caf))
 
-<br>
-
-## 🎵 [Git 커밋 메시지 규칙](https://www.notion.so/202cb8da20cf4cc1a28aa212f5fffc86)
+  - [`Git 커밋 메시지 규칙`](https://www.notion.so/202cb8da20cf4cc1a28aa212f5fffc86)
 
 <br>
